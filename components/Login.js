@@ -1,6 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
-import { StatusBar } from 'react-native'
+import { StatusBar, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import SvgLogo from '../assets/SvgLogo'
 import { useNavigate } from 'react-router'
 
