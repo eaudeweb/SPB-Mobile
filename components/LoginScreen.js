@@ -1,13 +1,15 @@
 import React from 'react'
+import { useEffect } from 'react'
 import { StatusBar, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
 import SvgLogo from '../assets/SvgLogo'
-import { useNavigate } from 'react-router'
 
-function Login({ isUserLogged, setIsUserLogged }) {
-  const navigate = useNavigate()
+function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
+  useEffect(() => {
+    isUserLogged ?? navigation.navigate('Layout')
+  }, [isUserLogged])
   const onLogin = () => {
+    navigation.navigate('Layout')
     setIsUserLogged(true)
-    navigate('/')
   }
   return (
     <View style={styles.loginView}>
@@ -18,7 +20,7 @@ function Login({ isUserLogged, setIsUserLogged }) {
         <Text style={styles.loginButtonText}>Log in  </Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.loginButton, { backgroundColor: '#3E5998' }]} >
-        <Text style={styles.loginButtonText}>Log in with Facebook</Text>
+        <Text style={styles.loginButtonText} onPress={() => alert(isUserLogged)}>Log in with Facebook</Text>
       </TouchableOpacity>
       <TouchableOpacity>
         <Text style={styles.loginButtonText}>I forgot my password</Text>
@@ -67,4 +69,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Login
+export default LoginScreen

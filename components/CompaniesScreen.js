@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 
-export default function CompaniesScreen({ navigation }) {
+export default function CompaniesScreen({ navigation, text }) {
   return (
     <View style={styles.container}>
       <Text style={{ color: 'white', fontSize: 36 }}>Companies</Text>
