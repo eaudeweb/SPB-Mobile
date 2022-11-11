@@ -12,7 +12,7 @@ export default function LayoutScreen() {
   const Tab = createBottomTabNavigator()
   const screen = {
     companies: 'COMPANIES',
-    internships: 'INTERSHIPS',
+    internships: 'INTERNSHIPS',
     webinars: 'WEBINARS',
     profile: 'PROFILE'
   }
