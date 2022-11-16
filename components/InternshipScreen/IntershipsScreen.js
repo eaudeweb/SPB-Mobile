@@ -1,49 +1,19 @@
 import React from 'react'
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native'
-import { SearchBar } from '@rneui/themed';
-import InternshipsFilter from './InternshipsFilter';
-import InternshipList from './InternshipList';
+import { createStackNavigator } from '@react-navigation/stack';
+import InternshipMain from './InternshipMain';
+import InternshipDetail from './InternshipDetail';
 
 export default function InternshipsScreen() {
-  const [searchText, setSearchText] = useState('')
-  const updateSearch = (text) => {
-    setSearchText(text)
-  }
+  const Stack = createStackNavigator();
 
   return (
-    <View>
-      <SearchBar
-        onChangeText={updateSearch}
-        value={searchText}
-        placeholder={'Search'}
-        containerStyle={styles.searchContainer}
-        inputContainerStyle={styles.inputContainer}
-        inputStyle={{ color: 'white' }}
-      />
-      <InternshipsFilter />
-      <InternshipList />
-    </View>
+    <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false, }}>
+      <Stack.Screen name="Main"   >
+        {(props) => <InternshipMain {...props} />}
+      </Stack.Screen>
+      <Stack.Screen name="InternshipDetail" >
+        {(props) => <InternshipDetail {...props} />}
+      </Stack.Screen>
+    </Stack.Navigator>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  searchContainer: {
-    borderBottomColor: 'transparent',
-    borderTopColor: 'transparent',
-    backgroundColor: 'transparent',
-    paddingHorizontal: 10,
-
-  },
-  inputContainer: {
-    borderWidth: 2,
-    borderBottomWidth: 2,
-    borderColor: '#757575',
-    borderRadius: 8,
-    backgroundColor: '#424242',
-
-  }
-})

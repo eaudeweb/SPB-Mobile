@@ -11,7 +11,6 @@ export default function InternshipsFilter() {
     { label: 'Item 2', value: '2' },
     { label: 'Item 3', value: '3' },
     { label: 'Item 4', value: '4' },
-
   ];
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true)
   const [filter, setFilter] = useState({
@@ -31,7 +30,6 @@ export default function InternshipsFilter() {
         <Text style={{ color: '#F26649', fontSize: 18 }}>Filter:</Text>
         <Ionicon name={isFilterCollapsed ? 'chevron-down' : 'chevron-up'} size={26} color='#F26649' />
       </TouchableOpacity>
-
       <Collapsible collapsed={isFilterCollapsed}>
         <View style={styles.dropDownView}>
           <Dropdown
@@ -94,7 +92,6 @@ export default function InternshipsFilter() {
           />
         </View>
       </Collapsible>
-
     </View>
   )
 }

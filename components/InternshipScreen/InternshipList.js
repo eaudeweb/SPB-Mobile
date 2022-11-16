@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, View, Text, Image, TouchableHighlight, ScrollView } from 'react-native'
 
-function InternshipsAvailable() {
+export default function InternshipsAvailable({ navigation }) {
   const Internship1 = () => {
     return (
-      <TouchableHighlight onPress={alert} style={styles.internshipWrapper}>
+      <TouchableHighlight onPress={() => navigation.navigate('InternshipDetail', { test: 'Bine' })} style={styles.internshipWrapper}>
         <View style={styles.innerWrapper}>
           <Image source={require('../../assets/edw-logo.png')} style={styles.companyLogo} />
           <View>
@@ -17,7 +17,7 @@ function InternshipsAvailable() {
   }
   const Internship2 = () => {
     return (
-      <TouchableHighlight onPress={alert} style={styles.internshipWrapper}>
+      <TouchableHighlight onPress={() => navigation.navigate('InternshipDetail', { test: 'Bine' })} style={styles.internshipWrapper}>
         <View style={styles.innerWrapper}>
           <Image source={require('../../assets/IBM_logo.png')} style={styles.companyLogo} />
           <View>
@@ -43,8 +43,6 @@ function InternshipsAvailable() {
     </ScrollView>
   )
 }
-
-export default InternshipsAvailable
 
 const styles = StyleSheet.create({
   internshipWrapper: {

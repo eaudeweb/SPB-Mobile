@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { StyleSheet, StatusBar, Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import LayoutScreen from './components/LayoutScreen';
 import LoginScreen from './components/LoginScreen';
@@ -9,7 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 export default function App() {
   const [isUserLogged, setIsUserLogged] = useState(false)
-  console.log('main app', isUserLogged)
+
   const Stack = createStackNavigator();
   const MyTheme = {
     ...DarkTheme,
