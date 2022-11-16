@@ -1,8 +1,9 @@
 import React from 'react'
 import { useState } from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { SearchBar } from '@rneui/themed';
-
+import InternshipsFilter from './InternshipsFilter';
+import InternshipList from './InternshipList';
 
 export default function InternshipsScreen() {
   const [searchText, setSearchText] = useState('')
@@ -11,7 +12,7 @@ export default function InternshipsScreen() {
   }
 
   return (
-    <ScrollView>
+    <View>
       <SearchBar
         onChangeText={updateSearch}
         value={searchText}
@@ -20,22 +21,21 @@ export default function InternshipsScreen() {
         inputContainerStyle={styles.inputContainer}
         inputStyle={{ color: 'white' }}
       />
-
-    </ScrollView>
+      <InternshipsFilter />
+      <InternshipList />
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
   },
   searchContainer: {
     borderBottomColor: 'transparent',
     borderTopColor: 'transparent',
     backgroundColor: 'transparent',
-    marginHorizontal: 15,
+    paddingHorizontal: 10,
 
   },
   inputContainer: {
@@ -43,5 +43,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderColor: '#757575',
     borderRadius: 8,
+    backgroundColor: '#424242',
+
   }
 })

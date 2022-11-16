@@ -3,11 +3,11 @@ import { StatusBar } from 'expo-status-bar';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import CompaniesScreen from './CompaniesScreen';
-import InternshipsScreen from './IntershipsScreen';
+import InternshipsScreen from './InternshipScreen/IntershipsScreen';
 import WebinarsScreen from './WebinarsScreen';
 import ProfileScreen from './ProfileScreen';
 import SvgLogo from '../assets/SvgLogo';
-import Svg from 'react-native-svg';
+
 export default function LayoutScreen() {
   const Tab = createBottomTabNavigator()
   const screen = {
