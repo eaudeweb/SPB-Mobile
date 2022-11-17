@@ -21,15 +21,13 @@ export default function App() {
   return (
     <NavigationContainer theme={MyTheme}>
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false, }}>
-        <Stack.Screen name="Layout"   >
+        <Stack.Screen name="Layout" >
           {(props) => <LayoutScreen {...props} isUserLogged={isUserLogged} />}
         </Stack.Screen>
         <Stack.Screen name="Login" >
           {(props) => <LoginScreen {...props} isUserLogged={isUserLogged} setIsUserLogged={setIsUserLogged} />}
         </Stack.Screen>
-
       </Stack.Navigator>
-
     </NavigationContainer >
   );
 }

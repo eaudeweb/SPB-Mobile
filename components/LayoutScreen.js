@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import CompaniesScreen from './CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
-import WebinarsScreen from './WebinarsScreen';
+import EventsScreen from './EventsScreen/EventsMain';
 import ProfileScreen from './ProfileScreen';
 import SvgLogo from '../assets/SvgLogo';
 
@@ -13,7 +13,7 @@ export default function LayoutScreen() {
   const screen = {
     companies: 'COMPANIES',
     internships: 'INTERNSHIPS',
-    webinars: 'WEBINARS',
+    events: 'EVENTS',
     profile: 'PROFILE'
   }
   return (
@@ -28,7 +28,7 @@ export default function LayoutScreen() {
             iconName = focused ? 'md-business' : 'md-business-outline'
           } else if (rn === screen.internships) {
             iconName = focused ? 'briefcase' : 'briefcase-outline'
-          } else if (rn === screen.webinars) {
+          } else if (rn === screen.events) {
             iconName = focused ? 'desktop' : 'desktop-outline'
           } else if (rn === screen.profile) {
             iconName = focused ? 'ios-person' : 'ios-person-outline'
@@ -49,7 +49,7 @@ export default function LayoutScreen() {
         {(props) => <CompaniesScreen {...props} text='Dada' />}
       </Tab.Screen>
       <Tab.Screen name={screen.internships} component={InternshipsScreen} options={{ headerTitle: (props) => <SvgLogo /> }} />
-      <Tab.Screen name={screen.webinars} component={WebinarsScreen} />
+      <Tab.Screen name={screen.events} component={EventsScreen} />
       <Tab.Screen name={screen.profile} component={ProfileScreen} />
     </Tab.Navigator>
   )

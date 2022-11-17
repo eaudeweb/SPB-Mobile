@@ -13,7 +13,7 @@ export default function CompaniesScreen({ navigation, text }) {
           <Text style={styles.jumbotronText}>10+</Text>
           <Text style={styles.jumbotronTextTitle}>COMPANIES</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.jumbotronCategory} onPress={() => navigation.navigate('WEBINARS')}>
+        <TouchableOpacity style={styles.jumbotronCategory} onPress={() => navigation.navigate('EVENTS')}>
           <Text style={styles.jumbotronText}>35</Text>
           <Text style={styles.jumbotronTextTitle}>WEBINARS</Text>
         </TouchableOpacity>
