@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import CompaniesScreen from './CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
-import EventsScreen from './EventsScreen/EventsMain';
+import EventsScreen from './EventsScreen/EventsScreen';
 import ProfileScreen from './ProfileScreen';
 import SvgLogo from '../assets/SvgLogo';
 
@@ -16,6 +16,7 @@ export default function LayoutScreen() {
     events: 'EVENTS',
     profile: 'PROFILE'
   }
+
   return (
     <Tab.Navigator
       initialRouteName={screen.companies}

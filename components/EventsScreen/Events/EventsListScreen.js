@@ -2,14 +2,14 @@ import React from 'react'
 import { StyleSheet, ScrollView, View, TouchableHighlight, Text } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-export default function EventsListScreen() {
+export default function EventsListScreen({ navigation }) {
   const EventItem = () => {
     return (
-      <TouchableHighlight style={styles.eventContainer} onPress={alert}>
+      <TouchableHighlight style={styles.eventContainer} onPress={() => navigation.navigate('EventDetail')}>
         <View style={{ paddingVertical: 20, paddingHorizontal: 10 }}>
           <View style={styles.row}>
             <Ionicon name='terminal-outline' size={26} color='#F26649' style={styles.icon} />
-            <Text style={styles.text}>React Native Webinar</Text>
+            <Text style={styles.text}>React Native Event</Text>
           </View>
           <View style={styles.row}>
             <Ionicon name='md-business' size={26} color='#F26649' style={styles.icon} />
