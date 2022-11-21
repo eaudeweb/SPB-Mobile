@@ -1,16 +1,20 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, ScrollView, TouchableHighlight, Dimensions } from 'react-native'
+import { useState } from 'react'
+import { StyleSheet, View, Text, Image, ScrollView, TouchableHighlight, Button } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
+import onShare from '../../utils/shareFunction'
+import NotificationsModal from '../../utils/NotificationsModal'
 
 export default function WebinarDetail({ navigation }) {
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <ScrollView style={styles.container}>
       <Ionicon name='chevron-back' size={26} color='#F26649' onPress={() => navigation.navigate('WebinarsList')} />
       <Image source={require('../../../assets/conference-placeholder.jpg')} style={styles.headerImage} />
       <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'space-between', marginVertical: 10 }}>
         <Text style={styles.eventTitle}>React native webinar</Text>
-        <Ionicon name='ios-notifications-outline' size={26} color='#F26649' />
+        <Ionicon name='ios-notifications-outline' size={26} color='#F26649' onPress={() => setModalVisible(true)} />
       </View >
       <View>
         <Text style={styles.eventDescription}>
@@ -24,9 +28,10 @@ export default function WebinarDetail({ navigation }) {
           </TouchableHighlight>
         </View>
         <View>
-          <Ionicon name="send" size={26} color="#F26649" onPress={() => alert('Shared!')} />
+          <Ionicon name="send" size={26} color="#F26649" onPress={() => onShare('Webinar')} />
         </View>
       </View>
+      <NotificationsModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
     </ScrollView >
   )
 }

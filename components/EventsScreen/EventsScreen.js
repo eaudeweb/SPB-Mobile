@@ -1,7 +1,9 @@
 import React from 'react'
+import { useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import EventsNavigation from './Events/EventsNavigation';
 import WebinarNavigation from './Webinars/WebinarNavigation';
+
 export default function EventsScreen() {
   const Tab = createMaterialTopTabNavigator();
 
