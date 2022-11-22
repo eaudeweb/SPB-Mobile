@@ -5,7 +5,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import CompaniesScreen from './CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
 import EventsScreen from './EventsScreen/EventsScreen';
-import ProfileScreen from './ProfileScreen';
+import ProfileScreen from './ProfileScreen/ProfileScreen';
 import SvgLogo from '../assets/SvgLogo';
 
 export default function LayoutScreen() {

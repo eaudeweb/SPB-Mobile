@@ -1,9 +1,9 @@
 import { Share } from "react-native";
 
-const onShare = async (title,) => {
+const onShare = async (title, url) => {
   try {
     const result = await Share.share({
-      message: title,
+      message: title, a
     });
     if (result.action === Share.sharedAction) {
       if (result.activityType) {

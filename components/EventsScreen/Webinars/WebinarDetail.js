@@ -2,8 +2,8 @@ import React from 'react'
 import { useState } from 'react'
 import { StyleSheet, View, Text, Image, ScrollView, TouchableHighlight, Button } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import onShare from '../../utils/shareFunction'
-import NotificationsModal from '../../utils/NotificationsModal'
+import onShare from '../../../utils/shareFunction'
+import NotificationsModal from '../../../utils/NotificationsModal'
 
 export default function WebinarDetail({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);

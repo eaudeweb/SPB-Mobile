@@ -3,8 +3,8 @@ import { useState } from 'react'
 import { StyleSheet, View, Text, Image, ScrollView, TouchableHighlight, Dimensions } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
-import onShare from '../../utils/shareFunction'
-import NotificationsModal from '../../utils/NotificationsModal'
+import onShare from '../../../utils/shareFunction'
+import NotificationsModal from '../../../utils/NotificationsModal'
 
 export default function EventDetail({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false)
