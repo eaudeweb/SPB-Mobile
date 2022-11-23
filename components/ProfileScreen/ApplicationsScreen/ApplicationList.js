@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView, Image, TouchableHighlight, Animated, Touchable } from 'react-native'
+import { ScrollView } from 'react-native'
+import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../../utils/InternshipListItem'
 
-
-export default function ApplicationsMain({ navigation }) {
+export default function ApplicationList(props) {
   const internships = [
     {
       company: 'Eau de Web',
@@ -55,55 +55,12 @@ export default function ApplicationsMain({ navigation }) {
       jd: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed molestie urna. Nam porta bibendum ultrices. Duis eu varius purus. Nam rhoncus diam a diam vestibulum, rutrum aliquam neque rhoncus. Nullam arcu arcu, interdum vitae egestas eget, vestibulum sed mi. Sed eu sem arcu. Quisque at vulputate nisl, at tempor leo. Morbi eu felis quis nisl fringilla hendrerit. Donec malesuada ligula in augue vestibulum, in elementum mauris laoreet. Pellentesque dictum, lacus at scelerisque facilisis, lorem dui tincidunt mi, a tempor tellus velit sed erat. Integer vitae ante nisl. Sed quis augue iaculis, consectetur nisi vel, efficitur lorem. Sed in suscipit nisl, ut ultricies ipsum. Nunc sollicitudin ante id nibh placerat ullamcorper ut eu eros.',
       applied: true,
       swipeable: true
-
     },
   ]
 
   return (
     <ScrollView style={{ paddingVertical: 10 }}>
-      {internships.map(internship => <InternshipListItem internship={internship} />)}
+      {internships.map((internship, index) => <InternshipListItem {...props} internship={internship} parentRoute={useRoute().name} key={index} />)}
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  internshipWrapper: {
-    margin: 10,
-    backgroundColor: '#212121'
-  },
-  innerWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  companyLogo: {
-    width: 75,
-    height: 75,
-    resizeMode: 'contain',
-    marginRight: 20,
-  },
-  internshipTitle: {
-    color: 'white',
-    fontSize: 18
-  },
-  internshipCompany: {
-    color: '#2991e3',
-    fontSize: 16
-  },
-  swipeView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 20
-  },
-  swipeButton: {
-    width: 75,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'green',
-  },
-  swipeButtonText: {
-    color: 'white'
-  }
-})

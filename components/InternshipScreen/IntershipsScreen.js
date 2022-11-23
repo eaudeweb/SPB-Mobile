@@ -7,8 +7,8 @@ export default function InternshipsScreen() {
   const Stack = createStackNavigator();
 
   return (
-    <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false, }}>
-      <Stack.Screen name="Main"   >
+    <Stack.Navigator initialRouteName="InternshipMain" screenOptions={{ headerShown: false, }}>
+      <Stack.Screen name="InternshipMain"   >
         {(props) => <InternshipMain {...props} />}
       </Stack.Screen>
       <Stack.Screen name="InternshipDetail" >

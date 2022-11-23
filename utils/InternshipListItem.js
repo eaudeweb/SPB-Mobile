@@ -2,7 +2,8 @@ import { View, Text, StyleSheet, ScrollView, Image, TouchableHighlight, Animated
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
-export default function InternshipListItem({ navigation, internship }) {
+export default function InternshipListItem({ navigation, internship, parentRoute }) {
+  const newRoute = parentRoute === 'InternshipMain' ? 'InternshipDetail' : 'ApplicationDetail';
   const renderLeftActions = (progress, dragX) => {
     return (
       <Animated.View style={[styles.swipeView, { marginLeft: 10 }]}>
@@ -10,7 +11,7 @@ export default function InternshipListItem({ navigation, internship }) {
           <Ionicon name="checkbox-outline" size={26} color="white" />
           <Text style={[styles.swipeButtonText]}>Accepted</Text>
         </View>
-        <View style={[styles.swipeButton, { backgroundColor: '#F26649' }]}>
+        <View style={[styles.swipeButton, { backgroundColor: '#6C757D' }]}>
           <Ionicon name="mic-outline" size={26} color="white" />
           <Text style={styles.swipeButtonText}>Interview</Text>
         </View>
@@ -36,7 +37,7 @@ export default function InternshipListItem({ navigation, internship }) {
   return (
     <Swipeable renderLeftActions={internship.swipeable ? renderLeftActions : null} renderRightActions={internship.swipeable ? renderRightActions : null}>
       <View style={styles.internshipWrapper}>
-        <TouchableHighlight onPress={() => navigation.navigate('InternshipDetail', { test: 'Bine' })} >
+        <TouchableHighlight onPress={() => navigation.navigate(newRoute, { internship })} >
           <View style={styles.innerWrapper}>
             <Image source={internship.companyLogo} style={styles.companyLogo} />
             <View>

@@ -1,8 +1,9 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, TouchableHighlight, ScrollView } from 'react-native'
+import { View, ScrollView } from 'react-native'
+import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../utils/InternshipListItem'
 
-export default function InternshipsAvailable({ navigation }) {
+export default function InternshipsAvailable(props) {
   const internships = [
     {
       company: 'Eau de Web',
@@ -59,7 +60,9 @@ export default function InternshipsAvailable({ navigation }) {
 
   return (
     <ScrollView>
-      {internships.map(internship => <InternshipListItem navigation={navigation} internship={internship} />)}
+      <View style={{ marginBottom: 10 }}>
+        {internships.map((internship, index) => <InternshipListItem {...props} internship={internship} parentRoute={useRoute().name} key={index} />)}
+      </View>
     </ScrollView>
   )
 }

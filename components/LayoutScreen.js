@@ -1,5 +1,4 @@
 import React from 'react'
-import { StatusBar } from 'expo-status-bar';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import CompaniesScreen from './CompaniesScreen';
@@ -7,6 +6,7 @@ import InternshipsScreen from './InternshipScreen/IntershipsScreen';
 import EventsScreen from './EventsScreen/EventsScreen';
 import ProfileScreen from './ProfileScreen/ProfileScreen';
 import SvgLogo from '../assets/SvgLogo';
+import Constants from 'expo-constants';
 
 export default function LayoutScreen() {
   const Tab = createBottomTabNavigator()
@@ -38,14 +38,12 @@ export default function LayoutScreen() {
           return <Ionicon name={iconName} size={size} color={color} />
         },
         tabBarActiveTintColor: '#F26649',
-        // headerShown: false,
         tabBarStyle: { backgroundColor: '#121212' },
-        header: () => <SvgLogo style={{ alignSelf: 'center', marginTop: (Platform.OS === "ios") ? 50 : StatusBar.currentHeight, }} />,
+        header: () => <SvgLogo style={{ alignSelf: 'center', marginTop: Constants.statusBarHeight }} />,
         headerStyle: { marginTop: 50 }
       })}
 
     >
-      {/* <Tab.Screen name={screen.companies} component={CompaniesScreen} /> */}
       <Tab.Screen name={screen.companies}  >
         {(props) => <CompaniesScreen {...props} text='Dada' />}
       </Tab.Screen>

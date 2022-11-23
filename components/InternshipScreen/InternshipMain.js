@@ -6,7 +6,7 @@ import InternshipsFilter from './InternshipsFilter';
 import InternshipList from './InternshipList';
 import { createStackNavigator } from '@react-navigation/stack';
 
-export default function InternshipMain({ navigation }) {
+export default function InternshipMain(props) {
   const [searchText, setSearchText] = useState('')
   const updateSearch = (text) => {
     setSearchText(text)
@@ -24,7 +24,7 @@ export default function InternshipMain({ navigation }) {
         inputStyle={{ color: 'white' }}
       />
       <InternshipsFilter />
-      <InternshipList navigation={navigation} />
+      <InternshipList {...props} />
     </View>
   )
 }

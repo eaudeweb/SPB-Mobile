@@ -1,7 +1,6 @@
 import React from 'react'
-import { Text } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import ApplicationsMain from './ApplicationsScreen/ApplicationsMain';
+import ApplicationsMain from './ApplicationsScreen/ApplicationsScreen';
 import CVMain from './CVScreen/CVMain';
 import SettingsMain from './SettingsScreen/SettingsMain';
 
