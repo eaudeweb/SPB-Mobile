@@ -22,7 +22,6 @@ export default function NotificationsModal(props) {
   ]
 
   const RadioButton = ({ options }) => {
-    console.log(options)
     return (
       <View style={{ width: '100%', paddingHorizontal: 30 }}>
         {options?.map(option => {

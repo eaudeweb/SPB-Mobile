@@ -49,7 +49,6 @@ export default function CVMain() {
   }
   const ExperienceComponent = ({ data }) => {
     const ExperienceItem = ({ item }) => {
-      console.log(item)
       return (
         <View style={categoryStyle.outerWrapper}>
           <View style={categoryStyle.innerWrapper}>
