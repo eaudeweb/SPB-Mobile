@@ -4,7 +4,7 @@ import { Alert, Modal, StyleSheet, Text, Pressable, TouchableOpacity, TouchableW
 
 export default function NotificationsModal(props) {
   const { modalVisible, setModalVisible } = props
-  const [notificationValue, setNotificationValue] = useState(null)
+  const [notificationValue, setNotificationValue] = useState('weekly')
 
   const options = [
     {
