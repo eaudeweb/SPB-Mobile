@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { StyleSheet, View, Text, TextInput, TouchableHighlight } from 'react-native'
+import { StyleSheet, View, Text, TextInput, TouchableHighlight, ScrollView } from 'react-native'
 import FeedbackModal from './FeedbackModal'
 import { NotificationsRadioInput } from './RadioInputs'
 
@@ -9,7 +9,7 @@ export default function SettingsMain() {
   const [modalVisible, setModalVisible] = useState(false)
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.headerText}>Contact details</Text>
       <View>
         <View>
@@ -28,6 +28,7 @@ export default function SettingsMain() {
             placeholderTextColor='white'
           />
         </View>
+        <Text>TEST</Text>
         <View>
           <Text style={styles.labelText}>Phone number</Text>
           <TextInput
@@ -55,7 +56,7 @@ export default function SettingsMain() {
         <NotificationsRadioInput setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} />
       </View>
       <FeedbackModal modalVisible={modalVisible} setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} styles={styles} />
-    </View >
+    </ScrollView >
 
   )
 }

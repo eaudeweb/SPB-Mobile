@@ -5,6 +5,7 @@ import CompaniesScreen from './CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
 import EventsScreen from './EventsScreen/EventsScreen';
 import ProfileScreen from './ProfileScreen/ProfileScreen';
+import NewsScreen from './NewsScreen/NewsScreen'
 import SvgLogo from '../assets/SvgLogo';
 import Constants from 'expo-constants';
 
@@ -13,6 +14,7 @@ export default function LayoutScreen() {
   const screen = {
     companies: 'COMPANIES',
     internships: 'INTERNSHIPS',
+    news: 'NEWS',
     events: 'EVENTS',
     profile: 'PROFILE'
   }
@@ -24,17 +26,25 @@ export default function LayoutScreen() {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          let rn = route.name
-          if (rn === screen.companies) {
-            iconName = focused ? 'md-business' : 'md-business-outline'
-          } else if (rn === screen.internships) {
-            iconName = focused ? 'briefcase' : 'briefcase-outline'
-          } else if (rn === screen.events) {
-            iconName = focused ? 'desktop' : 'desktop-outline'
-          } else if (rn === screen.profile) {
-            iconName = focused ? 'ios-person' : 'ios-person-outline'
-          }
 
+          switch (route.name) {
+            case screen.companies:
+              iconName = focused ? 'md-business' : 'md-business-outline'
+              break;
+            case screen.internships:
+              iconName = focused ? 'briefcase' : 'briefcase-outline'
+              break;
+            case screen.news:
+              iconName = focused ? 'newspaper' : 'newspaper-outline'
+              break;
+            case screen.events:
+              iconName = focused ? 'desktop' : 'desktop-outline'
+              break;
+            case screen.profile:
+              iconName = focused ? 'ios-person' : 'ios-person-outline'
+              break;
+
+          }
           return <Ionicon name={iconName} size={size} color={color} />
         },
         tabBarActiveTintColor: '#F26649',
@@ -47,7 +57,8 @@ export default function LayoutScreen() {
       <Tab.Screen name={screen.companies}  >
         {(props) => <CompaniesScreen {...props} text='Dada' />}
       </Tab.Screen>
-      <Tab.Screen name={screen.internships} component={InternshipsScreen} options={{ headerTitle: (props) => <SvgLogo /> }} />
+      <Tab.Screen name={screen.internships} component={InternshipsScreen} />
+      <Tab.Screen name={screen.news} component={NewsScreen} />
       <Tab.Screen name={screen.events} component={EventsScreen} />
       <Tab.Screen name={screen.profile} component={ProfileScreen} />
     </Tab.Navigator>

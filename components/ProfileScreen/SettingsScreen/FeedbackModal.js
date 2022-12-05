@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { Pressable, TouchableWithoutFeedback, View, Text, TextInput, TouchableHighlight, TouchableOpacity, Modal } from 'react-native'
+import { Pressable, TouchableWithoutFeedback, View, Text, TextInput, TouchableHighlight, Modal, Animated } from 'react-native'
 import { FeedbackRadioInput } from './RadioInputs'
 
 export default function FeedbackModal(props) {

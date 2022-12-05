@@ -8,16 +8,22 @@ import { createStackNavigator } from '@react-navigation/stack';
 export default function App() {
   const [isUserLogged, setIsUserLogged] = useState(false)
   const Stack = createStackNavigator();
-  const MyTheme = {
+  const CustomDarkTheme = {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
       background: '#212121',
+      lightBackground: '#353535',
+      darkBackground: '121212',
+      jumbotron: '#616161',
+      accentColor: '#F26649',
+      primaryText: 'white',
+      secondaryText: ''
     },
   };
 
   return (
-    <NavigationContainer theme={MyTheme}>
+    <NavigationContainer theme={CustomDarkTheme}>
       <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false, }}>
         <Stack.Screen name="Layout" >
           {(props) => <LayoutScreen {...props} isUserLogged={isUserLogged} />}
