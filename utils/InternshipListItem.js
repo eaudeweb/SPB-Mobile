@@ -1,20 +1,41 @@
-import { View, Text, StyleSheet, ScrollView, Image, TouchableHighlight, Animated, Touchable } from 'react-native'
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, Image, TouchableHighlight, Animated, Button } from 'react-native'
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { useSelector, useDispatch } from 'react-redux';
+import { completeSwipeableDemo } from '../features/animations/animationsSlice';
 
-export default function InternshipListItem({ navigation, internship, parentRoute }) {
+export default function InternshipListItem({ navigation, internship, parentRoute, index }) {
+  const dispatch = useDispatch()
+  const { animations } = useSelector(state => state)
   const newRoute = parentRoute === 'InternshipMain' ? 'InternshipDetail' : 'ApplicationDetail';
+  const swipeRef = React.useRef()
+
+  if (parentRoute === 'ApplicationsList' && index == 0) {
+    if (!animations.swipeableDemo) {
+      setTimeout((() => {
+        swipeRef?.current?.openLeft()
+        setTimeout(swipeRef?.current?.close, 250)
+      }), 250)
+      dispatch(completeSwipeableDemo())
+    }
+  }
+
   const renderLeftActions = (progress, dragX) => {
     return (
       <Animated.View style={[styles.swipeView, { marginLeft: 10 }]}>
-        <View style={[styles.swipeButton, { backgroundColor: '#4CAF50' }]}>
-          <Ionicon name="checkbox-outline" size={26} color="white" />
-          <Text style={[styles.swipeButtonText]}>Accepted</Text>
-        </View>
-        <View style={[styles.swipeButton, { backgroundColor: '#6C757D' }]}>
-          <Ionicon name="mic-outline" size={26} color="white" />
-          <Text style={styles.swipeButtonText}>Interview</Text>
-        </View>
+        <TouchableHighlight onPress={() => alert("Accepted")}>
+          <View style={[styles.swipeButton, { backgroundColor: '#4CAF50' }]}>
+            <Ionicon name="checkbox-outline" size={26} color="white" />
+            <Text style={[styles.swipeButtonText]}>Accepted</Text>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={() => alert("Interview")}>
+          <View style={[styles.swipeButton, { backgroundColor: '#6C757D' }]}>
+            <Ionicon name="mic-outline" size={26} color="white" />
+            <Text style={styles.swipeButtonText}>Interview</Text>
+          </View>
+        </TouchableHighlight>
       </Animated.View>
     );
   };
@@ -22,20 +43,25 @@ export default function InternshipListItem({ navigation, internship, parentRoute
   const renderRightActions = (progress, dragX) => {
     return (
       <Animated.View style={[styles.swipeView, { marginRight: 10 }]}>
-        <View style={[styles.swipeButton, { backgroundColor: '#F44336' }]}>
-          <Ionicon name="close-circle-outline" size={26} color="white" />
-          <Text style={[styles.swipeButtonText]}>Cancel</Text>
-        </View>
-        <View style={[styles.swipeButton, { backgroundColor: '#2196F3' }]}>
-          <Ionicon name="archive-outline" size={26} color="white" />
-          <Text style={styles.swipeButtonText}>Archive</Text>
-        </View>
+        <TouchableHighlight onPress={() => alert('Cancel')}>
+          <View style={[styles.swipeButton, { backgroundColor: '#F44336' }]}>
+            <Ionicon name="close-circle-outline" size={26} color="white" />
+            <Text style={[styles.swipeButtonText]}>Cancel</Text>
+          </View>
+        </TouchableHighlight>
+
+        <TouchableHighlight onPress={() => alert('Achive')}>
+          <View style={[styles.swipeButton, { backgroundColor: '#2196F3' }]}>
+            <Ionicon name="archive-outline" size={26} color="white" />
+            <Text style={styles.swipeButtonText}>Archive</Text>
+          </View>
+        </TouchableHighlight>
       </Animated.View>
     );
   };
 
   return (
-    <Swipeable renderLeftActions={internship.swipeable ? renderLeftActions : null} renderRightActions={internship.swipeable ? renderRightActions : null}>
+    <Swipeable ref={swipeRef} friction={2} renderLeftActions={internship.swipeable ? renderLeftActions : null} renderRightActions={internship.swipeable ? renderRightActions : null}>
       <View style={styles.internshipWrapper}>
         <TouchableHighlight onPress={() => navigation.navigate(newRoute, { internship })} >
           <View style={styles.innerWrapper}>

@@ -52,7 +52,7 @@ export default function NewsMain({ navigation }) {
     },
   ]
 
-  const generateListItem = (item) => {
+  const generateListItem = (item, index) => {
     let iconName;
     switch (item.originScreen) {
       case 'COMPANIES':
@@ -71,6 +71,7 @@ export default function NewsMain({ navigation }) {
 
     return (
       <TouchableOpacity
+        key={index}
         onPress={() => navigation.navigate(item.originScreen)}
       >
         <View style={styles.newsItemWrap}>
@@ -89,7 +90,7 @@ export default function NewsMain({ navigation }) {
     <ScrollView style={styles.container}>
       <Text style={styles.header}>News</Text>
       <View>
-        {newsList.map(listItem => generateListItem(listItem))}
+        {newsList.map((listItem, index) => generateListItem(listItem, index))}
       </View>
     </ScrollView>
   )

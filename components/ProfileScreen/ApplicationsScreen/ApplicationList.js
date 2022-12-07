@@ -60,7 +60,7 @@ export default function ApplicationList(props) {
 
   return (
     <ScrollView style={{ paddingVertical: 10 }}>
-      {internships.map((internship, index) => <InternshipListItem {...props} internship={internship} parentRoute={useRoute().name} key={index} />)}
+      {internships.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} parentRoute={useRoute().name} key={index} />)}
     </ScrollView>
   )
 }

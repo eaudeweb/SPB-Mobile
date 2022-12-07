@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native'
 
-export default function CompaniesScreen({ navigation, text }) {
+export default function CompaniesScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.jumbotron}>
