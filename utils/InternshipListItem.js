@@ -15,7 +15,7 @@ export default function InternshipListItem({ navigation, internship, parentRoute
     if (!animations.swipeableDemo) {
       setTimeout((() => {
         swipeRef?.current?.openLeft()
-        setTimeout(swipeRef?.current?.close, 250)
+        setTimeout(swipeRef?.current?.close, 500)
       }), 250)
       dispatch(completeSwipeableDemo())
     }

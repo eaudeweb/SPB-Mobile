@@ -22,7 +22,6 @@ export default function LayoutScreen() {
   return (
     <Tab.Navigator
       initialRouteName={screen.companies}
-
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -43,7 +42,6 @@ export default function LayoutScreen() {
             case screen.profile:
               iconName = focused ? 'ios-person' : 'ios-person-outline'
               break;
-
           }
           return <Ionicon name={iconName} size={size} color={color} />
         },
@@ -54,8 +52,8 @@ export default function LayoutScreen() {
       })}
 
     >
-      <Tab.Screen name={screen.companies}  >
-        {(props) => <CompaniesScreen {...props} text='Dada' />}
+      <Tab.Screen name={screen.companies}>
+        {(props) => <CompaniesScreen {...props} text='Props passing test' />}
       </Tab.Screen>
       <Tab.Screen name={screen.internships} component={InternshipsScreen} />
       <Tab.Screen name={screen.news} component={NewsScreen} />

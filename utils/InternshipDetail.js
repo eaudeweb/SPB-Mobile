@@ -40,8 +40,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     flex: 1
   },
-  internshipWrapper: {
-  },
   innerWrapper: {
     flexDirection: 'row',
     alignItems: 'center',

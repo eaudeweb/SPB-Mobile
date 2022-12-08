@@ -40,6 +40,7 @@ export default function CVMain() {
         </View>
       )
     }
+
     return (
       <View>
         <Text style={styles.infoTextBold}>EDUCATION</Text>
@@ -63,6 +64,7 @@ export default function CVMain() {
         </View>
       )
     }
+
     return (
       <View>
         <Text style={styles.infoTextBold}>EXPERIENCE</Text>
@@ -71,7 +73,6 @@ export default function CVMain() {
     )
   }
   const ExtraComponenet = ({ data }) => {
-
     const ExtraItem = ({ item }) => {
       return (
         <View style={categoryStyle.outerWrapper}>

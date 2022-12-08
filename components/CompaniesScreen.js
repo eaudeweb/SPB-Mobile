@@ -91,6 +91,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   jumbotronTextTitle: {
-    color: '#F26649'
+    color: '# '
   }
 })
