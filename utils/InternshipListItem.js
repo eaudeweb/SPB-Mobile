@@ -11,8 +11,10 @@ export default function InternshipListItem({ navigation, internship, parentRoute
   const newRoute = parentRoute === 'InternshipMain' ? 'InternshipDetail' : 'ApplicationDetail';
   const swipeRef = React.useRef()
 
+
   if (parentRoute === 'ApplicationsList' && index == 0) {
     if (!animations.swipeableDemo) {
+      //animation that runs once, after component is loaded, to indicate that the item is horizonatally swipeable
       setTimeout((() => {
         swipeRef?.current?.openLeft()
         setTimeout(swipeRef?.current?.close, 500)
@@ -21,7 +23,7 @@ export default function InternshipListItem({ navigation, internship, parentRoute
     }
   }
 
-  const renderLeftActions = (progress, dragX) => {
+  const renderLeftActions = () => {
     return (
       <Animated.View style={[styles.swipeView, { marginLeft: 10 }]}>
         <TouchableHighlight onPress={() => alert("Accepted")}>
@@ -40,7 +42,7 @@ export default function InternshipListItem({ navigation, internship, parentRoute
     );
   };
 
-  const renderRightActions = (progress, dragX) => {
+  const renderRightActions = () => {
     return (
       <Animated.View style={[styles.swipeView, { marginRight: 10 }]}>
         <TouchableHighlight onPress={() => alert('Cancel')}>

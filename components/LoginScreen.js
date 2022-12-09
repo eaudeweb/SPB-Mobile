@@ -1,7 +1,9 @@
 import React from 'react'
 import { useEffect } from 'react'
-import { StatusBar, StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { StatusBar, StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import SvgLogo from '../assets/SvgLogo'
+import OrangeStrokeSvg from '../assets/OrangeStroke'
+import { colors, spacing, font } from '../styles/globalStyle'
 
 function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
   useEffect(() => {
@@ -11,61 +13,68 @@ function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
     navigation.navigate('Layout')
     setIsUserLogged(true)
   }
+  const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
+
   return (
     <View style={styles.loginView}>
-      <SvgLogo style={{ marginBottom: 32 }} />
-      <TextInput style={styles.loginInput} placeholder="Email" placeholderTextColor="white" />
-      <TextInput style={styles.loginInput} placeholder="Password" placeholderTextColor="white" secureTextEntry={true} />
-      <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
-        <Text style={styles.loginButtonText}>Log in  </Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.loginButton, { backgroundColor: '#3E5998' }]} >
-        <Text style={styles.loginButtonText} onPress={() => alert(isUserLogged)}>Log in with Facebook</Text>
-      </TouchableOpacity>
-      <TouchableOpacity>
-        <Text style={styles.loginButtonText}>I forgot my password</Text>
-      </TouchableOpacity>
+      <SvgLogo style={styles.logo} customerSize={{ width: customWidth, height: customWidth / 3 }} />
+      <View style={styles.content}>
+        <Text style={styles.sloganText}>zee <Text style={{ color: colors.main.cappucino }}>first,</Text></Text>
+        <Text style={[styles.sloganText, { color: colors.main.cappucino }]}>popular,</Text>
+        <Text style={[styles.sloganText, { color: colors.main.cappucino }]}>leading</Text>
+        <OrangeStrokeSvg />
+      </View>
+      <View style={[styles.content, { marginTop: 10 }]}>
+        <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>internship</Text>
+        <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>program in</Text>
+        <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>the country</Text>
+      </View>
+
+      <View style={[styles.content, { marginTop: 60 }]}>
+        <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
+          <Text style={[styles.buttonText, { color: colors.secondary.nearBlack }]}>Log in</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.loginButton, { backgroundColor: 'transparent' }]}>
+          <Text style={[styles.buttonText, { color: colors.main.cappucino }]}>Sign up</Text>
+        </TouchableOpacity>
+      </View>
+
     </View >
   )
 }
-
 const styles = StyleSheet.create({
   loginView: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginHorizontal: spacing.xl
   },
   logo: {
-    width: 100,
-    height: 100
+    marginTop: 40,
+    marginBottom: 60
   },
-  text: {
-    color: 'white'
+  content: {
+    width: '100%'
   },
-  loginInput: {
-    width: "80%",
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    marginBottom: 16,
-    backgroundColor: '#424242',
-    color: 'white',
-    borderWidth: 2,
-    borderColor: "#616161",
-    borderRadius: 8,
+  sloganText: {
+    color: colors.main.white,
+    fontSize: font.size.xxl,
+    fontWeight: font.fontWeight.xbold,
+    letterSpacing: 1.5,
+    lineHeight: 45
   },
   loginButton: {
-    width: "80%",
-    padding: 10,
-    marginBottom: 16,
-    backgroundColor: '#F26649',
-    color: 'white',
-    borderRadius: 2,
-    alignItems: 'center'
+    width: '100%',
+    backgroundColor: colors.main.cappucino,
+    borderRadius: 5,
+    marginVertical: 10
   },
-  loginButtonText: {
-    color: "white",
-    fontWeight: "bold"
+  buttonText: {
+    fontSize: font.size.xl,
+    fontWeight: font.fontWeight.xbold,
+    paddingVertical: 5,
+    textAlign: 'center'
   }
 })
 

@@ -137,6 +137,7 @@ export default function CVMain() {
       },
     ]
   }
+
   return (
     <ScrollView>
       <View style={styles.container}>
