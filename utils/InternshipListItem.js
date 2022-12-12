@@ -51,7 +51,6 @@ export default function InternshipListItem({ navigation, internship, parentRoute
             <Text style={[styles.swipeButtonText]}>Cancel</Text>
           </View>
         </TouchableHighlight>
-
         <TouchableHighlight onPress={() => alert('Achive')}>
           <View style={[styles.swipeButton, { backgroundColor: '#2196F3' }]}>
             <Ionicon name="archive-outline" size={26} color="white" />
@@ -63,7 +62,12 @@ export default function InternshipListItem({ navigation, internship, parentRoute
   };
 
   return (
-    <Swipeable ref={swipeRef} friction={2} renderLeftActions={internship.swipeable ? renderLeftActions : null} renderRightActions={internship.swipeable ? renderRightActions : null}>
+    <Swipeable
+      ref={swipeRef}
+      friction={2}
+      renderLeftActions={internship.swipeable ? renderLeftActions : null}
+      renderRightActions={internship.swipeable ? renderRightActions : null}
+    >
       <View style={styles.internshipWrapper}>
         <TouchableHighlight onPress={() => navigation.navigate(newRoute, { internship })} >
           <View style={styles.innerWrapper}>

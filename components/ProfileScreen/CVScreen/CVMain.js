@@ -219,17 +219,6 @@ const categoryStyle = StyleSheet.create({
     fontSize: 26,
     color: '#F44336'
   },
-  textListWrap: {
-    flexDirection: 'row',
-    flex: 1,
-    flexWrap: 'wrap',
-  },
-  testListItem: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginHorizontal: 5
-  }
 })
 
 const styles = StyleSheet.create({

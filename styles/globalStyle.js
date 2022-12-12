@@ -12,7 +12,7 @@ const globalStyles = StyleSheet.create({
     secondary: {
       cream: '#F2E3C6',
       lightGrey: '#999696',
-      mediumGreY: '#2C2A2A',
+      mediumGrey: '#2C2A2A',
       darkGrey: '#1C1A1A',
       nearBlack: '#131111'
     },
@@ -26,7 +26,6 @@ const globalStyles = StyleSheet.create({
       orange: 'rgba(241, 90, 56, 0.2)',
       red: 'rgba(153, 17, 0, 0.4)',
       blue: 'rgba(0, 52, 153, 0.4)'
-
     }
   },
   spacing: {
@@ -53,7 +52,8 @@ const globalStyles = StyleSheet.create({
       bold: '500',
       xbold: '700'
     }
-  }
+  },
+  test: 'daba'
 })
 
 const colors = globalStyles.colors
@@ -61,3 +61,4 @@ const spacing = globalStyles.spacing
 const font = globalStyles.font
 
 export { colors, spacing, font }
+export default globalStyles

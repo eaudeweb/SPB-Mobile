@@ -3,13 +3,11 @@ import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
 import { useNavigate } from 'react-router'
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import FaIcon from 'react-native-vector-icons/FontAwesome'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+
 function Navbar() {
   const navigate = useNavigate()
-  const handlePress = () => {
 
-  }
   return (
     <View style={styles.navbarWrap}>
       <TouchableHighlight style={styles.navbarItemWrap} onPress={() => navigate('/companies')}>

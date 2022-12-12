@@ -1,7 +1,7 @@
 import * as React from "react"
 import Svg, { Path } from "react-native-svg"
 const SvgLogo = (props) => {
-  const size = props.customerSize ? { width: props.customerSize.width, height: props.customerSize.height } : { width: 156, height: 72 }
+  const size = props.customSize ? { width: props.customSize.width, height: props.customSize.height } : { width: 156, height: 72 }
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
