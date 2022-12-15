@@ -1,21 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Platform } from 'react-native'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import CompaniesScreen from './CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
 import EventsScreen from './EventsScreen/EventsScreen';
 import ProfileScreen from './ProfileScreen/ProfileScreen';
-import SvgLogo from '../assets/SvgLogo';
 import Constants from 'expo-constants';
-import { colors, font } from '../styles/globalStyle';
-import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { colors } from '../styles/globalStyle';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-console.log(Constants.statusBarHeight)
-export default function LayoutScreen() {
+export default function LayoutScreen({ navigation }) {
   const insets = useSafeAreaInsets();
-  console.log(insets)
   const Tab = createBottomTabNavigator()
   const screen = {
     companies: 'Companies',
@@ -24,6 +20,13 @@ export default function LayoutScreen() {
     events: 'Calendar',
     profile: 'Profile'
   }
+
+  useEffect(() => {
+    //prevent swiping back to the login screen after login occurred succesfully 
+    navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault()
+    })
+  }, [])
 
   return (
     <Tab.Navigator
@@ -49,7 +52,7 @@ export default function LayoutScreen() {
               iconName = 'user-circle'
               break;
           }
-          return <FaIcon name={iconName} size={size} color={focused ? colors.main.accent : colors.secondary.lightGrey} padding={10} />
+          return <FaIcon name={iconName} size={size} color={focused ? colors.main.accent : colors.secondary.lightGrey} />
         },
         style: {
           backgroundColor: 'transparent',
@@ -59,10 +62,9 @@ export default function LayoutScreen() {
         },
         tabBarActiveTintColor: colors.secondary.cream,
         tabBarStyle: [styles.tabBar, { bottom: Platform.OS === 'ios' ? insets.bottom : 10 }],
-        headerStyle: { backgroundColor: 'blue' },
         tabBarItemStyle: styles.tabBarItem,
         tabBarLabelStyle: styles.tabBarLabel,
-        header: () => <SvgLogo style={{ alignSelf: 'center', marginTop: insets.top }} />,
+        headerShown: false
       })}
 
     >
@@ -82,13 +84,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary.mediumGrey,
     marginHorizontal: 10,
     borderRadius: 50,
-    height: 70,
+    height: 60,
     position: 'absolute',
   },
   tabBarItem: {
-    height: Platform.OS === 'ios' ? '170%' : '100%',
+    height: Platform.OS === 'ios' ? '200%' : '100%',
   },
   tabBarLabel: {
-    marginBottom: 10
+    marginBottom: 5,
   }
 })

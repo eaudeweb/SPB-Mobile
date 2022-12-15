@@ -41,7 +41,7 @@ const globalStyles = StyleSheet.create({
       s: 14,
       m: 16,
       l: 20,
-      xl: 30,
+      xl: 32,
       xxl: 40,
       xxxl: 50
     },

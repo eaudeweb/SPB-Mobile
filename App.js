@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { DarkTheme } from '@react-navigation/native';
 import LayoutScreen from './components/LayoutScreen';
@@ -7,7 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 
-export default function App() {
+export default function App(props) {
   const [isUserLogged, setIsUserLogged] = useState(false)
   const Stack = createStackNavigator();
   const CustomDarkTheme = {
@@ -21,7 +21,13 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer theme={CustomDarkTheme}>
-        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerShown: false,
+            gestureEnabled: false
+
+          }}>
           <Stack.Screen name="Layout" >
             {(props) => <LayoutScreen {...props} isUserLogged={isUserLogged} />}
           </Stack.Screen>
