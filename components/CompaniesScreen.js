@@ -74,7 +74,7 @@ export default function CompaniesScreen({ navigation }) {
       notifications: 6
     }
   ]
-  const jumbotronTextArray = [
+  const jumbotronTextArr = [
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>15+ </Text>COMPANIES</Text>,
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>35+ </Text>INTERNSHIPS</Text>,
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>20+ </Text>WEBINARS`</Text>
@@ -92,7 +92,7 @@ export default function CompaniesScreen({ navigation }) {
           >
             <View>
               <View style={styles.jumbotron}>
-                <LoopText textArray={jumbotronTextArray} duration={1500} delay={200} />
+                <LoopText textArray={jumbotronTextArr} duration={1500} delay={200} />
               </View>
               <View style={styles.companiesWrapper}>
                 {companies.map((company, index) => (
@@ -194,5 +194,10 @@ const styles = StyleSheet.create({
     color: colors.secondary.mediumGrey,
     fontSize: font.size.xs,
     fontWeight: font.fontWeight.xbold
+  },
+  horizontalLine: {
+    borderTopWidth: 1,
+    borderTopColor: colors.secondary.cream,
+    width: '100%'
   }
 })

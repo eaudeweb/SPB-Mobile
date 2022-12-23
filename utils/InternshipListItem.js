@@ -4,13 +4,29 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { useSelector, useDispatch } from 'react-redux';
 import { completeSwipeableDemo } from '../features/animations/animationsSlice';
+import { colors, font, spacing } from '../styles/globalStyle';
+import FaIcon from 'react-native-vector-icons/FontAwesome5'
 
-export default function InternshipListItem({ navigation, internship, parentRoute, index }) {
+export default function InternshipListItem({ navigation, internship, parentRoute, swipeable, index }) {
   const dispatch = useDispatch()
   const { animations } = useSelector(state => state)
   const newRoute = parentRoute === 'InternshipMain' ? 'InternshipDetail' : 'ApplicationDetail';
   const swipeRef = React.useRef()
 
+  const PaymentInformation = ({ is_paid, payment }) => {
+    let text = ''
+
+    if (is_paid && payment.length > 0) {
+      text = "PAID: " + payment + " EUR"
+    } else if (is_paid) {
+      text = "PAID"
+    } else {
+      text = "UNPAID"
+    }
+    return (
+      <Text style={styles.detailsText}>{text}</Text>
+    )
+  }
 
   if (parentRoute === 'ApplicationsList' && index == 0) {
     if (!animations.swipeableDemo) {
@@ -46,14 +62,14 @@ export default function InternshipListItem({ navigation, internship, parentRoute
     return (
       <Animated.View style={[styles.swipeView, { marginRight: 10 }]}>
         <TouchableHighlight onPress={() => alert('Cancel')}>
-          <View style={[styles.swipeButton, { backgroundColor: '#F44336' }]}>
-            <Ionicon name="close-circle-outline" size={26} color="white" />
+          <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.red }]}>
+            <FaIcon name="trash-alt" size={26} color={colors.indicators.red} />
             <Text style={[styles.swipeButtonText]}>Cancel</Text>
           </View>
         </TouchableHighlight>
         <TouchableHighlight onPress={() => alert('Achive')}>
-          <View style={[styles.swipeButton, { backgroundColor: '#2196F3' }]}>
-            <Ionicon name="archive-outline" size={26} color="white" />
+          <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.blue }]}>
+            <FaIcon name="archive" size={26} color={colors.indicators.blue} />
             <Text style={styles.swipeButtonText}>Archive</Text>
           </View>
         </TouchableHighlight>
@@ -65,17 +81,24 @@ export default function InternshipListItem({ navigation, internship, parentRoute
     <Swipeable
       ref={swipeRef}
       friction={2}
-      renderLeftActions={internship.swipeable ? renderLeftActions : null}
-      renderRightActions={internship.swipeable ? renderRightActions : null}
+      renderLeftActions={swipeable ? renderLeftActions : null}
+      renderRightActions={swipeable ? renderRightActions : null}
     >
       <View style={styles.internshipWrapper}>
         <TouchableHighlight onPress={() => navigation.navigate(newRoute, { internship })} >
           <View style={styles.innerWrapper}>
-            <Image source={internship.companyLogo} style={styles.companyLogo} />
-            <View>
-              <Text style={styles.internshipTitle}>{internship.title}</Text>
-              <Text style={styles.internshipCompany}>{internship.company}</Text>
+            <Text style={styles.internshipTitle}>{internship.title}</Text>
+            <View style={styles.detailsWrapper}>
+              <PaymentInformation is_paid={internship.is_paid} payment={internship.payment} />
+              <Text style={styles.detailsText}>{internship.start_date}</Text>
+              <Text style={styles.detailsText}>{internship.office_location.toUpperCase()}</Text>
             </View>
+            <View>
+              <Text style={styles.aplicantsLow}>APLICANTS: LOW</Text>
+              {/* <Text style={styles.aplicantsFair}>APLICANTS: FAIR</Text>
+              <Text style={styles.aplicantsHigh}>APLICANTS: HIGH</Text> */}
+            </View>
+            <Text style={styles.internshipCompany}>{internship.company.name}</Text>
           </View>
         </TouchableHighlight>
         {internship.applied ?
@@ -93,41 +116,70 @@ export default function InternshipListItem({ navigation, internship, parentRoute
 const styles = StyleSheet.create({
   internshipWrapper: {
     margin: 10,
-    backgroundColor: '#212121'
+    backgroundColor: colors.secondary.darkGrey,
+    borderRadius: 10,
   },
   innerWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  companyLogo: {
-    width: 75,
-    height: 75,
-    resizeMode: 'contain',
-    marginRight: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 15
+
   },
   internshipTitle: {
-    color: 'white',
-    fontSize: 18
+    color: colors.main.white,
+    fontSize: font.size.l
   },
   internshipCompany: {
     color: '#2991e3',
     fontSize: 16
+  },
+  detailsWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  detailsText: {
+    color: colors.secondary.lightGrey,
+    marginRight: 5
+  },
+  aplicantsLow: {
+    fontWeight: font.fontWeight.bold,
+    color: colors.indicators.green,
+  },
+  aplicantsFair: {
+    fontWeight: font.fontWeight.bold,
+    color: colors.indicators.orange,
+  },
+  aplicantsHigh: {
+    fontWeight: font.fontWeight.bold,
+    color: colors.indicators.red,
   },
   swipeView: {
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   swipeButton: {
-    width: 75,
+    width: 60,
+    margin: 5,
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'green',
+    borderRadius: 10
+
   },
   swipeButtonText: {
-    color: 'white'
+    color: colors.secondary.lightGrey,
+    marginTop: 5
+  },
+  swipeIcon: {
+    blue: {
+      color: colors.indicators.blue
+    },
+    red: {
+      color: colors.indicators.red
+    },
+
   }
 })

@@ -2,65 +2,12 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../../utils/InternshipListItem'
-
+import internships from '../../../utils/internshipsTestJson'
 export default function ApplicationList(props) {
-  const internships = [
-    {
-      company: 'Eau de Web',
-      companyLogo: require('../../../assets/edw-logo.png'),
-      categories: ['Front end'],
-      city: 'Bucharest',
-      title: 'Front end internship',
-      jd: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed molestie urna. Nam porta bibendum ultrices. Duis eu varius purus. Nam rhoncus diam a diam vestibulum, rutrum aliquam neque rhoncus. Nullam arcu arcu, interdum vitae egestas eget, vestibulum sed mi. Sed eu sem arcu. Quisque at vulputate nisl, at tempor leo. Morbi eu felis quis nisl fringilla hendrerit. Donec malesuada ligula in augue vestibulum, in elementum mauris laoreet. Pellentesque dictum, lacus at scelerisque facilisis, lorem dui tincidunt mi, a tempor tellus velit sed erat. Integer vitae ante nisl. Sed quis augue iaculis, consectetur nisi vel, efficitur lorem. Sed in suscipit nisl, ut ultricies ipsum. Nunc sollicitudin ante id nibh placerat ullamcorper ut eu eros.',
-      applied: true,
-      swipeable: true
-    },
-    {
-      company: 'Eau de Web',
-      companyLogo: require('../../../assets/edw-logo.png'),
-      categories: ['Backend'],
-      city: 'Bucharest',
-      title: 'Backend internship',
-      jd: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed molestie urna. Nam porta bibendum ultrices. Duis eu varius purus. Nam rhoncus diam a diam vestibulum, rutrum aliquam neque rhoncus. Nullam arcu arcu, interdum vitae egestas eget, vestibulum sed mi. Sed eu sem arcu. Quisque at vulputate nisl, at tempor leo. Morbi eu felis quis nisl fringilla hendrerit. Donec malesuada ligula in augue vestibulum, in elementum mauris laoreet. Pellentesque dictum, lacus at scelerisque facilisis, lorem dui tincidunt mi, a tempor tellus velit sed erat. Integer vitae ante nisl. Sed quis augue iaculis, consectetur nisi vel, efficitur lorem. Sed in suscipit nisl, ut ultricies ipsum. Nunc sollicitudin ante id nibh placerat ullamcorper ut eu eros.',
-      applied: true,
-      swipeable: true
-
-    },
-    {
-      company: 'IBM',
-      companyLogo: require('../../../assets/IBM_logo.png'),
-      categories: ['Front end'],
-      city: 'Bucharest',
-      title: 'Front end internship',
-      jd: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed molestie urna. Nam porta bibendum ultrices. Duis eu varius purus. Nam rhoncus diam a diam vestibulum, rutrum aliquam neque rhoncus. Nullam arcu arcu, interdum vitae egestas eget, vestibulum sed mi. Sed eu sem arcu. Quisque at vulputate nisl, at tempor leo. Morbi eu felis quis nisl fringilla hendrerit. Donec malesuada ligula in augue vestibulum, in elementum mauris laoreet. Pellentesque dictum, lacus at scelerisque facilisis, lorem dui tincidunt mi, a tempor tellus velit sed erat. Integer vitae ante nisl. Sed quis augue iaculis, consectetur nisi vel, efficitur lorem. Sed in suscipit nisl, ut ultricies ipsum. Nunc sollicitudin ante id nibh placerat ullamcorper ut eu eros.',
-      applied: true,
-      swipeable: true
-    },
-    {
-      company: 'IBM',
-      companyLogo: require('../../../assets/IBM_logo.png'),
-      categories: ['Front end'],
-      city: 'Bucharest',
-      title: 'UX Internship',
-      jd: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed molestie urna. Nam porta bibendum ultrices. Duis eu varius purus. Nam rhoncus diam a diam vestibulum, rutrum aliquam neque rhoncus. Nullam arcu arcu, interdum vitae egestas eget, vestibulum sed mi. Sed eu sem arcu. Quisque at vulputate nisl, at tempor leo. Morbi eu felis quis nisl fringilla hendrerit. Donec malesuada ligula in augue vestibulum, in elementum mauris laoreet. Pellentesque dictum, lacus at scelerisque facilisis, lorem dui tincidunt mi, a tempor tellus velit sed erat. Integer vitae ante nisl. Sed quis augue iaculis, consectetur nisi vel, efficitur lorem. Sed in suscipit nisl, ut ultricies ipsum. Nunc sollicitudin ante id nibh placerat ullamcorper ut eu eros.',
-      applied: true,
-      swipeable: true
-    },
-    {
-      company: 'Eau de Web',
-      companyLogo: require('../../../assets/edw-logo.png'),
-      categories: ['Backend'],
-      city: 'Bucharest',
-      title: 'Backend internship',
-      jd: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sed molestie urna. Nam porta bibendum ultrices. Duis eu varius purus. Nam rhoncus diam a diam vestibulum, rutrum aliquam neque rhoncus. Nullam arcu arcu, interdum vitae egestas eget, vestibulum sed mi. Sed eu sem arcu. Quisque at vulputate nisl, at tempor leo. Morbi eu felis quis nisl fringilla hendrerit. Donec malesuada ligula in augue vestibulum, in elementum mauris laoreet. Pellentesque dictum, lacus at scelerisque facilisis, lorem dui tincidunt mi, a tempor tellus velit sed erat. Integer vitae ante nisl. Sed quis augue iaculis, consectetur nisi vel, efficitur lorem. Sed in suscipit nisl, ut ultricies ipsum. Nunc sollicitudin ante id nibh placerat ullamcorper ut eu eros.',
-      applied: true,
-      swipeable: true
-    },
-  ]
 
   return (
     <ScrollView style={{ paddingVertical: 10 }}>
-      {internships.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} parentRoute={useRoute().name} key={index} />)}
+      {internships.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)}
     </ScrollView>
   )
 }

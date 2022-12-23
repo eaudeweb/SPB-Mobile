@@ -6,7 +6,7 @@ const globalStyles = StyleSheet.create({
       black: '#080000',
       white: '#FFFFFF',
       accent: '#F15A38',
-      cappucino: '#EDCE8A',
+      cappuccino: '#EDCE8A',
       turquoise: '#50B2BD',
     },
     secondary: {
@@ -53,12 +53,22 @@ const globalStyles = StyleSheet.create({
       xbold: '700'
     }
   },
-  test: 'daba'
 })
 
 const colors = globalStyles.colors
 const spacing = globalStyles.spacing
 const font = globalStyles.font
 
-export { colors, spacing, font }
+const components = StyleSheet.create({
+  screenHeader: {
+    color: colors.main.accent,
+    marginHorizontal: spacing.s,
+    fontSize: font.size.xl,
+    fontWeight: font.fontWeight.bold,
+    marginVertical: 10
+  }
+})
+
+
+export { colors, spacing, font, components }
 export default globalStyles

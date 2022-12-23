@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, ScrollView, View, TouchableHighlight, Text } from 'react-native'
 import EventListItem from '../../../utils/EventListItem'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 export default function WebinarListScreen(props, { navigation }) {
   const webinars = [
@@ -46,16 +47,20 @@ export default function WebinarListScreen(props, { navigation }) {
     }
   ]
 
+  const styles = getStyles(useBottomTabBarHeight())
+
   return (
-    <ScrollView style={styles.container}>
-      {webinars.map((webinar, index) => <EventListItem key={index} event={webinar} {...props} />)}
+    <ScrollView>
+      <View style={styles.container}>
+        {webinars.map((webinar, index) => <EventListItem key={index} event={webinar} {...props} />)}
+      </View>
     </ScrollView>
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
-    marginHorizontal: 10,
-    marginVertical: 10
+    margin: 10,
+    paddingBottom: bottomTabHeight + 10
   }
 })

@@ -9,13 +9,13 @@ export default function InternshipDetail({ route, navigation }) {
     <View style={styles.container}>
       <Ionicon name="chevron-back" size={26} color="#F26649" onPress={() => navigation.goBack()} />
       <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
-        <Image source={internship.companyLogo} style={styles.companyLogo} />
+        <Image source={internship.company.logo} style={styles.companyLogo} />
         <View style={{ flex: 1 }}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.internshipTitle}>{internship.title}</Text>
             <Ionicon name="send" size={26} color="#F26649" onPress={() => alert('Shared!')} />
           </View>
-          <Text style={styles.internshipCompany}>{internship.company}</Text>
+          <Text style={styles.internshipCompany}>{internship.company.name}</Text>
         </View>
       </View>
       {internship.applied ?
@@ -28,7 +28,7 @@ export default function InternshipDetail({ route, navigation }) {
       <View>
         <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', marginBottom: 20 }}>Job description:</Text>
         <Text style={styles.jobDescription}>
-          {internship.jd}
+          {internship.description}
         </Text>
       </View>
     </View >

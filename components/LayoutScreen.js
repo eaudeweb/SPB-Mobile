@@ -6,7 +6,6 @@ import CompaniesScreen from './CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
 import EventsScreen from './EventsScreen/EventsScreen';
 import ProfileScreen from './ProfileScreen/ProfileScreen';
-import Constants from 'expo-constants';
 import { colors } from '../styles/globalStyle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

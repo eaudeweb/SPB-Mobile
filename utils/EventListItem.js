@@ -1,6 +1,10 @@
 import React from 'react'
 import { StyleSheet, View, TouchableHighlight, Text } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { colors, font } from '../styles/globalStyle'
+import FaIcon from 'react-native-vector-icons/FontAwesome5'
+import { Dimensions } from 'react-native';
+
 
 const EventListItem = ({ event, navigation }) => {
   const childrenScreen = event.type === 'event' ? 'EventDetail' : 'WebinarDetail'
@@ -10,43 +14,31 @@ const EventListItem = ({ event, navigation }) => {
       style={styles.eventContainer}
       onPress={() => navigation.navigate(childrenScreen)}
     >
-      <View style={{ paddingVertical: 20, paddingHorizontal: 10 }}>
-        <View style={styles.row}>
-          <Ionicon name='terminal-outline' size={26} color='#F26649' style={styles.icon} />
-          <Text style={styles.text}>{event.name}</Text>
-        </View>
-        <View style={styles.row}>
-          <Ionicon name='md-business' size={26} color='#F26649' style={styles.icon} />
-          <Text style={styles.text}>{event.company}</Text>
-        </View>
-        <View style={styles.row}>
-          <Ionicon name='calendar-outline' size={26} color='#F26649' style={styles.icon} />
-          <Text style={styles.text}>{event.date}</Text>
-        </View>
-        <View style={styles.row}>
-          <Ionicon name='time' size={26} color='#F26649' style={styles.icon} />
-          <Text style={styles.text}>{event.time}</Text>
-        </View>
-        {event.type === 'event' ?
-          <View style={styles.row}>
-            <Ionicon name='location' size={26} color='#F26649' style={styles.icon} />
-            <Text style={styles.text}>{event.address}</Text>
-          </View>
-          :
-          ''
-        }
-        <View style={[styles.row, { justifyContent: 'space-between', marginTop: 20 }]}>
-          <View style={{ marginRight: 10 }}>
-            <Text style={[styles.text, { fontSize: 16 }]}>Booked seats:</Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicon name='md-people' size={26} color='#F26649' style={[styles.icon, { paddingRight: 0 }]} />
-              <Text style={[styles.text, { fontSize: 16 }]}>{event.availableSeats}</Text>
+      <View style={styles.innerContainer}>
+        <View>
+          <Text style={styles.title}>{event.name}</Text>
+          <Text style={styles.companyName}>{event.company}</Text>
+          <View style={styles.horizontalContainer}>
+            <View>
+              <View style={styles.timeInformationContainer}>
+                <FaIcon name={'calendar-alt'} size={font.size.s} style={styles.timeInformationIcon} />
+                <Text style={styles.timeInformationText}>{event.date}</Text>
+                <Text style={styles.timeInformationText}>{event.time}</Text>
+              </View>
+              <View style={styles.seatingContainer}>
+                <FaIcon name={'users'} size={font.size.s} style={styles.seatingIcon} />
+                <Text style={styles.seatingText}>{event.availableSeats}</Text>
+              </View>
+            </View>
+            <View>
+              <TouchableHighlight style={styles.bookEventButton} onPress={() => alert('Joined event')}>
+                <Text style={styles.buttonText}>Book seat</Text>
+              </TouchableHighlight>
             </View>
           </View>
-          <TouchableHighlight style={styles.bookEventButton} onPress={() => alert('Joined event')}>
-            <Text style={styles.text}>Book</Text>
-          </TouchableHighlight>
+
         </View>
+
       </View>
     </TouchableHighlight>
   )
@@ -54,9 +46,68 @@ const EventListItem = ({ event, navigation }) => {
 
 const styles = StyleSheet.create({
   eventContainer: {
-    backgroundColor: '#353535',
-    borderRadius: 5,
+    backgroundColor: colors.secondary.darkGrey,
+    borderRadius: 10,
     marginVertical: 10
+  },
+  innerContainer: {
+    padding: 10,
+    flexDirection: 'row'
+  },
+  horizontalContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    width: Dimensions.get('window').width - 40 // 10 x 2 horizontal padding + 10 x2 parent margin
+  },
+  title: {
+    color: colors.main.white,
+    fontSize: font.size.l,
+    fontWeight: font.fontWeight.bold
+  },
+  companyName: {
+    color: colors.main.accent,
+    fontSize: font.size.m,
+    fontWeight: font.fontWeight.xbold
+  },
+  timeInformationIcon: {
+    size: font.size.m,
+    color: colors.secondary.lightGrey,
+    marginRight: 5
+  },
+  timeInformationContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  timeInformationText: {
+    color: colors.secondary.lightGrey,
+    fontSize: font.size.s,
+    marginRight: 5
+  },
+  seatingContainer: {
+    marginTop: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  seatingIcon: {
+    color: colors.indicators.green,
+    marginRight: 5
+  },
+  seatingText: {
+    color: colors.indicators.green,
+    fontSize: font.size.s,
+  },
+  bookEventButton: {
+    paddingHorizontal: 15,
+    paddingVertical: 7,
+    borderRadius: 10,
+    backgroundColor: colors.buttonBackground.orange
+  },
+  buttonText: {
+    fontSize: font.size.m,
+    color: colors.secondary.cream,
+    fontWeight: font.fontWeight.bold
   },
   row: {
     flexDirection: 'row',
@@ -70,12 +121,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20
   },
-  bookEventButton: {
-    paddingHorizontal: 25,
-    paddingVertical: 7,
-    borderRadius: 5,
-    backgroundColor: '#F26649'
-  }
+
 })
 
 export default EventListItem

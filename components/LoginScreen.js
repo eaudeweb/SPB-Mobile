@@ -16,13 +16,64 @@ function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
   }
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
 
+
+
+  const get_set_cookies = function (headers) {
+    const set_cookies = []
+    for (const [name, value] of headers) {
+      if (name === "set-cookie") {
+        set_cookies.push(value)
+      }
+    }
+    return set_cookies
+  }
+
+  const getInternships = async () => {
+    try {
+      const response = await fetch(
+        "https://staging.stagiipebune.ro/login/",
+        {
+          headers: {
+            Authorization: "Basic " + btoa(uname + ":" + pword),
+          },
+          credentials: 'include'
+        }
+      );
+      const set_cookies = get_set_cookies(response.headers)
+      // data = await response.json();
+
+      const csrf_token = set_cookies[0].split('csrftoken=')[1]
+      const internshipResponse = await fetch(
+        "https://staging.stagiipebune.ro/api/v1/students/jobs/",
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRF-TOKEN': csrf_token
+          },
+          credentials: 'include',
+        }
+
+      );
+      console.log({ response, csrf_token, internshipResponse }, window);
+      // console.log(data.name);
+      return response;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+
+
   return (
     <View style={styles.loginView}>
       <SvgLogo style={styles.logo} customSize={{ width: customWidth, height: customWidth / 3 }} />
       <View style={styles.content}>
-        <Text style={styles.sloganText}>zee <Text style={{ color: colors.main.cappucino }}>first,</Text></Text>
-        <Text style={[styles.sloganText, { color: colors.main.cappucino }]}>popular,</Text>
-        <Text style={[styles.sloganText, { color: colors.main.cappucino }]}>leading</Text>
+        <Text style={styles.sloganText}>zee <Text style={{ color: colors.main.cappuccino }}>first,</Text></Text>
+        <Text style={[styles.sloganText, { color: colors.main.cappuccino }]}>popular,</Text>
+        <Text style={[styles.sloganText, { color: colors.main.cappuccino }]}>leading</Text>
         <OrangeStrokeSvg />
       </View>
       <View style={[styles.content, { marginTop: 10 }]}>
@@ -35,8 +86,8 @@ function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
         <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
           <Text style={[styles.buttonText, { color: colors.secondary.nearBlack }]}>Log in</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.loginButton, { backgroundColor: 'transparent' }]}>
-          <Text style={[styles.buttonText, { color: colors.main.cappucino }]}>Sign up</Text>
+        <TouchableOpacity style={[styles.loginButton, { backgroundColor: 'transparent' }]} onPress={getInternships}>
+          <Text style={[styles.buttonText, { color: colors.main.cappuccino }]}>Sign up</Text>
         </TouchableOpacity>
       </View>
     </View >
@@ -67,7 +118,7 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     width: '100%',
-    backgroundColor: colors.main.cappucino,
+    backgroundColor: colors.main.cappuccino,
     borderRadius: 5,
     marginVertical: 10
   },

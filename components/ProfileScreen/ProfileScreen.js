@@ -3,10 +3,23 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import ApplicationsMain from './ApplicationsScreen/ApplicationsScreen';
 import CVMain from './CVScreen/CVMain';
 import SettingsMain from './SettingsScreen/SettingsMain';
-
+import CustomTabBar from '../../utils/CustomTabBar';
 export default function ProfileScreen() {
   const Tab = createMaterialTopTabNavigator();
-
+  const screens = [
+    {
+      name: 'Applications',
+      screen: 'Applications',
+    },
+    {
+      name: 'CV',
+      screen: 'CV',
+    },
+    {
+      name: 'Settings',
+      screen: 'Settings',
+    },
+  ]
   return (
     <Tab.Navigator
       initialRouteName='Applications'
@@ -22,8 +35,9 @@ export default function ProfileScreen() {
         tabBarStyle: {
           backgroundColor: '#212121',
           borderWidth: 0
-        }
+        },
       }}
+      tabBar={(props) => < CustomTabBar {...props} screens={screens} />}
     >
       <Tab.Screen name="Applications">
         {(props) => <ApplicationsMain {...props} />}
@@ -34,6 +48,6 @@ export default function ProfileScreen() {
       <Tab.Screen name="Settings">
         {(props) => <SettingsMain {...props} />}
       </Tab.Screen>
-    </Tab.Navigator>
+    </Tab.Navigator >
   )
 }

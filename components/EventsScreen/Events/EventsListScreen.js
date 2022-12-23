@@ -1,12 +1,13 @@
 import React from 'react'
 import { StyleSheet, ScrollView, View, TouchableHighlight, Text } from 'react-native'
 import EventListItem from '../../../utils/EventListItem'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 export default function EventsListScreen(props) {
   const events = [
     {
       type: 'event',
-      name: 'React native event',
+      name: 'React native event long text text text text text',
       company: 'Eau de Web',
       date: '12/12/2022',
       time: '14:00',
@@ -51,16 +52,19 @@ export default function EventsListScreen(props) {
     }
   ]
 
+  const styles = getStyles(useBottomTabBarHeight())
   return (
-    <ScrollView style={styles.container}>
-      {events.map((event, index) => <EventListItem event={event} key={index} {...props} />)}
+    <ScrollView >
+      <View style={styles.container}>
+        {events.map((event, index) => <EventListItem event={event} key={index} {...props} />)}
+      </View>
     </ScrollView>
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
-    marginHorizontal: 10,
-    marginVertical: 10
+    margin: 10,
+    paddingBottom: bottomTabHeight
   }
 })
