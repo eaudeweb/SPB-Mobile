@@ -4,6 +4,7 @@ import EventListItem from '../../../utils/EventListItem'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 export default function WebinarListScreen(props, { navigation }) {
+  // TODO move to redux 
   const webinars = [
     {
       type: 'webinar',
@@ -61,6 +62,6 @@ export default function WebinarListScreen(props, { navigation }) {
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     margin: 10,
-    paddingBottom: bottomTabHeight + 10
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight - 20 : 0
   }
 })

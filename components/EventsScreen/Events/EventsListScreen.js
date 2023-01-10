@@ -4,6 +4,7 @@ import EventListItem from '../../../utils/EventListItem'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 export default function EventsListScreen(props) {
+  // TODO move to redux 
   const events = [
     {
       type: 'event',
@@ -65,6 +66,6 @@ export default function EventsListScreen(props) {
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     margin: 10,
-    paddingBottom: bottomTabHeight
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight - 30 : 0
   }
 })

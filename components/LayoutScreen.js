@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform, } from 'react-native'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import CompaniesScreen from './CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
@@ -33,7 +33,7 @@ export default function LayoutScreen({ navigation }) {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-
+          //TODO: simplify
           switch (route.name) {
             case screen.companies:
               iconName = 'globe'
@@ -77,14 +77,14 @@ export default function LayoutScreen({ navigation }) {
     </Tab.Navigator>
   )
 }
-
+//comapa
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: colors.secondary.mediumGrey,
     marginHorizontal: 10,
     borderRadius: 50,
     height: 60,
-    position: 'absolute',
+    // position: 'absolute',
   },
   tabBarItem: {
     height: Platform.OS === 'ios' ? '200%' : '100%',

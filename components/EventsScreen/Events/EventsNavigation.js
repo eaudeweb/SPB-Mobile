@@ -2,6 +2,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import EventsListScreen from './EventsListScreen';
 import EventDetail from './EventDetail';
+import { Text } from 'react-native-svg';
 
 export default function EventsNavigation({ navigation }) {
   const Stack = createStackNavigator();

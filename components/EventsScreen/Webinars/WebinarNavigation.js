@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
-import EventsListScreen from './WebinarListScreen';
-import EventDetail from './WebinarDetail';
+import WebinarList from './WebinarListScreen';
+import WebinarDetail from './WebinarDetail';
 
 export default function WebinarNavigation({ navigation }) {
   const Stack = createStackNavigator();
@@ -9,10 +9,10 @@ export default function WebinarNavigation({ navigation }) {
   return (
     <Stack.Navigator initialRouteName="WebinarsList" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="WebinarsList"   >
-        {(props) => <EventsListScreen navigation={navigation} />}
+        {(props) => <WebinarList navigation={navigation} />}
       </Stack.Screen>
       <Stack.Screen name="WebinarDetail" >
-        {(props) => <EventDetail navigation={navigation} />}
+        {(props) => <WebinarDetail navigation={navigation} />}
       </Stack.Screen>
     </Stack.Navigator >
   )

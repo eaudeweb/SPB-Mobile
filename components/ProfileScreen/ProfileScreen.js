@@ -4,8 +4,10 @@ import ApplicationsMain from './ApplicationsScreen/ApplicationsScreen';
 import CVMain from './CVScreen/CVMain';
 import SettingsMain from './SettingsScreen/SettingsMain';
 import CustomTabBar from '../../utils/CustomTabBar';
+
 export default function ProfileScreen() {
   const Tab = createMaterialTopTabNavigator();
+  // TODO move to separate file and import 
   const screens = [
     {
       name: 'Applications',

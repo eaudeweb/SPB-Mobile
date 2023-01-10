@@ -2,7 +2,9 @@ import React from 'react'
 import { ScrollView } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../../utils/InternshipListItem'
+// TODO move to redux
 import internships from '../../../utils/internshipsTestJson'
+
 export default function ApplicationList(props) {
 
   return (

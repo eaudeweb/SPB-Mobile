@@ -1,37 +1,39 @@
 import React from 'react'
 import { StyleSheet, Image, View, Text } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 
 export default function InternshipDetail({ route, navigation }) {
   const { internship } = route.params
-
   return (
-    <View style={styles.container}>
-      <Ionicon name="chevron-back" size={26} color="#F26649" onPress={() => navigation.goBack()} />
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
-        <Image source={internship.company.logo} style={styles.companyLogo} />
-        <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.internshipTitle}>{internship.title}</Text>
-            <Ionicon name="send" size={26} color="#F26649" onPress={() => alert('Shared!')} />
+    <ScrollView>
+      <View style={styles.container}>
+        <Ionicon name="chevron-back" size={26} color="#F26649" onPress={() => navigation.goBack()} />
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
+          <Image source={internship.company.logo} style={styles.companyLogo} />
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={styles.internshipTitle}>{internship.title}</Text>
+              <Ionicon name="send" size={26} color="#F26649" onPress={() => alert('Shared!')} />
+            </View>
+            <Text style={styles.internshipCompany}>{internship.company.name}</Text>
           </View>
-          <Text style={styles.internshipCompany}>{internship.company.name}</Text>
         </View>
-      </View>
-      {internship.applied ?
+        {internship.applied ?
+          <View>
+            <Text style={{ color: 'white', marginBottom: 10 }}>Applied two 2 weeks ago</Text>
+          </View>
+          :
+          ''
+        }
         <View>
-          <Text style={{ color: 'white', marginBottom: 10 }}>Applied two 2 weeks ago</Text>
+          <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', marginBottom: 20 }}>Job description:</Text>
+          <Text style={styles.jobDescription}>
+            {internship.description}
+          </Text>
         </View>
-        :
-        ''
-      }
-      <View>
-        <Text style={{ color: 'white', fontSize: 18, fontWeight: 'bold', marginBottom: 20 }}>Job description:</Text>
-        <Text style={styles.jobDescription}>
-          {internship.description}
-        </Text>
-      </View>
-    </View >
+      </View >
+    </ScrollView>
   )
 }
 

@@ -1,7 +1,6 @@
 import React from 'react'
-import axios, * as others from 'axios';
 import { useState } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, StatusBar, Text, View } from 'react-native'
+import { StyleSheet, ScrollView, SafeAreaView, StatusBar, Text } from 'react-native'
 import { SearchBar } from '@rneui/themed';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import InternshipsFilter from './InternshipsFilter';
@@ -10,6 +9,17 @@ import { colors, components } from '../../styles/globalStyle'
 
 export default function InternshipMain(props) {
   const [searchText, setSearchText] = useState('')
+  const [filteredInternships, setFilteredInternships] = useState([''])
+  // TODO use company from companies tab 
+  // cities/categories/companies use form 
+
+  // TODO add clear filters button/option 
+  const [filterData, setFilterData] = useState({
+    categories: [1],
+    cities: [],
+    companies: ['Eau de Web', "Lenovo"]
+  });
+
   const updateSearch = (text) => {
     setSearchText(text)
   }
@@ -17,6 +27,7 @@ export default function InternshipMain(props) {
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Text style={components.screenHeader}>INTERNSHIPS</Text>
+        {/* TODO implement search bar  */}
         <SearchBar
           onChangeText={updateSearch}
           value={searchText}
@@ -29,8 +40,18 @@ export default function InternshipMain(props) {
             <FaIcon name={'search'} size={18} color={colors.secondary.lightGrey} />
           }
         />
-        <InternshipsFilter />
-        <InternshipList {...props} />
+        <InternshipsFilter
+          filterData={filterData}
+          setFilterData={setFilterData}
+          filteredInternships={filteredInternships}
+        />
+        {/* TODO infinite scroll  */}
+        <InternshipList {...props}
+          filteredInternships={filteredInternships}
+          setFilteredInternships={setFilteredInternships}
+          filterData={filterData}
+          setFilterData={setFilterData}
+        />
       </ScrollView>
 
     </SafeAreaView>

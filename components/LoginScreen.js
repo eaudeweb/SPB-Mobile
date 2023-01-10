@@ -4,7 +4,7 @@ import { StatusBar, StyleSheet, View, Text, Dimensions, TouchableOpacity } from 
 import SvgLogo from '../assets/SvgLogo'
 import OrangeStrokeSvg from '../assets/OrangeStroke'
 import { colors, spacing, font } from '../styles/globalStyle';
-
+import credentials from '../test_login_credentials'
 
 function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
   useEffect(() => {
@@ -15,8 +15,6 @@ function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
     setIsUserLogged(true)
   }
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
-
-
 
   const get_set_cookies = function (headers) {
     const set_cookies = []
@@ -34,7 +32,7 @@ function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
         "https://staging.stagiipebune.ro/login/",
         {
           headers: {
-            Authorization: "Basic " + btoa(uname + ":" + pword),
+            Authorization: "Basic " + btoa(credentials.username + ":" + credentials.password),
           },
           credentials: 'include'
         }
@@ -43,20 +41,23 @@ function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
       // data = await response.json();
 
       const csrf_token = set_cookies[0].split('csrftoken=')[1]
+
       const internshipResponse = await fetch(
         "https://staging.stagiipebune.ro/api/v1/students/jobs/",
         {
+          mode: 'cors',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json; charset=UTF-8',
-            'X-CSRF-TOKEN': csrf_token
+            "X-CSRFToken": csrf_token
           },
-          credentials: 'include',
+          credentials: 'same-origin',
+          // credentials: 'include',
         }
 
       );
-      console.log({ response, csrf_token, internshipResponse }, window);
-      // console.log(data.name);
+      console.log({ response, "token": csrf_token, internshipResponse }, window);
+      console.log(set_cookies);
       return response;
     } catch (error) {
       console.error(error);
@@ -64,14 +65,13 @@ function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
       // setLoading(false);
     }
   };
-
-
+  //setting > disable notifications, instead of the company name internship add a select w companies
 
   return (
     <View style={styles.loginView}>
       <SvgLogo style={styles.logo} customSize={{ width: customWidth, height: customWidth / 3 }} />
       <View style={styles.content}>
-        <Text style={styles.sloganText}>zee <Text style={{ color: colors.main.cappuccino }}>first,</Text></Text>
+        <Text style={styles.sloganText}>The <Text style={{ color: colors.main.cappuccino }}>first,</Text></Text>
         <Text style={[styles.sloganText, { color: colors.main.cappuccino }]}>popular,</Text>
         <Text style={[styles.sloganText, { color: colors.main.cappuccino }]}>leading</Text>
         <OrangeStrokeSvg />

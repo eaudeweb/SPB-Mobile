@@ -1,10 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit"
-import animationsReducer from "../features/animations/animationsSlice"
 import { composeWithDevTools } from 'redux-devtools-extension';
+import animationsReducer from "../features/animations/animationsSlice"
+import companiesReducer from "../features/companies/companiesSlice"
+import internshipsReducer from "../features/internships/internshipsSlice";
+import filtersReducer from "../features/filters/filtersSlice";
 
 export const store = configureStore({
   reducer: {
-    animations: animationsReducer
+    animations: animationsReducer,
+    companies: companiesReducer,
+    internships: internshipsReducer,
+    filters: filtersReducer
   },
 },
   composeWithDevTools()
