@@ -25,7 +25,9 @@ const globalStyles = StyleSheet.create({
     buttonBackground: {
       orange: 'rgba(241, 90, 56, 0.2)',
       red: 'rgba(153, 17, 0, 0.4)',
-      blue: 'rgba(0, 52, 153, 0.4)'
+      blue: 'rgba(0, 52, 153, 0.4)',
+      yellow: 'rgba(174, 109, 61, 0.2)',
+      green: 'rgba(116, 165, 127, 0.2)'
     }
   },
   spacing: {

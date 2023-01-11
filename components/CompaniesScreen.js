@@ -4,10 +4,12 @@ import SvgLogo from '../assets/SvgLogo'
 import LoopText from 'react-native-loop-text'
 import { colors, font, spacing } from "../styles/globalStyle"
 import { Dimensions } from 'react-native'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { resetFilters, getInternshipsByCompany } from '../features/internships/internshipsSlice';
 
 export default function CompaniesScreen({ navigation }) {
   const { companies } = useSelector(state => state.companies)
+  const dispatch = useDispatch()
 
   //TODO move to store
   const jumbotronTextArr = [
@@ -15,7 +17,10 @@ export default function CompaniesScreen({ navigation }) {
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>35+ </Text>INTERNSHIPS</Text>,
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>20+ </Text>WEBINARS`</Text>
   ]
-
+  const handleClick = (companyName) => {
+    dispatch(getInternshipsByCompany(companyName))
+    navigation.navigate('Internships')
+  }
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -37,7 +42,7 @@ export default function CompaniesScreen({ navigation }) {
                   <TouchableOpacity
                     style={company.mainPartner ? styles.partnerCompanyWrapper : styles.companyWrapper}
                     key={index}
-                    onPress={() => alert(company.name)}
+                    onPress={() => handleClick(company.name)}
                   >
                     {company.notifications ?
                       <View style={styles.companyNotificationWrapper}>

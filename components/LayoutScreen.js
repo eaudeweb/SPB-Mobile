@@ -77,7 +77,6 @@ export default function LayoutScreen({ navigation }) {
     </Tab.Navigator>
   )
 }
-//comapa
 const styles = StyleSheet.create({
   tabBar: {
     backgroundColor: colors.secondary.mediumGrey,

@@ -13,7 +13,7 @@ export default function InternshipsList(props) {
 
   useEffect(() => {
     setFilteredInternships(() => getInternshipsByStartDate())
-  }, [])
+  }, [internships])
 
   const getCompaniesName = (internshipsList) => {
     const companies = []

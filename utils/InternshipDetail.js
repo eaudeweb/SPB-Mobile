@@ -1,13 +1,22 @@
 import React from 'react'
-import { StyleSheet, Image, View, Text } from 'react-native'
+import { StyleSheet, Image, View, Text, TouchableHighlight } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import { applyToInternship } from '../features/internships/internshipsSlice'
+import { useDispatch } from 'react-redux'
 
 export default function InternshipDetail({ route, navigation }) {
   const { internship } = route.params
+  const dispatch = useDispatch()
   return (
     <ScrollView>
       <View style={styles.container}>
+        <TouchableHighlight
+          style={{ backgroundColor: 'red', padding: 10, marginTop: 50 }}
+          onPress={() => dispatch(applyToInternship(internship))}
+        >
+          <Text>Apply to job</Text>
+        </TouchableHighlight>
         <Ionicon name="chevron-back" size={26} color="#F26649" onPress={() => navigation.goBack()} />
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
           <Image source={internship.company.logo} style={styles.companyLogo} />

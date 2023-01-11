@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, TouchableHighlight, Animated, Button } from 'react-native'
+import { View, Text, StyleSheet, TouchableHighlight, Animated } from 'react-native'
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import { useSelector, useDispatch } from 'react-redux';
 import { completeSwipeableDemo } from '../features/animations/animationsSlice';
 import { colors, font, spacing } from '../styles/globalStyle';
@@ -43,14 +42,14 @@ export default function InternshipListItem({ navigation, internship, parentRoute
     return (
       <Animated.View style={[styles.swipeView, { marginLeft: 10 }]}>
         <TouchableHighlight onPress={() => alert("Accepted")}>
-          <View style={[styles.swipeButton, { backgroundColor: '#4CAF50' }]}>
-            <Ionicon name="checkbox-outline" size={26} color="white" />
+          <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.green }]}>
+            <FaIcon name="calendar-check" size={26} color={colors.indicators.green} />
             <Text style={[styles.swipeButtonText]}>Accepted</Text>
           </View>
         </TouchableHighlight>
         <TouchableHighlight onPress={() => alert("Interview")}>
-          <View style={[styles.swipeButton, { backgroundColor: '#6C757D' }]}>
-            <Ionicon name="mic-outline" size={26} color="white" />
+          <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.yellow }]}>
+            <FaIcon name="clipboard" size={26} color={colors.indicators.orange} />
             <Text style={styles.swipeButtonText}>Interview</Text>
           </View>
         </TouchableHighlight>
