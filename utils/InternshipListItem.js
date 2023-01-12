@@ -3,12 +3,15 @@ import { View, Text, StyleSheet, TouchableHighlight, Animated } from 'react-nati
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useSelector, useDispatch } from 'react-redux';
 import { completeSwipeableDemo } from '../features/animations/animationsSlice';
+import { internshipsActions } from '../features/internships/internshipsSlice'
 import { colors, font, spacing } from '../styles/globalStyle';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 
 export default function InternshipListItem({ navigation, internship, parentRoute, swipeable, index }) {
   const dispatch = useDispatch()
   const { animations } = useSelector(state => state)
+  const { toggleAcceptedStatus, toggleInterviewStatus } = internshipsActions
+
   const newRoute = parentRoute === 'InternshipMain' ? 'InternshipDetail' : 'ApplicationDetail';
   const swipeRef = React.useRef()
 
@@ -38,18 +41,27 @@ export default function InternshipListItem({ navigation, internship, parentRoute
     }
   }
 
-  const renderLeftActions = () => {
+  const renderLeftActions = (internship) => {
+    const handleAccepted = () => {
+      dispatch(toggleAcceptedStatus(internship))
+      swipeRef?.current?.close()
+    }
+    const handleInterview = () => {
+      dispatch(toggleInterviewStatus(internship))
+      swipeRef?.current?.close()
+    }
+
     return (
       <Animated.View style={[styles.swipeView, { marginLeft: 10 }]}>
-        <TouchableHighlight onPress={() => alert("Accepted")}>
+        <TouchableHighlight onPress={handleAccepted}>
           <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.green }]}>
             <FaIcon name="calendar-check" size={26} color={colors.indicators.green} />
             <Text style={[styles.swipeButtonText]}>Accepted</Text>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight onPress={() => alert("Interview")}>
+        <TouchableHighlight onPress={handleInterview}>
           <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.yellow }]}>
-            <FaIcon name="clipboard" size={26} color={colors.indicators.orange} />
+            <FaIcon name="microphone" size={26} color={colors.indicators.orange} />
             <Text style={styles.swipeButtonText}>Interview</Text>
           </View>
         </TouchableHighlight>
@@ -75,15 +87,24 @@ export default function InternshipListItem({ navigation, internship, parentRoute
       </Animated.View>
     );
   };
+  const getInternshipStatusBorder = (internship) => {
+    if (internship.acceptedStatus) {
+      return { borderColor: styles.statusColor.green }
+    } else if (internship.interviewStatus) {
+      return { borderColor: styles.statusColor.yellow }
+
+    }
+  }
+  const borderColor = getInternshipStatusBorder(internship)
 
   return (
     <Swipeable
       ref={swipeRef}
       friction={2}
-      renderLeftActions={swipeable ? renderLeftActions : null}
+      renderLeftActions={swipeable ? () => renderLeftActions(internship) : null}
       renderRightActions={swipeable ? renderRightActions : null}
     >
-      <View style={styles.internshipWrapper}>
+      <View style={[styles.internshipWrapper, borderColor]}>
         <TouchableHighlight onPress={() => navigation.navigate(newRoute, { internship })} >
           <View style={styles.innerWrapper}>
             <Text style={styles.internshipTitle}>{internship.title}</Text>
@@ -92,13 +113,47 @@ export default function InternshipListItem({ navigation, internship, parentRoute
               <Text style={styles.detailsText}>{internship.start_date}</Text>
               <Text style={styles.detailsText}>{internship.office_location.toUpperCase()}</Text>
             </View>
-            <View>
-              <Text style={styles.aplicantsLow}>APLICANTS: LOW</Text>
-              {/* <Text style={styles.aplicantsFair}>APLICANTS: FAIR</Text>
-              <Text style={styles.aplicantsHigh}>APLICANTS: HIGH</Text> */}
-            </View>
+            {
+              !swipeable ?
+                <View>
+                  <Text style={styles.applicantsLow}>APPLICANTS: LOW</Text>
+                  {/* <Text style={styles.applicantsFair}>APPLICANTS: FAIR</Text>
+              <Text style={styles.applicantsHigh}>APPLICANTS: HIGH</Text> */}
+                </View>
+                :
+                ''
+            }
             <Text style={styles.internshipCompany}>{internship.company.name}</Text>
+
+            {
+              !internship.acceptedStatus && !internship.interviewStatus && swipeable ?
+                <View style={styles.statusTextWrapper}>
+                  <FaIcon name="clipboard" size={16} color={colors.secondary.lightGrey} />
+                  <Text style={styles.statusText}>Applied</Text>
+                </View>
+                :
+                ''
+            }
+            {
+              internship.acceptedStatus ?
+                <View style={styles.statusTextWrapper}>
+                  <FaIcon name="thumbs-up" size={16} color={colors.indicators.green} />
+                  <Text style={[styles.statusText, styles.applicantsLow]}>Accepted</Text>
+                </View>
+                :
+                ''
+            }
+            {
+              internship.interviewStatus ?
+                <View style={styles.statusTextWrapper}>
+                  <FaIcon name="microphone" size={16} color={colors.indicators.orange} />
+                  <Text style={[styles.statusText, styles.applicantsFair]}>Interview</Text>
+                </View>
+                :
+                ''
+            }
           </View>
+
         </TouchableHighlight>
         {internship.applied ?
           <TouchableHighlight style={{ flexDirection: 'row', marginBottom: 10 }}>
@@ -117,11 +172,12 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: colors.secondary.darkGrey,
     borderRadius: 10,
+    borderWidth: 2,
+    borderColor: colors.secondary.darkGrey,
   },
   innerWrapper: {
     paddingHorizontal: 10,
-    paddingVertical: 15
-
+    paddingVertical: 15,
   },
   internshipTitle: {
     color: colors.main.white,
@@ -139,15 +195,15 @@ const styles = StyleSheet.create({
     color: colors.secondary.lightGrey,
     marginRight: 5
   },
-  aplicantsLow: {
+  applicantsLow: {
     fontWeight: font.fontWeight.bold,
     color: colors.indicators.green,
   },
-  aplicantsFair: {
+  applicantsFair: {
     fontWeight: font.fontWeight.bold,
     color: colors.indicators.orange,
   },
-  aplicantsHigh: {
+  applicantsHigh: {
     fontWeight: font.fontWeight.bold,
     color: colors.indicators.red,
   },
@@ -155,22 +211,33 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 20,
+    marginVertical: 10,
   },
   swipeButton: {
-    width: 60,
-    margin: 5,
+    width: 70,
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'green',
-    borderRadius: 10
-
+    borderRadius: 10,
+    marginHorizontal: 5,
   },
   swipeButtonText: {
     color: colors.secondary.lightGrey,
     marginTop: 5
+  },
+  statusTextWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10
+  },
+  statusText: {
+    fontSize: font.size.m,
+    color: colors.secondary.lightGrey,
+    marginLeft: 10
+  },
+  statusColor: {
+    green: colors.indicators.green,
+    yellow: colors.indicators.orange,
   },
   swipeIcon: {
     blue: {
@@ -178,7 +245,6 @@ const styles = StyleSheet.create({
     },
     red: {
       color: colors.indicators.red
-    },
-
+    }
   }
 })

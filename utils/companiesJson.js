@@ -12,14 +12,14 @@ const companies = [
     notifications: 0
   },
   {
-    name: 'Deutsche Bank',
-    logo: 'https://stagiipebune.ro/media/cache/bf/81/bf81c3539d702e1cf4c90d49a79098e4.png',
+    name: 'Lenovo',
+    logo: 'https://stagiipebune.ro/media/cache/de/9b/de9bd96bc7cc78e881255154124245b6.png',
     mainPartner: false,
-    notifications: 6
+    notifications: 3
   },
   {
-    name: 'Bearing Point',
-    logo: 'https://stagiipebune.ro/media/cache/4f/f5/4ff53f12a023aee13ea96ae98ef007a0.png',
+    name: 'ING Romania',
+    logo: 'https://stagiipebune.ro/media/cache/d7/d1/d7d18cd4141c98afdfa820eafd339c88.png',
     mainPartner: false,
     notifications: '9+'
   },
@@ -30,8 +30,8 @@ const companies = [
     notifications: false
   },
   {
-    name: 'Eau de Web',
-    logo: 'https://stagiipebune.ro/media/cache/79/9b/799b16bb7b473aff55253544c84b2565.png',
+    name: 'AQUASoft',
+    logo: 'https://stagiipebune.ro/media/cache/74/ad/74ad7c0ee2d116a47d1909dda095f03c.png',
     mainPartner: false,
     notifications: 0
   },

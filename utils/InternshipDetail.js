@@ -2,11 +2,12 @@ import React from 'react'
 import { StyleSheet, Image, View, Text, TouchableHighlight } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import { applyToInternship } from '../features/internships/internshipsSlice'
+import { internshipsActions } from '../features/internships/internshipsSlice'
 import { useDispatch } from 'react-redux'
 
 export default function InternshipDetail({ route, navigation }) {
   const { internship } = route.params
+  const { applyToInternship } = internshipsActions
   const dispatch = useDispatch()
   return (
     <ScrollView>

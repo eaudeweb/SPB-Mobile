@@ -71,6 +71,5 @@ const components = StyleSheet.create({
   }
 })
 
-
 export { colors, spacing, font, components }
 export default globalStyles

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { createIconSet } from "react-native-vector-icons"
 import internships from "../../utils/internshipsTestJson"
 
 
@@ -22,9 +23,34 @@ const internshipsSlice = createSlice({
     applyToInternship: (state, { payload }) => {
       const newArr = state.internshipsAppliedTo
       if (newArr.find(internship => internship.id === payload.id)) return
-      newArr.push(payload)
+      newArr.push({ ...payload, acceptedStatus: false, interviewStatus: false })
+
       state.internshipsAppliedTo = newArr
-    }
+    },
+    toggleAcceptedStatus: (state, { payload }) => {
+      const newArr = state.internshipsAppliedTo
+      const internshipIndex = newArr.findIndex(internship => internship.id === payload.id)
+      if (newArr[internshipIndex].acceptedStatus) {
+        newArr[internshipIndex].acceptedStatus = false
+      } else {
+        newArr[internshipIndex].acceptedStatus = true
+        newArr[internshipIndex].interviewStatus = false
+
+      }
+      state.internshipsAppliedTo = newArr
+
+    },
+    toggleInterviewStatus: (state, { payload }) => {
+      const newArr = state.internshipsAppliedTo
+      const internshipIndex = newArr.findIndex(internship => internship.id === payload.id)
+      if (newArr[internshipIndex].interviewStatus) {
+        newArr[internshipIndex].interviewStatus = false
+      } else {
+        newArr[internshipIndex].interviewStatus = true
+        newArr[internshipIndex].acceptedStatus = false
+      }
+      state.internshipsAppliedTo = newArr
+    },
   }
 })
 
