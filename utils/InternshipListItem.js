@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableHighlight, Animated } from 'react-native'
+import { View, Text, StyleSheet, TouchableHighlight, TouchableOpacity, Animated } from 'react-native'
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { useSelector, useDispatch } from 'react-redux';
 import { completeSwipeableDemo } from '../features/animations/animationsSlice';
@@ -53,18 +53,18 @@ export default function InternshipListItem({ navigation, internship, parentRoute
 
     return (
       <Animated.View style={[styles.swipeView, { marginLeft: 10 }]}>
-        <TouchableHighlight onPress={handleAccepted}>
+        <TouchableOpacity onPress={handleAccepted}>
           <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.green }]}>
             <FaIcon name="calendar-check" size={26} color={colors.indicators.green} />
             <Text style={[styles.swipeButtonText]}>Accepted</Text>
           </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={handleInterview}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleInterview}>
           <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.yellow }]}>
             <FaIcon name="microphone" size={26} color={colors.indicators.orange} />
             <Text style={styles.swipeButtonText}>Interview</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </Animated.View>
     );
   };
@@ -72,18 +72,18 @@ export default function InternshipListItem({ navigation, internship, parentRoute
   const renderRightActions = () => {
     return (
       <Animated.View style={[styles.swipeView, { marginRight: 10 }]}>
-        <TouchableHighlight onPress={() => alert('Cancel')}>
+        <TouchableOpacity onPress={() => alert('Cancel')}>
           <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.red }]}>
             <FaIcon name="trash-alt" size={26} color={colors.indicators.red} />
             <Text style={[styles.swipeButtonText]}>Cancel</Text>
           </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => alert('Achive')}>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => alert('Achive')}>
           <View style={[styles.swipeButton, { backgroundColor: colors.buttonBackground.blue }]}>
             <FaIcon name="archive" size={26} color={colors.indicators.blue} />
             <Text style={styles.swipeButtonText}>Archive</Text>
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
       </Animated.View>
     );
   };

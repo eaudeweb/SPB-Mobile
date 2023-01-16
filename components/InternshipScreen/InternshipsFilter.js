@@ -3,11 +3,15 @@ import { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import { colors, font } from '../../styles/globalStyle';
 import FilterModal from '../../utils/FilterModal'
+import { useDispatch, useSelector } from 'react-redux';
+import { filtersActions } from '../../features/filters/filtersSlice';
 
 export default function InternshipsFilter(props) {
+  const dispatch = useDispatch()
+  const { internshipsFilter } = useSelector(state => state.filters)
+  const { updateFilter } = filtersActions
   const [modalVisible, setModalVisible] = useState(false)
   const [modalFilter, setModalFilter] = useState(null)
-  const { filterData, setFilterData } = props
 
   const handleFilterTap = (filterCategory) => {
     setModalFilter(filterCategory)
@@ -18,12 +22,12 @@ export default function InternshipsFilter(props) {
     <View style={styles.container}>
       <Text style={styles.filterDescriptionText}>FILTER BY: </Text>
       <View style={styles.filterContainer}>
-        <TouchableOpacity onPress={() => handleFilterTap('categories')}>
-          {filterData.categories.length > 0 ?
+        <TouchableOpacity onPress={() => dispatch(updateFilter({ type: 'categories', data: 'yeye' }))}>
+          {internshipsFilter.categories.length > 0 ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>Categories</Text>
               <View style={styles.filterNumberCounter}>
-                <Text style={styles.filterNumberCounterText}>{filterData.categories.length}</Text>
+                <Text style={styles.filterNumberCounterText}>{internshipsFilter.categories.length}</Text>
               </View>
             </View>
             :
@@ -34,11 +38,11 @@ export default function InternshipsFilter(props) {
 
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleFilterTap('city')}>
-          {filterData.cities.length > 0 ?
+          {internshipsFilter.cities.length > 0 ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>City</Text>
               <View style={styles.filterNumberCounter}>
-                <Text style={styles.filterNumberCounterText}>{filterData.cities.length}</Text>
+                <Text style={styles.filterNumberCounterText}>{internshipsFilter.cities.length}</Text>
               </View>
             </View>
             :
@@ -48,11 +52,11 @@ export default function InternshipsFilter(props) {
           }
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleFilterTap('companies')}>
-          {filterData.companies.length > 0 ?
+          {internshipsFilter.companies.length > 0 ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>Companies</Text>
               <View style={styles.filterNumberCounter}>
-                <Text style={styles.filterNumberCounterText}>{filterData.companies.length}</Text>
+                <Text style={styles.filterNumberCounterText}>{internshipsFilter.companies.length}</Text>
               </View>
             </View>
             :

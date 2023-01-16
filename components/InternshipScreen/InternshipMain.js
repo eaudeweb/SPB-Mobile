@@ -6,7 +6,7 @@ import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import InternshipsFilter from './InternshipsFilter';
 import InternshipList from './InternshipList';
 import { colors, components } from '../../styles/globalStyle'
-
+import { useDispatch, useSelector } from 'react-redux';
 export default function InternshipMain(props) {
   const [searchText, setSearchText] = useState('')
   const [filteredInternships, setFilteredInternships] = useState([''])

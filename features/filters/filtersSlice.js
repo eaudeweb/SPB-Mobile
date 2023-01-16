@@ -5,7 +5,12 @@ const { categories, locations } = filterCategories
 
 const initialState = {
   categories: categories,
-  locations: locations
+  locations: locations,
+  internshipsFilter: {
+    categories: [],
+    cities: [],
+    companies: ['Lenovo']
+  }
 }
 
 const filtersSlice = createSlice({
@@ -15,6 +20,9 @@ const filtersSlice = createSlice({
     // completeSwipeableDemo: (state) => {
     //   state.swipeableDemo = true
     // }
+    updateFilter: (state, { payload }) => {
+      console.log(payload)
+    }
   }
 })
 
