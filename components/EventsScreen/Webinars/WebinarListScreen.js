@@ -2,51 +2,10 @@ import React from 'react'
 import { StyleSheet, ScrollView, View, TouchableHighlight, Text } from 'react-native'
 import EventListItem from '../../../utils/EventListItem'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useSelector } from 'react-redux';
 
 export default function WebinarListScreen(props, { navigation }) {
-  // TODO move to redux 
-  const webinars = [
-    {
-      type: 'webinar',
-      name: 'Intro to React',
-      company: 'Eau de Web',
-      date: '12/12/2022',
-      time: '14:00',
-      availableSeats: "150/200"
-    },
-    {
-      type: 'webinar',
-      name: 'Intro to React',
-      company: 'Eau de Web',
-      date: '12/12/2022',
-      time: '14:00',
-      availableSeats: "150/200"
-    },
-    {
-      type: 'webinar',
-      name: 'Intro to React',
-      company: 'Eau de Web',
-      date: '12/12/2022',
-      time: '14:00',
-      availableSeats: "150/200"
-    },
-    {
-      type: 'webinar',
-      name: 'Intro to React',
-      company: 'Eau de Web',
-      date: '12/12/2022',
-      time: '14:00',
-      availableSeats: "150/200"
-    },
-    {
-      type: 'webinar',
-      name: 'Intro to React',
-      company: 'Eau de Web',
-      date: '12/12/2022',
-      time: '14:00',
-      availableSeats: "150/200"
-    }
-  ]
+  const { webinars } = useSelector(state => state.events)
 
   const styles = getStyles(useBottomTabBarHeight())
 
@@ -62,6 +21,6 @@ export default function WebinarListScreen(props, { navigation }) {
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     margin: 10,
-    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight - 20 : 0
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight + 20 : bottomTabHeight
   }
 })

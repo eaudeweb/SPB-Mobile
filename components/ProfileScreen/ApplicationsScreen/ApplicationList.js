@@ -9,6 +9,8 @@ import Collapsible from 'react-native-collapsible';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { colors, font } from '../../../styles/globalStyle';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
+import IonIcon from 'react-native-vector-icons/Ionicons'
+
 
 export default function ApplicationList(props) {
   const styles = getStyles(useBottomTabBarHeight())
@@ -31,16 +33,45 @@ export default function ApplicationList(props) {
       <TouchableOpacity onPress={() => handleFilterTap(type)}>
         <View style={active ? styles.filterButtonWrapperActive : styles.filterButtonWrapper}>
           <Text style={active ? styles.filterButtonTextActive : styles.filterButtonText} >{name}</Text>
-          <FaIcon name={active ? 'check' : 'times'} size={18} color={active ? colors.main.cappuccino : colors.secondary.lightGrey} />
+          <IonIcon name={active ? 'checkmark-circle-outline' : 'checkmark-outline'} size={22} color={active ? colors.main.cappuccino : colors.secondary.lightGrey} />
         </View>
       </TouchableOpacity>
     )
   }
-  const [filter, setFilter] = useState({
-    categories: [1, 1, 1, , 1, 1],
-    cities: [],
-    companies: [1, 1]
-  });
+  // const addFilterInternships = (filterType) => {
+  //   const internshipsToBeAdded = internshipsAppliedTo.filter(internship => {
+  //     if (filterType === 'accepted') {
+  //       return internship.acceptedStatus
+  //     } else if (filterType === 'interview') {
+  //       return internship.interviewStatus
+  //     } else {
+  //       return !internship.interviewStatus && !internship.acceptedStatus
+  //     }
+  //   })
+  //   const newArr = [...applications, ...internshipsToBeAdded]
+
+  //   setApplications(newArr)
+  // }
+  // const removeFilterInternships = (filterType) => {
+
+  //   const newArr = applications.filter(internship => {
+  //     if (filterType === 'accepted') {
+  //       return !internship.acceptedStatus
+  //     } else if (filterType === 'interview') {
+  //       return !internship.interviewStatus
+  //     } else {
+  //       return internship.interviewStatus || internship.acceptedStatus
+  //     }
+  //   })
+  //   // setApplications(newArr)
+  // }
+  // useEffect(() => {
+  //   // applicationsFilter.accepted ? filterInternships('accepte') : false,
+  //   applicationsFilter.accepted ? addFilterInternships('accepted') : removeFilterInternships('accepted')
+  //   applicationsFilter.interview ? addFilterInternships('interview') : removeFilterInternships('interview')
+  //   applicationsFilter.pending ? addFilterInternships('pending') : removeFilterInternships('pending')
+  // }, [applicationsFilter])
+
 
   useEffect(() => {
     setApplications(internshipsAppliedTo)
@@ -64,7 +95,6 @@ export default function ApplicationList(props) {
           return application.interviewStatus || !application.acceptedStatus
         })
         setApplications(updatedApplications)
-
       } else if (applicationsFilter.accepted) {
         const updatedApplications = internshipsAppliedTo.filter(application => application.acceptedStatus)
         setApplications(updatedApplications)
@@ -108,7 +138,7 @@ export default function ApplicationList(props) {
 
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
-    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight - 20 : 10
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight + 30 : bottomTabHeight + 10
   },
   dropDownView: {
     marginBottom: 15

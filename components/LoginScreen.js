@@ -1,71 +1,94 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { StatusBar, StyleSheet, View, Text, Dimensions, TouchableOpacity } from 'react-native'
+import { StatusBar, StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity } from 'react-native'
 import SvgLogo from '../assets/SvgLogo'
 import OrangeStrokeSvg from '../assets/OrangeStroke'
 import { colors, spacing, font } from '../styles/globalStyle';
 import credentials from '../test_login_credentials'
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios'
 
-function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
-  useEffect(() => {
-    isUserLogged ?? navigation.navigate('Layout')
-  }, [isUserLogged])
-  const onLogin = () => {
-    navigation.navigate('Layout')
-    setIsUserLogged(true)
-  }
+function LoginScreen({ navigation }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
-
-  const get_set_cookies = function (headers) {
-    const set_cookies = []
-    for (const [name, value] of headers) {
-      if (name === "set-cookie") {
-        set_cookies.push(value)
-      }
-    }
-    return set_cookies
+  useEffect(() => {
+    checkForToken()
+  }, [])
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  const deleteToken = () => {
+    SecureStore.deleteItemAsync('authToken')
   }
-
-  const getInternships = async () => {
+  const onFormChange = (value, inputType) => {
+    setFormData(prevState => ({
+      ...prevState,
+      [inputType]: value
+    }))
+  }
+  const saveToken = async (value) => {
+    const result = await SecureStore.setItemAsync('authToken', value)
+    return result
+  }
+  const checkForToken = async () => {
+    SecureStore.getItemAsync('authToken').then(token => {
+      if (token) {
+        navigation.navigate('Layout')
+      }
+    })
+  }
+  const handleAuth = async () => {
     try {
       const response = await fetch(
-        "https://staging.stagiipebune.ro/login/",
+        "https://staging.stagiipebune.ro/api/v1/token/general_auth",
         {
-          headers: {
-            Authorization: "Basic " + btoa(credentials.username + ":" + credentials.password),
-          },
-          credentials: 'include'
-        }
-      );
-      const set_cookies = get_set_cookies(response.headers)
-      // data = await response.json();
-
-      const csrf_token = set_cookies[0].split('csrftoken=')[1]
-
-      const internshipResponse = await fetch(
-        "https://staging.stagiipebune.ro/api/v1/students/jobs/",
-        {
-          mode: 'cors',
+          method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json; charset=UTF-8',
-            "X-CSRFToken": csrf_token
+            'Content-Type': 'application/json'
           },
-          credentials: 'same-origin',
-          // credentials: 'include',
+          body: JSON.stringify({ email: formData.email, password: formData.password })
         }
-
-      );
-      console.log({ response, "token": csrf_token, internshipResponse }, window);
-      console.log(set_cookies);
-      return response;
+      ).then((response) => response.json())
+        .then((responseJson) => {
+          if (responseJson.token) {
+            saveToken(responseJson.token)
+            checkForToken()
+          }
+        });
     } catch (error) {
       console.error(error);
     } finally {
       // setLoading(false);
     }
-  };
-  //setting > disable notifications, instead of the company name internship add a select w companies
+  }
+
+  const handleQuickAuth = async () => {
+    try {
+      const response = await fetch(
+        "https://staging.stagiipebune.ro/api/v1/token/general_auth",
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email: credentials.email, password: credentials.password })
+
+        }
+      ).then((response) => response.json())
+        .then((responseJson) => {
+          saveToken(responseJson.token)
+          checkForToken()
+
+        });
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
+  }
+  // //setting > disable notifications, instead of the company name internship add a select w companies
 
   return (
     <View style={styles.loginView}>
@@ -81,12 +104,27 @@ function LoginScreen({ navigation, isUserLogged, setIsUserLogged }) {
         <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>program in</Text>
         <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>the country</Text>
       </View>
-
-      <View style={[styles.content, { marginTop: 60 }]}>
-        <TouchableOpacity style={styles.loginButton} onPress={onLogin}>
-          <Text style={[styles.buttonText, { color: colors.secondary.nearBlack }]}>Log in</Text>
+      <View style={[styles.content, { marginTop: 10 }]}>
+        <View style={[styles.inputWrapper, { marginBottom: 10 }]}>
+          <TextInput
+            style={styles.input} placeholder='E-mail'
+            placeholderTextColor={colors.secondary.lightGrey}
+            onChangeText={(value) => onFormChange(value, 'email')}
+          />
+        </View>
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={styles.input} placeholder='Passwords'
+            placeholderTextColor={colors.secondary.lightGrey}
+            onChangeText={(value) => onFormChange(value, 'password')}
+          />
+        </View>
+      </View>
+      <View style={[styles.content, { marginTop: 20 }]}>
+        <TouchableOpacity style={styles.loginButton} onPress={handleAuth}>
+          <Text style={[styles.buttonText, { color: colors.secondary.nearBlack }]}  >Log in</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.loginButton, { backgroundColor: 'transparent' }]} onPress={getInternships}>
+        <TouchableOpacity style={[styles.loginButton, { backgroundColor: 'transparent' }]} onPress={handleQuickAuth}>
           <Text style={[styles.buttonText, { color: colors.main.cappuccino }]}>Sign up</Text>
         </TouchableOpacity>
       </View>
@@ -127,6 +165,20 @@ const styles = StyleSheet.create({
     fontWeight: font.fontWeight.xbold,
     paddingVertical: 5,
     textAlign: 'center'
+  },
+  inputWrapper: {
+    backgroundColor: colors.secondary.mediumGrey,
+    padding: 5,
+    borderRadius: 10
+  },
+
+  input: {
+    color: colors.main.white,
+    fontSize: font.size.l,
+    padding: 10,
+  },
+  inputStyle: {
+    color: colors.secondary.lightGrey
   }
 })
 

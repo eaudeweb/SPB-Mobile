@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { StyleSheet, ScrollView, SafeAreaView, StatusBar, Text } from 'react-native'
 import { SearchBar } from '@rneui/themed';
@@ -7,11 +7,21 @@ import InternshipsFilter from './InternshipsFilter';
 import InternshipList from './InternshipList';
 import { colors, components } from '../../styles/globalStyle'
 import { useDispatch, useSelector } from 'react-redux';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { getAllInternships } from '../../features/internships/internshipsSlice';
+import Loading from './Loading';
+
 export default function InternshipMain(props) {
+  const styles = getStyles(useBottomTabBarHeight())
+  const dispatch = useDispatch()
   const [searchText, setSearchText] = useState('')
-  const [filteredInternships, setFilteredInternships] = useState([''])
-  // TODO use company from companies tab 
-  // cities/categories/companies use form 
+  const [filteredInternships, setFilteredInternships] = useState([])
+  const { isLoading } = useSelector(state => state.internships)
+  //TODO cities/categories/companies use form 
+
+  useEffect(() => {
+    dispatch(getAllInternships())
+  }, [])
 
   // TODO add clear filters button/option 
   const [filterData, setFilterData] = useState({
@@ -23,6 +33,8 @@ export default function InternshipMain(props) {
   const updateSearch = (text) => {
     setSearchText(text)
   }
+
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -45,20 +57,25 @@ export default function InternshipMain(props) {
           setFilterData={setFilterData}
           filteredInternships={filteredInternships}
         />
+
         {/* TODO infinite scroll  */}
-        <InternshipList {...props}
-          filteredInternships={filteredInternships}
-          setFilteredInternships={setFilteredInternships}
-          filterData={filterData}
-          setFilterData={setFilterData}
-        />
+        {isLoading ?
+          <Loading />
+          :
+          <InternshipList {...props}
+            filteredInternships={filteredInternships}
+            setFilteredInternships={setFilteredInternships}
+            filterData={filterData}
+            setFilterData={setFilterData}
+          />
+        }
       </ScrollView>
 
     </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight
   },

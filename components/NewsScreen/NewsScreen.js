@@ -1,52 +1,55 @@
 import React from 'react'
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
-import Ionicon from 'react-native-vector-icons/Ionicons'
-
+import { StyleSheet, SafeAreaView, Text, View, ScrollView, TouchableOpacity, StatusBar } from 'react-native'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import FaIcon from 'react-native-vector-icons/FontAwesome5'
+import { colors, font } from '../../styles/globalStyle'
 
 export default function NewsMain({ navigation }) {
+  const styles = getStyles(useBottomTabBarHeight())
+
   const newsList = [
     {
-      originScreen: 'EVENTS',
+      originScreen: 'Companies',
       title: 'Pizza is coming',
       description: 'Come and get it'
     },
     {
-      originScreen: 'INTERNSHIPS',
+      originScreen: 'Internships',
       title: '3 new React internships',
       description: 'Apply right now'
     },
     {
-      originScreen: 'PROFILE',
+      originScreen: 'Profile',
       title: 'Add your CV',
       description: "Companies that you have applied to would not be able to see your information."
     },
     {
-      originScreen: 'EVENTS',
+      originScreen: 'Calendar',
       title: 'Pizza is coming',
       description: 'Come and get it'
     },
     {
-      originScreen: 'INTERNSHIPS',
+      originScreen: 'Internships',
       title: '3 new React internships',
       description: 'Apply right now'
     },
     {
-      originScreen: 'PROFILE',
+      originScreen: 'Profile',
       title: 'Add your CV',
       description: "Companies that you have applied to would not be able to see your information."
     },
     {
-      originScreen: 'EVENTS',
+      originScreen: 'Calendar',
       title: 'Pizza is coming',
       description: 'Come and get it'
     },
     {
-      originScreen: 'INTERNSHIPS',
+      originScreen: 'Internships',
       title: '3 new React internships',
       description: 'Apply right now'
     },
     {
-      originScreen: 'PROFILE',
+      originScreen: 'Profile',
       title: 'Add your CV',
       description: "Companies that you have applied to would not be able to see your information."
     },
@@ -55,17 +58,17 @@ export default function NewsMain({ navigation }) {
   const generateListItem = (item, index) => {
     let iconName;
     switch (item.originScreen) {
-      case 'COMPANIES':
-        iconName = 'md-business-outline'
+      case 'Companies':
+        iconName = 'building'
         break;
-      case 'INTERNSHIPS':
-        iconName = 'briefcase-outline'
+      case 'Internships':
+        iconName = 'briefcase'
         break;
-      case 'EVENTS':
-        iconName = 'desktop-outline'
+      case 'Calendar':
+        iconName = 'desktop'
         break;
-      case 'PROFILE':
-        iconName = 'ios-person-outline'
+      case 'Profile':
+        iconName = 'user'
         break;
     }
 
@@ -76,7 +79,7 @@ export default function NewsMain({ navigation }) {
       >
         <View style={styles.newsItemWrap}>
           <View flexDirection={'row'} alignItems={'center'} marginBottom={10}>
-            <Ionicon name={iconName} size={26} color={'white'} />
+            <FaIcon name={iconName} size={18} color={colors.main.accent} />
             <Text style={styles.newsItemTitle}>{item.title}</Text>
           </View>
           <View>
@@ -87,40 +90,46 @@ export default function NewsMain({ navigation }) {
     )
   }
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>News</Text>
-      <View>
-        {newsList.map((listItem, index) => generateListItem(listItem, index))}
-      </View>
-    </ScrollView>
+    <SafeAreaView>
+      <ScrollView style={styles.container}>
+        <Text style={styles.header}>News</Text>
+        <View style={styles.innerContainer}>
+          {newsList.map((listItem, index) => generateListItem(listItem, index))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
-    flex: 1,
-    marginHorizontal: 10,
-    marginBottom: 20
+    marginTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+
+    marginHorizontal: 10
+  },
+  innerContainer: {
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10,
   },
   header: {
-    color: 'white',
-    fontSize: 26,
+    color: colors.main.white,
+    fontSize: font.size.xl,
     fontWeight: 'bold'
   },
   newsItemWrap: {
-    backgroundColor: '#353535',
+    backgroundColor: colors.secondary.darkGrey,
     borderRadius: 5,
     marginVertical: 10,
     padding: 10
   },
   newsItemTitle: {
-    color: 'white',
-    fontSize: 18,
+    color: colors.main.white,
+    fontSize: font.size.l,
     fontWeight: 'bold',
-    marginLeft: 5
+    marginLeft: 10
   },
   newsItemText: {
-    color: 'white',
-    fontSize: 16,
+    color: colors.main.white,
+    fontSize: font.size.m
+
   }
 })

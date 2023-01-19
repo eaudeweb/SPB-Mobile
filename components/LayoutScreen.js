@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, Platform, } from 'react-native'
+import { StyleSheet, Platform, View, Text } from 'react-native'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import CompaniesScreen from './CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
 import EventsScreen from './EventsScreen/EventsScreen';
 import ProfileScreen from './ProfileScreen/ProfileScreen';
+import NewsScreen from './NewsScreen/NewsScreen'
 import { colors } from '../styles/globalStyle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -42,7 +43,7 @@ export default function LayoutScreen({ navigation }) {
               iconName = 'clipboard-list'
               break;
             case screen.news:
-              iconName = focused ? 'newspaper' : 'newspaper-outline'
+              iconName = 'newspaper'
               break;
             case screen.events:
               iconName = 'calendar-alt'
@@ -71,8 +72,11 @@ export default function LayoutScreen({ navigation }) {
         {(props) => <CompaniesScreen {...props} text='Props passing test' />}
       </Tab.Screen>
       <Tab.Screen name={screen.internships} component={InternshipsScreen} />
-      {/* <Tab.Screen name={screen.news} component={NewsScreen} /> */}
+      <Tab.Screen name={screen.news} component={NewsScreen} />
       <Tab.Screen name={screen.events} component={EventsScreen} />
+      {/* <Tab.Screen name={screen.events}>
+        {props => <NewsScreen {...props} />}
+      </Tab.Screen> */}
       <Tab.Screen name={screen.profile} component={ProfileScreen} />
     </Tab.Navigator>
   )
@@ -83,7 +87,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 50,
     height: 60,
-    // position: 'absolute',
+    position: 'absolute',
   },
   tabBarItem: {
     height: Platform.OS === 'ios' ? '200%' : '100%',

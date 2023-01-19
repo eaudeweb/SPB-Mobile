@@ -9,9 +9,10 @@ import { useSelector } from 'react-redux';
 export default function InternshipsList(props) {
   const { filteredInternships, setFilteredInternships } = props
   const styles = getStyles(useBottomTabBarHeight())
-  const internships = useSelector(state => state.internships.internships)
+  const { internships } = useSelector(state => state.internships)
 
   useEffect(() => {
+    console.log(internships)
     setFilteredInternships(() => getInternshipsByStartDate())
   }, [internships])
 
@@ -57,7 +58,7 @@ export default function InternshipsList(props) {
 
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
-    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight - 20 : 10
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10
   },
   companyTitle: {
     color: colors.main.accent,

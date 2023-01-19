@@ -1,12 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import { createIconSet } from "react-native-vector-icons"
-import internships from "../../utils/internshipsTestJson"
-
+import internshipsService from "./internshipsService"
 
 const initialState = {
-  internships: internships,
+  internships: [],
+  isLoading: false,
+  isError: false,
+  message: '',
   internshipsAppliedTo: []
 }
+
+export const getAllInternships = createAsyncThunk('internships/getAll', async (internships, thunkAPI) => {
+  try {
+    return await internshipsService.getAllInternships()
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
 
 const internshipsSlice = createSlice({
   name: 'internships',
@@ -51,6 +66,22 @@ const internshipsSlice = createSlice({
       }
       state.internshipsAppliedTo = newArr
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getAllInternships.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getAllInternships.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.internships = action.payload
+      })
+      .addCase(getAllInternships.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+
   }
 })
 
