@@ -1,13 +1,24 @@
 import React from 'react'
-import { useState } from 'react'
-import { StyleSheet, View, Text, TextInput, TouchableHighlight, ScrollView } from 'react-native'
+import { useState, useRef } from 'react'
+import { StyleSheet, View, Text, TextInput, TouchableHighlight, ScrollView, Platform } from 'react-native'
 import FeedbackModal from './FeedbackModal'
 import { NotificationsRadioInput } from './RadioInputs'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import * as SecureStore from 'expo-secure-store';
+import { useNavigation } from '@react-navigation/native'
 
 export default function SettingsMain() {
   const [notificationsActive, setNotificationsActive] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
+  const styles = getStyles(useBottomTabBarHeight())
+  const navigation = useNavigation()
+  const handleLogOut = async () => {
+    SecureStore.deleteItemAsync('authToken').then(() => {
+      navigation.navigate('Login')
 
+    })
+    navigation.navigate('Layout')
+  }
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.headerText}>Contact details</Text>
@@ -55,17 +66,20 @@ export default function SettingsMain() {
         <Text style={styles.headerText}>Notifications</Text>
         <NotificationsRadioInput setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} />
       </View>
+      <TouchableHighlight style={[styles.button, { backgroundColor: 'red' }]} onPress={handleLogOut}>
+        <Text style={styles.labelText}>Log out</Text>
+      </TouchableHighlight>
       <FeedbackModal modalVisible={modalVisible} setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} styles={styles} />
     </ScrollView >
 
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 10,
-    marginBottom: 20
+    marginBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10,
   },
   headerText: {
     fontSize: 22,

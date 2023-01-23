@@ -15,7 +15,7 @@ export default function CompaniesScreen({ navigation }) {
   const jumbotronTextArr = [
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>15+ </Text>COMPANIES</Text>,
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>35+ </Text>INTERNSHIPS</Text>,
-    <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>20+ </Text>WEBINARS`</Text>
+    <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>20+ </Text>WEBINARS</Text>
   ]
   const handleClick = (companyName) => {
     dispatch(getInternshipsByCompany(companyName))

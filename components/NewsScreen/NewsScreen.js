@@ -104,7 +104,6 @@ export default function NewsMain({ navigation }) {
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     marginTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-
     marginHorizontal: 10
   },
   innerContainer: {

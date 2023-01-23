@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Platform, Text } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../utils/InternshipListItem'
@@ -8,12 +8,14 @@ import { useSelector } from 'react-redux';
 
 export default function InternshipsList(props) {
   const { filteredInternships, setFilteredInternships } = props
+
   const styles = getStyles(useBottomTabBarHeight())
   const { internships } = useSelector(state => state.internships)
 
   useEffect(() => {
-    console.log(internships)
-    setFilteredInternships(() => getInternshipsByStartDate())
+    // const filteredInternshipByDate = getInternshipsByStartDate()
+    // setFilteredInternships(filteredInternshipByDate)
+    // alert('internships changed')
   }, [internships])
 
   const getCompaniesName = (internshipsList) => {
@@ -46,7 +48,7 @@ export default function InternshipsList(props) {
 
   return (
     <View style={styles.container}>
-      {filteredInternships?.map((item, index) => (
+      {internships?.map((item, index) => (
         <View key={index}>
           <Text style={styles.companyTitle}>{item.companyName}</Text>
           {item.internships?.map((internship, index) => <InternshipListItem {...props} internship={internship} parentRoute={useRoute().name} key={index} />)}

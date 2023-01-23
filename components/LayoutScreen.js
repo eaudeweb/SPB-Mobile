@@ -9,6 +9,7 @@ import ProfileScreen from './ProfileScreen/ProfileScreen';
 import NewsScreen from './NewsScreen/NewsScreen'
 import { colors } from '../styles/globalStyle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as SecureStore from 'expo-secure-store';
 
 export default function LayoutScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -19,6 +20,10 @@ export default function LayoutScreen({ navigation }) {
     news: 'News',
     events: 'Calendar',
     profile: 'Profile'
+  }
+  const getToken = async () => {
+    const result = await SecureStore.getItemAsync('authToken')
+    return result
   }
 
   useEffect(() => {
@@ -74,9 +79,6 @@ export default function LayoutScreen({ navigation }) {
       <Tab.Screen name={screen.internships} component={InternshipsScreen} />
       <Tab.Screen name={screen.news} component={NewsScreen} />
       <Tab.Screen name={screen.events} component={EventsScreen} />
-      {/* <Tab.Screen name={screen.events}>
-        {props => <NewsScreen {...props} />}
-      </Tab.Screen> */}
       <Tab.Screen name={screen.profile} component={ProfileScreen} />
     </Tab.Navigator>
   )

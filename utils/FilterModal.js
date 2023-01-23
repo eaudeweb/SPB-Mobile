@@ -1,27 +1,20 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useState } from 'react'
-import { StyleSheet, Pressable, TouchableWithoutFeedback, View, ScrollView, Text, TextInput, TouchableHighlight, TouchableOpacity, Modal, Animated } from 'react-native'
+import { StyleSheet, Pressable, View, ScrollView, Text, TouchableHighlight, TouchableOpacity, Modal } from 'react-native'
 import { colors, font } from '../styles/globalStyle'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
+import { useSelector } from 'react-redux';
 
 export default function FilterModal(props) {
-  const { modalVisible, setModalVisible, data, modalFilter, filterData, setFilterData, filteredInternships } = props
+  const { modalVisible, setModalVisible, data, modalFilter, filterData } = props
   const [companiesFilter, setCompaniesFilter] = useState(filterData.companies)
+  const { internships } = useSelector(state => state.internships)
 
   const getAvailableCompanies = () => {
-    const companies = []
-    filteredInternships.map(company => {
-      if (!companies.includes(company.companyName)) {
-        companies.push(company.companyName)
-      }
-    })
+    const companies = [...new Set(internships.map(obj => obj.companyName))]
     return companies.sort()
   }
-  const getFilteredCompanies = () => {
-    return getAvailableCompanies().map((company, index) => {
-      return filterData.companies.find(companyName => companyName === company) ? <SelectedOption key={index} option={company} /> : <Option key={index} option={company} />
-    })
-  }
+
   const handleSave = () => {
     setModalVisible(false)
   }
@@ -54,9 +47,9 @@ export default function FilterModal(props) {
       return getAvailableCompanies().map((company, index) => {
         return filterData.companies.find(companyName => companyName === company) ? <SelectedOption key={index} option={company} /> : <Option key={index} option={company} />
       })
-
     }
   }
+
   return (
     <View>
       <Modal
@@ -75,12 +68,12 @@ export default function FilterModal(props) {
             style={{ flex: 1 }}
             onPress={handleCancel} />
           <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Available filters</Text>
+            <Text style={styles.modalTitle}>Companies</Text>
             <ScrollView style={{ width: '100%' }}>
               {getFilterData()}
             </ScrollView>
             <TouchableHighlight style={styles.saveButton} onPress={handleSave}>
-              <Text style={[styles.textStyle, { fontSize: 16 }]}>Save settings</Text>
+              <Text style={[styles.textStyle, { fontSize: 16 }]}>Apply filter</Text>
             </TouchableHighlight>
           </View>
         </View>

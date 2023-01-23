@@ -15,7 +15,6 @@ export default function InternshipMain(props) {
   const styles = getStyles(useBottomTabBarHeight())
   const dispatch = useDispatch()
   const [searchText, setSearchText] = useState('')
-  const [filteredInternships, setFilteredInternships] = useState([])
   const { isLoading } = useSelector(state => state.internships)
   //TODO cities/categories/companies use form 
 
@@ -27,18 +26,17 @@ export default function InternshipMain(props) {
   const [filterData, setFilterData] = useState({
     categories: [1],
     cities: [],
-    companies: ['Eau de Web', "Lenovo"]
+    companies: ['Eau de Web']
   });
 
   const updateSearch = (text) => {
     setSearchText(text)
   }
 
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Text style={components.screenHeader}>INTERNSHIPS</Text>
+        <Text style={components.screenHeader}>{true && 'INTERNSHIPS'}</Text>
         {/* TODO implement search bar  */}
         <SearchBar
           onChangeText={updateSearch}
@@ -55,7 +53,6 @@ export default function InternshipMain(props) {
         <InternshipsFilter
           filterData={filterData}
           setFilterData={setFilterData}
-          filteredInternships={filteredInternships}
         />
 
         {/* TODO infinite scroll  */}
@@ -63,8 +60,6 @@ export default function InternshipMain(props) {
           <Loading />
           :
           <InternshipList {...props}
-            filteredInternships={filteredInternships}
-            setFilteredInternships={setFilteredInternships}
             filterData={filterData}
             setFilterData={setFilterData}
           />

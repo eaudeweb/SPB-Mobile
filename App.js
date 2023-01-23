@@ -9,6 +9,7 @@ import { store } from './store/store';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 
+
 export default function App(props) {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);

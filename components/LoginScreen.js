@@ -6,7 +6,6 @@ import OrangeStrokeSvg from '../assets/OrangeStroke'
 import { colors, spacing, font } from '../styles/globalStyle';
 import credentials from '../test_login_credentials'
 import * as SecureStore from 'expo-secure-store';
-import axios from 'axios'
 
 function LoginScreen({ navigation }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
