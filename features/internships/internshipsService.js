@@ -50,7 +50,6 @@ const getAllInternships = async () => {
     })
     return internships
   }
-  // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0LCJ1c2VybmFtZSI6ImdhYnJpZWxhLnN0cmV6ZWFAZ21haWwuY29tIiwiZXhwIjoxNjc0NTU2ODA3LCJlbWFpbCI6ImdhYnJpZWxhLnN0cmV6ZWFAZ21haWwuY29tIiwib3JpZ19pYXQiOjE2NzQ1NTMyMDd9.PsoZcNqeyY60-3O7ikOBQ1LqvtD-LE4DrXphOnfv1nI
   return getInternshipsByCompany()
 }
 
