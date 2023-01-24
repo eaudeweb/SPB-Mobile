@@ -1,35 +1,36 @@
 import React from 'react'
-import { useState } from 'react'
 import { StyleSheet, Pressable, View, ScrollView, Text, TouchableHighlight, TouchableOpacity, Modal } from 'react-native'
-import { colors, font } from '../styles/globalStyle'
+import { colors, font } from '../../styles/globalStyle'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { filtersActions } from '../../features/filters/filtersSlice';
 
 export default function FilterModal(props) {
-  const { modalVisible, setModalVisible, data, modalFilter, filterData } = props
-  const [companiesFilter, setCompaniesFilter] = useState(filterData.companies)
+  const { modalVisible, setModalVisible } = props
   const { internships } = useSelector(state => state.internships)
-
-  const getAvailableCompanies = () => {
-    const companies = [...new Set(internships.map(obj => obj.companyName))]
-    return companies.sort()
-  }
+  const { selectedFilter, internshipsFilter } = useSelector(state => state.filters)
+  const dispatch = useDispatch()
+  const { resetSelectedFilter, updateFilterList } = filtersActions
+  const companies = [...new Set(internships.map(internship => internship.companyName))].sort();
 
   const handleSave = () => {
     setModalVisible(false)
   }
   const handleCancel = () => {
+    dispatch(resetSelectedFilter())
     setModalVisible(false)
   }
-  const Option = ({ option }) => (
-    <TouchableHighlight onPress={() => console.log('ye')}>
+
+
+  const Option = ({ option, handlePress }) => (
+    <TouchableHighlight onPress={handlePress}>
       <View style={styles.optionWrapper}>
         <Text style={styles.optionText}>{option}</Text>
       </View >
     </TouchableHighlight>
   )
-  const SelectedOption = ({ option }) => (
-    <TouchableOpacity onPress={() => console.log('ye')}>
+  const SelectedOption = ({ option, handlePress }) => (
+    <TouchableOpacity onPress={handlePress}>
       <View style={styles.optionWrapperSelected}>
         <Text style={styles.optionTextSelected}>{option}</Text>
         <FaIcon name={'check'} size={18} color={colors.indicators.green} />
@@ -37,17 +38,26 @@ export default function FilterModal(props) {
     </TouchableOpacity>
 
   )
-  const getFilterData = () => {
-    if (modalFilter === 'categories') {
-      return <SelectedOption option={'categories'} />
-
-    } else if (modalFilter === "city") {
-      return <SelectedOption option={'cities'} />
+  const handleCompanyFilterPress = (companyName) => {
+    const isCompanySelected = internshipsFilter.companies.find(company => companyName === company)
+    let newArr = [...internshipsFilter.companies]
+    if (isCompanySelected) {
+      newArr.splice(newArr.indexOf(companyName), 1)
+      dispatch(updateFilterList({ type: 'companies', newArr: newArr }))
     } else {
-      return getAvailableCompanies().map((company, index) => {
-        return filterData.companies.find(companyName => companyName === company) ? <SelectedOption key={index} option={company} /> : <Option key={index} option={company} />
-      })
+      newArr.push(companyName)
+      dispatch(updateFilterList({ type: 'companies', newArr: newArr }))
     }
+  }
+
+  const CompaniesFilter = () => {
+    return companies.map((company, index) => {
+      return internshipsFilter.companies.find(companyName => companyName === company) ?
+        <SelectedOption key={index} option={company} handlePress={() => handleCompanyFilterPress(company)} />
+        :
+        <Option key={index} option={company} handlePress={() => handleCompanyFilterPress(company)} />
+    })
+
   }
 
   return (
@@ -69,7 +79,7 @@ export default function FilterModal(props) {
           <View style={styles.modalView}>
             <Text style={styles.modalTitle}>Companies</Text>
             <ScrollView style={{ width: '100%' }}>
-              {getFilterData()}
+              {selectedFilter === 'companies' && <CompaniesFilter />}
             </ScrollView>
             <TouchableHighlight style={styles.saveButton} onPress={handleSave}>
               <Text style={[styles.textStyle, { fontSize: 16 }]}>Apply filter</Text>

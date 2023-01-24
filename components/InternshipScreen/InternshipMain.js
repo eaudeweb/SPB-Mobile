@@ -23,12 +23,6 @@ export default function InternshipMain(props) {
   }, [])
 
   // TODO add clear filters button/option 
-  const [filterData, setFilterData] = useState({
-    categories: [1],
-    cities: [],
-    companies: ['Eau de Web', 'Lenovo']
-  });
-
   const updateSearch = (text) => {
     setSearchText(text)
   }
@@ -50,18 +44,12 @@ export default function InternshipMain(props) {
             <FaIcon name={'search'} size={18} color={colors.secondary.lightGrey} />
           }
         />
-        <InternshipsFilter
-          filterData={filterData}
-          setFilterData={setFilterData}
-        />
+        <InternshipsFilter />
         {/* TODO infinite scroll  */}
         {isLoading ?
           <Loading />
           :
-          <InternshipList {...props}
-            filterData={filterData}
-            setFilterData={setFilterData}
-          />
+          <InternshipList {...props} />
         }
       </ScrollView>
 

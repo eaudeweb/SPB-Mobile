@@ -2,19 +2,19 @@ import React from 'react'
 import { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
 import { colors, font } from '../../styles/globalStyle';
-import FilterModal from '../../utils/FilterModal'
+import FilterModal from './FilterModal'
 import { useDispatch, useSelector } from 'react-redux';
 import { filtersActions } from '../../features/filters/filtersSlice';
 
 export default function InternshipsFilter(props) {
   const dispatch = useDispatch()
   const { internshipsFilter } = useSelector(state => state.filters)
-  const { updateFilter } = filtersActions
+  const { updateSelectedFilter } = filtersActions
   const [modalVisible, setModalVisible] = useState(false)
-  const [modalFilter, setModalFilter] = useState(null)
+  const [selectedFilter, setSelectedFilter] = useState(null)
 
   const handleFilterTap = (filterCategory) => {
-    setModalFilter(filterCategory)
+    dispatch(updateSelectedFilter(filterCategory))
     setModalVisible(true)
   }
 
@@ -22,7 +22,7 @@ export default function InternshipsFilter(props) {
     <View style={styles.container}>
       <Text style={styles.filterDescriptionText}>FILTER BY: </Text>
       <View style={styles.filterContainer}>
-        <TouchableOpacity onPress={() => dispatch(updateFilter({ type: 'categories', data: 'yeye' }))}>
+        <TouchableOpacity onPress={() => handleFilterTap('categories')}>
           {internshipsFilter.categories.length > 0 ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>Categories</Text>
@@ -71,9 +71,9 @@ export default function InternshipsFilter(props) {
         {...props}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        modalFilter={modalFilter}
+        selectedFilter={selectedFilter}
       />
-    </View>
+    </View >
   )
 }
 
