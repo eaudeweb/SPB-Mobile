@@ -101,7 +101,6 @@ export default function App(props) {
           screenOptions={{
             headerShown: false,
             gestureEnabled: false
-
           }}>
           <Stack.Screen name="Layout" >
             {(props) => <LayoutScreen {...props} />}
