@@ -60,7 +60,6 @@ export default function FilterModal(props) {
         onRequestClose={() => {
           Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
-
         }}
       >
         <View style={{ flex: 1, }}>

@@ -26,7 +26,7 @@ export default function InternshipMain(props) {
   const [filterData, setFilterData] = useState({
     categories: [1],
     cities: [],
-    companies: ['Eau de Web']
+    companies: ['Eau de Web', 'Lenovo']
   });
 
   const updateSearch = (text) => {
@@ -54,7 +54,6 @@ export default function InternshipMain(props) {
           filterData={filterData}
           setFilterData={setFilterData}
         />
-
         {/* TODO infinite scroll  */}
         {isLoading ?
           <Loading />

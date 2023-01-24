@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { StyleSheet, View, Platform, Text } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../utils/InternshipListItem'
@@ -7,44 +7,9 @@ import { colors, font } from '../../styles/globalStyle'
 import { useSelector } from 'react-redux';
 
 export default function InternshipsList(props) {
-  const { filteredInternships, setFilteredInternships } = props
 
   const styles = getStyles(useBottomTabBarHeight())
   const { internships } = useSelector(state => state.internships)
-
-  useEffect(() => {
-    // const filteredInternshipByDate = getInternshipsByStartDate()
-    // setFilteredInternships(filteredInternshipByDate)
-    // alert('internships changed')
-  }, [internships])
-
-  const getCompaniesName = (internshipsList) => {
-    const companies = []
-    internshipsList.map(internship => {
-      if (!companies.includes(internship.company.name)) {
-        companies.push(internship.company.name)
-      }
-    })
-    return companies
-  }
-  const getInternshipsByCompany = (sortedInternships) => {
-    const companies = getCompaniesName(sortedInternships)
-    const internshipList = []
-    companies.map(company => {
-      const companyInternships = sortedInternships.filter(internship => internship.company.name === company)
-      internshipList.push({
-        companyName: company,
-        internships: companyInternships
-      })
-    })
-    return internshipList
-  }
-  const sortInternshipsByDate = () => {
-    return [...internships].sort((a, b) => new Date(b.start_date) - new Date(a.start_date))
-  }
-  const getInternshipsByStartDate = () => {
-    return getInternshipsByCompany(sortInternshipsByDate())
-  }
 
   return (
     <View style={styles.container}>

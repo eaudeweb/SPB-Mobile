@@ -38,39 +38,6 @@ export default function ApplicationList(props) {
       </TouchableOpacity>
     )
   }
-  // const addFilterInternships = (filterType) => {
-  //   const internshipsToBeAdded = internshipsAppliedTo.filter(internship => {
-  //     if (filterType === 'accepted') {
-  //       return internship.acceptedStatus
-  //     } else if (filterType === 'interview') {
-  //       return internship.interviewStatus
-  //     } else {
-  //       return !internship.interviewStatus && !internship.acceptedStatus
-  //     }
-  //   })
-  //   const newArr = [...applications, ...internshipsToBeAdded]
-
-  //   setApplications(newArr)
-  // }
-  // const removeFilterInternships = (filterType) => {
-
-  //   const newArr = applications.filter(internship => {
-  //     if (filterType === 'accepted') {
-  //       return !internship.acceptedStatus
-  //     } else if (filterType === 'interview') {
-  //       return !internship.interviewStatus
-  //     } else {
-  //       return internship.interviewStatus || internship.acceptedStatus
-  //     }
-  //   })
-  //   // setApplications(newArr)
-  // }
-  // useEffect(() => {
-  //   // applicationsFilter.accepted ? filterInternships('accepte') : false,
-  //   applicationsFilter.accepted ? addFilterInternships('accepted') : removeFilterInternships('accepted')
-  //   applicationsFilter.interview ? addFilterInternships('interview') : removeFilterInternships('interview')
-  //   applicationsFilter.pending ? addFilterInternships('pending') : removeFilterInternships('pending')
-  // }, [applicationsFilter])
 
 
   useEffect(() => {
