@@ -1,17 +1,17 @@
 import React from 'react'
-import { StyleSheet, Image, View, Text } from 'react-native'
+import { StyleSheet, SafeAreaView, StatusBar, Image, View, Text } from 'react-native'
 import InternshipPage from '../../utils/InternshipDetail'
 
 export default function InternshipDetail(props) {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <InternshipPage {...props} />
-    </View >
+    </SafeAreaView >
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    marginTop: StatusBar.currentHeight
   }
 })
