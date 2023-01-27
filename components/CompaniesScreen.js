@@ -18,7 +18,7 @@ export default function CompaniesScreen({ navigation }) {
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>20+ </Text>WEBINARS</Text>
   ]
   const handleClick = (companyName) => {
-    dispatch(getInternshipsByCompany(companyName))
+    // dispatch(getInternshipsByCompany(companyName))
     navigation.navigate('Internships')
   }
   return (

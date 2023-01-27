@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "SPB-Mobile",
-    "slug": "SPB-Mobile",
+    "name": "Stagii pe Bune",
+    "slug": "StagiiPeBune",
     "version": "1.0.0",
-    "orientation": "portrait`",
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -20,6 +20,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.StagiiPeBune",
+      "versionCode": 2,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -32,6 +34,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0a1761ea-d9b5-43af-9f9e-4ae3f7259606"
+      }
     }
   }
 }

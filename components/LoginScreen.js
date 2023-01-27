@@ -4,7 +4,7 @@ import { StatusBar, StyleSheet, View, Text, TextInput, Dimensions, TouchableOpac
 import SvgLogo from '../assets/SvgLogo'
 import OrangeStrokeSvg from '../assets/OrangeStroke'
 import { colors, spacing, font } from '../styles/globalStyle';
-import credentials from '../test_login_credentials'
+// import credentials from '../test_login_credentials'
 import * as SecureStore from 'expo-secure-store';
 
 function LoginScreen({ navigation }) {
@@ -12,13 +12,12 @@ function LoginScreen({ navigation }) {
   useEffect(() => {
     checkForToken()
   }, [])
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
-  const deleteToken = () => {
-    SecureStore.deleteItemAsync('authToken')
-  }
+
   const onFormChange = (value, inputType) => {
     setFormData(prevState => ({
       ...prevState,
@@ -62,31 +61,31 @@ function LoginScreen({ navigation }) {
     }
   }
 
-  const handleQuickAuth = async () => {
-    try {
-      const response = await fetch(
-        "https://staging.stagiipebune.ro/api/v1/token/general_auth",
-        {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email: credentials.email, password: credentials.password })
+  // const handleQuickAuth = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "https://staging.stagiipebune.ro/api/v1/token/general_auth",
+  //       {
+  //         method: 'POST',
+  //         headers: {
+  //           'Accept': 'application/json',
+  //           'Content-Type': 'application/json'
+  //         },
+  //         body: JSON.stringify({ email: credentials.email, password: credentials.password })
 
-        }
-      ).then((response) => response.json())
-        .then((responseJson) => {
-          saveToken(responseJson.token)
-          checkForToken()
+  //       }
+  //     ).then((response) => response.json())
+  //       .then((responseJson) => {
+  //         saveToken(responseJson.token)
+  //         checkForToken()
 
-        });
+  //       });
 
-    } catch (error) {
-      console.error(error);
-    } finally {
-    }
-  }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //   }
+  // }
   // //setting > disable notifications, instead of the company name internship add a select w companies
 
   return (
@@ -113,7 +112,7 @@ function LoginScreen({ navigation }) {
         </View>
         <View style={styles.inputWrapper}>
           <TextInput
-            style={styles.input} placeholder='Passwords'
+            style={styles.input} placeholder='Password'
             placeholderTextColor={colors.secondary.lightGrey}
             onChangeText={(value) => onFormChange(value, 'password')}
           />
@@ -123,9 +122,9 @@ function LoginScreen({ navigation }) {
         <TouchableOpacity style={styles.loginButton} onPress={handleAuth}>
           <Text style={[styles.buttonText, { color: colors.secondary.nearBlack }]}  >Log in</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.loginButton, { backgroundColor: 'transparent' }]} onPress={handleQuickAuth}>
+        {/* <TouchableOpacity style={[styles.loginButton, { backgroundColor: 'transparent' }]} onPress={handleQuickAuth}>
           <Text style={[styles.buttonText, { color: colors.main.cappuccino }]}>Sign up</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View >
   )

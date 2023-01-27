@@ -1,38 +1,46 @@
 import React, { useState } from 'react'
-import { StyleSheet, StatusBar, Image, View, Text, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, View, Text, TouchableHighlight, TouchableOpacity } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { internshipsActions } from '../features/internships/internshipsSlice'
 import { useDispatch } from 'react-redux'
 import { colors, font } from '../styles/globalStyle'
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import reactStringReplace from 'react-string-replace';
-
+import Toast from 'react-native-toast-message';
+import onShare from '../utils/shareFunction'
 
 export default function InternshipDetail({ route, navigation }) {
   const { internship } = route.params
   const { applyToInternship } = internshipsActions
   const dispatch = useDispatch()
-  const styles = getStyles(useBottomTabBarHeight())
-
+  const base_url = 'https://staging.stagiipebune.ro'
   const [currentView, setCurrentView] = useState('description')
-  console.log(internship)
   const handleBarTouch = (view) => view === 'description' ? setCurrentView('description') : setCurrentView('about')
-
+  console.log(internship)
   const formatText = (text) => {
     const regex = /\*{2}(.*?)\*{2}/g
-    const replacementFunction = (match, index) => <Text style={{ fontWeight: font.fontWeight.xbold }} key={index}>{match}</Text>;
+    const replacementFunction = (match, index) => <Text style={{ fontWeight: font.fontWeight.xbold, color: colors.main.accent }} key={index}>{match}</Text>;
 
     return reactStringReplace(text, regex, replacementFunction);
   }
   formatText(internship.description)
-  return (
-    <ScrollView>
-      <View style={styles.container}>
+  const handleApplyPress = () => {
+    dispatch(applyToInternship(internship))
+    Toast.show({
+      type: 'info',
+      text1: 'Applied successfully to job!',
+    });
 
-        <View style={styles.backButtonWrapper}>
-          <Ionicon name="chevron-back" size={26} style={styles.backButton} onPress={() => navigation.goBack()} />
-        </View>
+  }
+  return (
+    <View style={styles.container}>
+      <View marginBottom={10}>
+        <TouchableHighlight style={styles.backButtonWrapper} onPress={() => navigation.goBack()}>
+          <Ionicon name="chevron-back" size={26} style={styles.backButton} />
+        </TouchableHighlight>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
           <View style={styles.companyLogoWrapper}>
             <Image source={{ uri: internship.company.logo }} style={styles.companyLogo} />
@@ -40,9 +48,7 @@ export default function InternshipDetail({ route, navigation }) {
           <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.internshipTitle}>{internship.title}</Text>
-              <Ionicon name="send" size={26} color="#F26649" onPress={() => alert('Shared!')} />
             </View>
-            <Text style={styles.internshipCompany}>{internship.company.name}</Text>
           </View>
         </View>
         {/* <TouchableHighlight
@@ -81,14 +87,32 @@ export default function InternshipDetail({ route, navigation }) {
                 {formatText(internship.company.description)}
               </Text>}
         </View>
-      </View >
-    </ScrollView>
+      </ScrollView>
+
+      <View style={styles.bottomButtonsWrapper}>
+        <View width={'60%'}>
+          <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress}>
+            <Text style={styles.bottomButtonText}>Apply</Text>
+          </TouchableHighlight>
+        </View>
+        <View width={'30%'}>
+          <TouchableHighlight style={styles.bottomButton} onPress={() => onShare(base_url + internship.url)}>
+            <View flexDirection={'row'} alignItems={'center'}>
+              <Text style={[styles.bottomButtonText, { marginRight: 10, color: colors.secondary.lightGrey }]}>Share</Text>
+              <Ionicon name="send" size={16} color={colors.secondary.lightGrey} />
+            </View>
+          </TouchableHighlight>
+        </View>
+      </View>
+      <Toast />
+
+    </View >
   )
 }
-const getStyles = (bottomTabHeight) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     marginHorizontal: 10,
-    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight + 40 : bottomTabHeight + 20
+    height: '100%'
   },
   innerWrapper: {
     flexDirection: 'row',
@@ -111,11 +135,11 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   backButtonWrapper: {
     backgroundColor: colors.secondary.mediumGrey,
     borderRadius: 5,
-    padding: 5,
     alignSelf: 'flex-start',
   },
   backButton: {
-    color: colors.main.accent
+    color: colors.main.accent,
+    padding: 5,
   },
   internshipTitle: {
     color: 'white',
@@ -155,5 +179,25 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     color: colors.main.cappuccino,
     fontSize: font.size.m,
     fontWeight: font.fontWeight.bold
-  }
+  },
+  bottomButtonsWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+  },
+  bottomButton: {
+    backgroundColor: colors.secondary.mediumGrey,
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginRight: 10,
+    marginVertical: 5,
+  },
+  bottomButtonText: {
+    color: colors.main.accent,
+    fontSize: font.size.m,
+    fontWeight: font.fontWeight.bold,
+    textAlign: 'center'
+
+  },
 })
