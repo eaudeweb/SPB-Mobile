@@ -9,7 +9,6 @@ import { store } from './store/store';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 
-
 export default function App(props) {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
@@ -78,7 +77,6 @@ export default function App(props) {
     } else {
       console.log('Must use physical device for Push Notifications');
     }
-
     return token;
   }
 

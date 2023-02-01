@@ -8,7 +8,6 @@ import InternshipList from './InternshipList';
 import { colors, components } from '../../styles/globalStyle'
 import { useDispatch, useSelector } from 'react-redux';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import { getAllInternships } from '../../features/internships/internshipsSlice';
 import Loading from './Loading';
 
 export default function InternshipMain(props) {
@@ -17,10 +16,6 @@ export default function InternshipMain(props) {
   const [searchText, setSearchText] = useState('')
   const { isLoading } = useSelector(state => state.internships)
   //TODO cities/categories/companies use form 
-
-  useEffect(() => {
-    dispatch(getAllInternships())
-  }, [])
 
   // TODO add clear filters button/option 
   const updateSearch = (text) => {
@@ -45,7 +40,6 @@ export default function InternshipMain(props) {
           }
         />
         <InternshipsFilter />
-        {/* TODO infinite scroll  */}
         {isLoading ?
           <Loading />
           :

@@ -1,37 +1,72 @@
-import React, { useState } from 'react'
-import { StyleSheet, Image, View, Text, TouchableHighlight, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Image, View, Text, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import { internshipsActions } from '../features/internships/internshipsSlice'
-import { useDispatch } from 'react-redux'
+import { applyToInternship, withdrawFromInternship, resetApplicationStatus, updateLocalInternshipApplied, updateLocalInternshipWithdrew } from '../features/internships/internshipsSlice'
+import { useSelector, useDispatch } from 'react-redux';
 import { colors, font } from '../styles/globalStyle'
 import reactStringReplace from 'react-string-replace';
 import Toast from 'react-native-toast-message';
 import onShare from '../utils/shareFunction'
 
 export default function InternshipDetail({ route, navigation }) {
-  const { internship } = route.params
-  const { applyToInternship } = internshipsActions
+  const { application } = useSelector(state => state.internships)
+  const [internship, setInternship] = useState(route.params.internship)
+
   const dispatch = useDispatch()
   const base_url = 'https://staging.stagiipebune.ro'
   const [currentView, setCurrentView] = useState('description')
   const handleBarTouch = (view) => view === 'description' ? setCurrentView('description') : setCurrentView('about')
-  console.log(internship)
   const formatText = (text) => {
     const regex = /\*{2}(.*?)\*{2}/g
     const replacementFunction = (match, index) => <Text style={{ fontWeight: font.fontWeight.xbold, color: colors.main.accent }} key={index}>{match}</Text>;
 
     return reactStringReplace(text, regex, replacementFunction);
   }
-  formatText(internship.description)
   const handleApplyPress = () => {
-    dispatch(applyToInternship(internship))
-    Toast.show({
-      type: 'info',
-      text1: 'Applied successfully to job!',
-    });
-
+    const payload = {
+      companyId: internship.company.id,
+      jobId: internship.id
+    }
+    setInternship({ ...internship, can_apply: 'already_applied' })
+    dispatch(updateLocalInternshipApplied(internship))
+    dispatch(applyToInternship(payload))
   }
+  const handleWithdrawPress = () => {
+    const payload = {
+      companyId: internship.company.id,
+      jobId: internship.id
+    }
+    setInternship({ ...internship, can_apply: true })
+    dispatch(updateLocalInternshipWithdrew(internship))
+    dispatch(withdrawFromInternship(payload))
+  }
+  useEffect(() => {
+    if (application.isApplySuccess) {
+      Toast.show({
+        type: 'success',
+        text1: 'Applied successfully',
+      });
+      dispatch(resetApplicationStatus())
+    }
+    if (application.isWithdrawSuccess) {
+      Toast.show({
+        type: 'error',
+        text1: 'Withdrew successfully',
+      });
+      dispatch(resetApplicationStatus())
+    }
+    if (application.isError) {
+      Toast.show({
+        type: 'error',
+        text1: 'Could not apply right now',
+      });
+    }
+    dispatch(resetApplicationStatus())
+    // dispatch(getStudentInternships())
+
+  }, [application])
+
   return (
     <View style={styles.container}>
       <View marginBottom={10}>
@@ -51,12 +86,6 @@ export default function InternshipDetail({ route, navigation }) {
             </View>
           </View>
         </View>
-        {/* <TouchableHighlight
-          style={{ backgroundColor: 'red', padding: 10, marginTop: 50 }}
-          onPress={() => dispatch(applyToInternship(internship))}
-        >
-          <Text>Apply to job</Text>
-        </TouchableHighlight> */}
         {internship.applied ?
           <View>
             <Text style={{ color: 'white', marginBottom: 10 }}>Applied two 2 weeks ago</Text>
@@ -91,9 +120,28 @@ export default function InternshipDetail({ route, navigation }) {
 
       <View style={styles.bottomButtonsWrapper}>
         <View width={'60%'}>
-          <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress}>
-            <Text style={styles.bottomButtonText}>Apply</Text>
-          </TouchableHighlight>
+          {internship.can_apply !== 'already_applied' ?
+            <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress}>
+              <View>
+                {application.isLoading ?
+                  <ActivityIndicator size="small" style={styles.spinner} color={colors.main.cappuccino} />
+                  :
+                  <Text style={styles.bottomButtonText}>Apply</Text>
+                }
+              </View>
+            </TouchableHighlight>
+            :
+            <TouchableHighlight style={styles.bottomButton} onPress={handleWithdrawPress}>
+              <View>
+                {application.isLoading ?
+                  <ActivityIndicator size="small" style={styles.spinner} color={colors.main.accent} />
+                  :
+                  <Text style={[styles.bottomButtonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
+                }
+              </View>
+            </TouchableHighlight>
+          }
+
         </View>
         <View width={'30%'}>
           <TouchableHighlight style={styles.bottomButton} onPress={() => onShare(base_url + internship.url)}>
@@ -103,7 +151,7 @@ export default function InternshipDetail({ route, navigation }) {
             </View>
           </TouchableHighlight>
         </View>
-      </View>
+      </View >
       <Toast />
 
     </View >
@@ -197,7 +245,8 @@ const styles = StyleSheet.create({
     color: colors.main.accent,
     fontSize: font.size.m,
     fontWeight: font.fontWeight.bold,
-    textAlign: 'center'
-
+    textAlign: 'center',
   },
+  spinner: {
+  }
 })

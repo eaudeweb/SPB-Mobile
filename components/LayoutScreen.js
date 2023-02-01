@@ -10,6 +10,8 @@ import NewsScreen from './NewsScreen/NewsScreen'
 import { colors } from '../styles/globalStyle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
+import { useDispatch } from 'react-redux';
+import { getAllInternships, getStudentInternships } from '../features/internships/internshipsSlice'
 
 export default function LayoutScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -25,8 +27,10 @@ export default function LayoutScreen({ navigation }) {
     const result = await SecureStore.getItemAsync('authToken')
     return result
   }
-
+  const dispatch = useDispatch()
   useEffect(() => {
+    dispatch(getAllInternships())
+    // dispatch(getStudentInternships())
     //prevent swiping back to the login screen after login occurred succesfully 
     navigation.addListener('beforeRemove', (e) => {
       e.preventDefault()

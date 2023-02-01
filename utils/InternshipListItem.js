@@ -152,6 +152,15 @@ export default function InternshipListItem({ navigation, internship, parentRoute
                 :
                 ''
             }
+            {
+              internship.can_apply === 'already_applied' && !swipeable ?
+                <View style={styles.statusTextWrapper}>
+                  <FaIcon name="clipboard" size={16} color={colors.secondary.lightGrey} />
+                  <Text style={styles.statusText}>Applied</Text>
+                </View>
+                :
+                ''
+            }
           </View>
 
         </TouchableHighlight>

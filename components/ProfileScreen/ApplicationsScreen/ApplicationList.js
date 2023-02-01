@@ -14,8 +14,8 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 
 export default function ApplicationList(props) {
   const styles = getStyles(useBottomTabBarHeight())
-  const { internshipsAppliedTo } = useSelector(state => state.internships)
-  const [applications, setApplications] = useState(internshipsAppliedTo)
+  const { studentInternships } = useSelector(state => state.internships)
+  const [applications, setApplications] = useState(studentInternships)
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true)
   const [applicationsFilter, setApplicationsFilter] = useState({
     accepted: true,
@@ -41,11 +41,11 @@ export default function ApplicationList(props) {
 
 
   useEffect(() => {
-    setApplications(internshipsAppliedTo)
-  }, [internshipsAppliedTo])
+    setApplications(studentInternships)
+  }, [studentInternships])
   useEffect(() => {
     if (applicationsFilter.accepted && applicationsFilter.interview && applicationsFilter.applied) {
-      setApplications(internshipsAppliedTo)
+      setApplications(studentInternships)
     } else {
       if (applicationsFilter.accepted && applicationsFilter.interview) {
         const updatedApplications = internshipsAppliedTo.filter(application => {
@@ -78,7 +78,7 @@ export default function ApplicationList(props) {
       }
     }
 
-  }, [applicationsFilter, internshipsAppliedTo])
+  }, [applicationsFilter, studentInternships])
 
   return (
     <View style={styles.container}>
@@ -97,7 +97,13 @@ export default function ApplicationList(props) {
 
           </Collapsible>
         </View>
-        {applications?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)}
+        {applications?.map((item, index) => (
+          <View key={index}>
+            <Text style={styles.companyTitle}>{item.companyName}</Text>
+            {item.internships?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)}
+          </View>
+        ))}
+        {/* {applications?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)} */}
       </ScrollView>
     </View>
   )
@@ -151,5 +157,10 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     fontSize: font.size.m,
     color: colors.secondary.lightGrey,
     marginRight: 5
+  },
+  companyTitle: {
+    color: colors.main.accent,
+    fontSize: font.size.l,
+    marginHorizontal: 10
   }
 })

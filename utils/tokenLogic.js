@@ -9,7 +9,6 @@ const deleteToken = () => {
   SecureStore.deleteItemAsync('authToken')
 }
 
-
 const getToken = async () => {
   const result = await SecureStore.getItemAsync('authToken')
   return result
