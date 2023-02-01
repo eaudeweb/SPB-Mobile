@@ -4,20 +4,18 @@ import { StatusBar, StyleSheet, View, Text, TextInput, Dimensions, TouchableOpac
 import SvgLogo from '../assets/SvgLogo'
 import OrangeStrokeSvg from '../assets/OrangeStroke'
 import { colors, spacing, font } from '../styles/globalStyle';
-// import credentials from '../test_login_credentials'
 import * as SecureStore from 'expo-secure-store';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 function LoginScreen({ navigation }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
   useEffect(() => {
     checkForToken()
   }, [])
-
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   })
-
   const onFormChange = (value, inputType) => {
     setFormData(prevState => ({
       ...prevState,
@@ -57,39 +55,11 @@ function LoginScreen({ navigation }) {
     } catch (error) {
       console.error(error);
     } finally {
-      // setLoading(false);
     }
   }
-
-  // const handleQuickAuth = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       "https://staging.stagiipebune.ro/api/v1/token/general_auth",
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           'Accept': 'application/json',
-  //           'Content-Type': 'application/json'
-  //         },
-  //         body: JSON.stringify({ email: credentials.email, password: credentials.password })
-
-  //       }
-  //     ).then((response) => response.json())
-  //       .then((responseJson) => {
-  //         saveToken(responseJson.token)
-  //         checkForToken()
-
-  //       });
-
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //   }
-  // }
   // //setting > disable notifications, instead of the company name internship add a select w companies
-
   return (
-    <View style={styles.loginView}>
+    <KeyboardAwareScrollView contentContainerStyle={styles.loginView} bounces={false}>
       <SvgLogo style={styles.logo} customSize={{ width: customWidth, height: customWidth / 3 }} />
       <View style={styles.content}>
         <Text style={styles.sloganText}>The <Text style={{ color: colors.main.cappuccino }}>first,</Text></Text>
@@ -115,6 +85,7 @@ function LoginScreen({ navigation }) {
             style={styles.input} placeholder='Password'
             placeholderTextColor={colors.secondary.lightGrey}
             onChangeText={(value) => onFormChange(value, 'password')}
+            secureTextEntry={true}
           />
         </View>
       </View>
@@ -122,11 +93,8 @@ function LoginScreen({ navigation }) {
         <TouchableOpacity style={styles.loginButton} onPress={handleAuth}>
           <Text style={[styles.buttonText, { color: colors.secondary.nearBlack }]}  >Log in</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity style={[styles.loginButton, { backgroundColor: 'transparent' }]} onPress={handleQuickAuth}>
-          <Text style={[styles.buttonText, { color: colors.main.cappuccino }]}>Sign up</Text>
-        </TouchableOpacity> */}
       </View>
-    </View >
+    </KeyboardAwareScrollView>
   )
 }
 

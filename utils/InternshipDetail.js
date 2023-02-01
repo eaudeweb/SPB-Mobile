@@ -12,7 +12,6 @@ import onShare from '../utils/shareFunction'
 export default function InternshipDetail({ route, navigation }) {
   const { application } = useSelector(state => state.internships)
   const [internship, setInternship] = useState(route.params.internship)
-
   const dispatch = useDispatch()
   const base_url = 'https://staging.stagiipebune.ro'
   const [currentView, setCurrentView] = useState('description')
@@ -20,7 +19,6 @@ export default function InternshipDetail({ route, navigation }) {
   const formatText = (text) => {
     const regex = /\*{2}(.*?)\*{2}/g
     const replacementFunction = (match, index) => <Text style={{ fontWeight: font.fontWeight.xbold, color: colors.main.accent }} key={index}>{match}</Text>;
-
     return reactStringReplace(text, regex, replacementFunction);
   }
   const handleApplyPress = () => {
@@ -74,7 +72,6 @@ export default function InternshipDetail({ route, navigation }) {
           <Ionicon name="chevron-back" size={26} style={styles.backButton} />
         </TouchableHighlight>
       </View>
-
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
           <View style={styles.companyLogoWrapper}>
@@ -117,14 +114,13 @@ export default function InternshipDetail({ route, navigation }) {
               </Text>}
         </View>
       </ScrollView>
-
       <View style={styles.bottomButtonsWrapper}>
         <View width={'60%'}>
           {internship.can_apply !== 'already_applied' ?
             <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress}>
               <View>
                 {application.isLoading ?
-                  <ActivityIndicator size="small" style={styles.spinner} color={colors.main.cappuccino} />
+                  <ActivityIndicator size="small" color={colors.main.cappuccino} />
                   :
                   <Text style={styles.bottomButtonText}>Apply</Text>
                 }
@@ -134,14 +130,13 @@ export default function InternshipDetail({ route, navigation }) {
             <TouchableHighlight style={styles.bottomButton} onPress={handleWithdrawPress}>
               <View>
                 {application.isLoading ?
-                  <ActivityIndicator size="small" style={styles.spinner} color={colors.main.accent} />
+                  <ActivityIndicator size="small" color={colors.main.accent} />
                   :
                   <Text style={[styles.bottomButtonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
                 }
               </View>
             </TouchableHighlight>
           }
-
         </View>
         <View width={'30%'}>
           <TouchableHighlight style={styles.bottomButton} onPress={() => onShare(base_url + internship.url)}>
@@ -153,10 +148,10 @@ export default function InternshipDetail({ route, navigation }) {
         </View>
       </View >
       <Toast />
-
     </View >
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 10,
@@ -246,7 +241,5 @@ const styles = StyleSheet.create({
     fontSize: font.size.m,
     fontWeight: font.fontWeight.bold,
     textAlign: 'center',
-  },
-  spinner: {
   }
 })
