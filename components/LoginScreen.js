@@ -6,6 +6,7 @@ import OrangeStrokeSvg from '../assets/OrangeStroke'
 import { colors, spacing, font } from '../styles/globalStyle';
 import * as SecureStore from 'expo-secure-store';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import tokenLogic from '../utils/tokenLogic'
 
 function LoginScreen({ navigation }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
@@ -27,11 +28,11 @@ function LoginScreen({ navigation }) {
     return result
   }
   const checkForToken = async () => {
-    SecureStore.getItemAsync('authToken').then(token => {
-      if (token) {
-        navigation.navigate('Layout')
-      }
-    })
+    const token = await tokenLogic.getToken()
+    if (token) {
+      navigation.navigate('Layout')
+    }
+
   }
   const handleAuth = async () => {
     try {

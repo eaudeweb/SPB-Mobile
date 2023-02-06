@@ -1,16 +1,24 @@
 import React from 'react'
 import { SafeAreaView, StyleSheet, View, Text, StatusBar, ScrollView, TouchableOpacity, Image, Platform } from 'react-native'
-import SvgLogo from '../assets/SvgLogo'
+import SvgLogo from '../../assets/SvgLogo'
 import LoopText from 'react-native-loop-text'
-import { colors, font, spacing } from "../styles/globalStyle"
+import { colors, font, spacing } from "../../styles/globalStyle"
 import { Dimensions } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
-import { resetFilters, getInternshipsByCompany } from '../features/internships/internshipsSlice';
+import { resetFilters, getInternshipsByCompany } from '../../features/internships/internshipsSlice';
+import Loading from './Loading'
 
 export default function CompaniesScreen({ navigation }) {
-  const { companies } = useSelector(state => state.companies)
+  const { companies, isLoading } = useSelector(state => state.companies)
   const dispatch = useDispatch()
-
+  // minHeight: companies.length !== ?? Dimensions.get('window').height * 0.82 - 100,
+  const wrapperLoadingHeight = () => {
+    if (companies?.length == 0) {
+      return {
+        minHeight: Dimensions.get('window').height * 0.82 - 100,
+      }
+    }
+  }
   //TODO move to store
   const jumbotronTextArr = [
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>15+ </Text>COMPANIES</Text>,
@@ -21,6 +29,7 @@ export default function CompaniesScreen({ navigation }) {
     // dispatch(getInternshipsByCompany(companyName))
     navigation.navigate('Internships')
   }
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -36,24 +45,29 @@ export default function CompaniesScreen({ navigation }) {
                 {/* TODO no magic numbers */}
                 <LoopText textArray={jumbotronTextArr} duration={1500} delay={200} />
               </View>
-              <View style={styles.companiesWrapper}>
-                {companies.map((company, index) => (
-                  //TODO go to internships filtered by company
-                  <TouchableOpacity
-                    style={company.mainPartner ? styles.partnerCompanyWrapper : styles.companyWrapper}
-                    key={index}
-                    onPress={() => handleClick(company.name)}
-                  >
-                    {company.notifications ?
-                      <View style={styles.companyNotificationWrapper}>
-                        <Text style={styles.companyNotificationText}>{company.notifications}</Text>
-                      </View>
-                      :
-                      ''
-                    }
-                    <Image source={{ uri: company.logo }} style={styles.companyLogo} />
-                  </TouchableOpacity>
-                ))}
+              <View style={[styles.companiesWrapper, wrapperLoadingHeight()]}>
+                {isLoading ?
+                  <Loading />
+                  :
+                  companies?.map((company, index) => (
+                    //TODO go to internships filtered by company
+                    <TouchableOpacity
+                      style={company.name === "Bitdefender" ? styles.partnerCompanyWrapper : [styles.companyWrapper, index === companies.length - 1 ? { borderBottomWidth: 0 } : '']}
+                      key={index}
+                      onPress={() => handleClick(company.name)}
+                    >
+                      {company.notifications ?
+                        <View style={styles.companyNotificationWrapper}>
+                          <Text style={styles.companyNotificationText}>{company.notifications}</Text>
+                        </View>
+                        :
+                        ''
+                      }
+                      <Image source={{ uri: company.logo }} style={styles.companyLogo} />
+                    </TouchableOpacity>
+                  ))
+                }
+
               </View>
             </View>
           </ScrollView>
@@ -108,12 +122,15 @@ const styles = StyleSheet.create({
   partnerCompanyWrapper: {
     width: '100%',
     padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.secondary.cream
   },
   companyWrapper: {
     width: '50%',
     padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: colors.secondary.cream
+    // TODO FIX THIS
+    borderBottomWidth: 1,
+    borderBottomColor: colors.secondary.cream
   },
   companyLogo: {
     width: '100%',

@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import LoadingScreen from './components/LoadingScreen';
 
 export default function App(props) {
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -90,18 +91,21 @@ export default function App(props) {
       trigger: { seconds: 1 },
     });
   }
-
+  if (1 + 1 === 2) { }
   return (
     <Provider store={store}>
       <NavigationContainer theme={CustomDarkTheme}>
         <Stack.Navigator
-          initialRouteName="Login"
+          initialRouteName="Loading"
           screenOptions={{
             headerShown: false,
             gestureEnabled: false
           }}>
           <Stack.Screen name="Layout" >
             {(props) => <LayoutScreen {...props} />}
+          </Stack.Screen>
+          <Stack.Screen name="Loading"   >
+            {(props) => <LoadingScreen {...props} />}
           </Stack.Screen>
           <Stack.Screen name="Login" >
             {(props) => <LoginScreen {...props} />}

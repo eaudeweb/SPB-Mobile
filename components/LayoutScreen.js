@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Platform, View, Text } from 'react-native'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
-import CompaniesScreen from './CompaniesScreen';
+import CompaniesScreen from './CompaniesScreen/CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
 import EventsScreen from './EventsScreen/EventsScreen';
 import ProfileScreen from './ProfileScreen/ProfileScreen';
@@ -12,8 +12,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import { useDispatch } from 'react-redux';
 import { getAllInternships, getStudentInternships } from '../features/internships/internshipsSlice'
+import { getAllPartnerCompanies } from '../features/companies/companiesSlice';
 
-export default function LayoutScreen({ navigation }) {
+export default function LayoutScreen(props) {
   const insets = useSafeAreaInsets();
   const Tab = createBottomTabNavigator()
   const screen = {
@@ -30,11 +31,12 @@ export default function LayoutScreen({ navigation }) {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllInternships())
+    dispatch(getAllPartnerCompanies())
     // dispatch(getStudentInternships())
     //prevent swiping back to the login screen after login occurred succesfully 
-    navigation.addListener('beforeRemove', (e) => {
-      e.preventDefault()
-    })
+    // props.navigation.addListener('beforeRemove', (e) => {
+    //   e.preventDefault()
+    // })
   }, [])
 
   return (
@@ -80,10 +82,17 @@ export default function LayoutScreen({ navigation }) {
       <Tab.Screen name={screen.companies}>
         {(props) => <CompaniesScreen {...props} text='Props passing test' />}
       </Tab.Screen>
-      <Tab.Screen name={screen.internships} component={InternshipsScreen} />
+      <Tab.Screen name={screen.internships} component={InternshipsScreen}
+        options={{
+          tabBarStyle: { display: 'none' }
+
+        }}
+      />
       <Tab.Screen name={screen.news} component={NewsScreen} />
       <Tab.Screen name={screen.events} component={EventsScreen} />
-      <Tab.Screen name={screen.profile} component={ProfileScreen} />
+      <Tab.Screen name={screen.profile}  >
+        {(props) => <ProfileScreen  {...props} />}
+      </Tab.Screen>
     </Tab.Navigator>
   )
 }

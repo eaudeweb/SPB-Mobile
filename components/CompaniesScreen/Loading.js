@@ -6,22 +6,23 @@ import { colors } from '../../styles/globalStyle'
 const Loading = () => {
   const MyLoader = (props) => (
     <ContentLoader
-      speed={2}
+      speed={1}
       width={476}
-      height={220}
-      viewBox="0 0 476 220"
-      backgroundColor={colors.secondary.darkGrey}
-      foregroundColor={colors.secondary.mediumGrey}
+      height={124}
+      viewBox="0 0 476 123"
+      backgroundColor={colors.main.white}
+      foregroundColor={colors.main.accent}
       {...props}
     >
-      <Rect x="10" y="10" rx="5" ry="5" width="139" height="15" />
-      <Rect x="10" y="40" rx="5" ry="5" width="371" height="70" />
-      <Rect x="10" y="120" rx="5" ry="5" width="371" height="70" />
+      <Rect x="0" y="20" rx="4" ry="4" width="350" height="100" />
     </ContentLoader>
   )
 
+
   return (
     <View>
+      <MyLoader />
+      <MyLoader />
       <MyLoader />
       <MyLoader />
     </View>

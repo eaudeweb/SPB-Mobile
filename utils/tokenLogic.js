@@ -1,6 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
-
+import jwtDecode from 'jwt-decode';
 const saveToken = async (value) => {
+
   const result = await SecureStore.setItemAsync('authToken', value)
   return result
 }
@@ -11,7 +12,15 @@ const deleteToken = () => {
 
 const getToken = async () => {
   const result = await SecureStore.getItemAsync('authToken')
-  return result
+  const currentTime = new Date().getTime() / 1000 //unix time in seconds
+  const isExpired = currentTime > jwtDecode(result).exp //compare the current time to the exp time 
+
+  if (isExpired) {
+    // awaitdeleteToken()
+    return false
+  } else {
+    return result
+  }
 }
 
 const getRefreshedToken = async () => {

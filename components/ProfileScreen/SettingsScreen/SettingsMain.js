@@ -6,18 +6,20 @@ import { NotificationsRadioInput } from './RadioInputs'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native'
+import tokenLogic from '../../../utils/tokenLogic'
 
-export default function SettingsMain() {
+export default function SettingsMain({ navigation }) {
   const [notificationsActive, setNotificationsActive] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
   const styles = getStyles(useBottomTabBarHeight())
-  const navigation = useNavigation()
+  // const navigation = useNavigation()
   const handleLogOut = async () => {
     SecureStore.deleteItemAsync('authToken').then(() => {
       navigation.navigate('Login')
 
     })
-    navigation.navigate('Layout')
+
+
   }
   return (
     <ScrollView style={styles.container}>
