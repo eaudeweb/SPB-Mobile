@@ -3,16 +3,18 @@ import { StatusBar, StyleSheet, View, ActivityIndicator, Dimensions, TouchableOp
 import SvgLogo from '../assets/SvgLogo'
 import { colors, spacing, font } from '../styles/globalStyle';
 import * as SecureStore from 'expo-secure-store';
+import tokenLogic from '../utils/tokenLogic';
 
 function LoadingScreen({ navigation }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
   useEffect(() => {
     checkForToken()
+      .catch(err => console.log(err))
   }, [])
 
   const checkForToken = async () => {
-    const token = await SecureStore.getItemAsync('authToken')
-
+    const token = await tokenLogic.getToken().catch(error => console.log(error))
+    console.log(token)
     if (token) {
       navigation.navigate('Layout')
     } else {

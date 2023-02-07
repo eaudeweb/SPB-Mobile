@@ -28,7 +28,7 @@ function LoginScreen({ navigation }) {
     return result
   }
   const checkForToken = async () => {
-    const token = await tokenLogic.getToken()
+    const token = await tokenLogic.getToken().catch(err => console.log(err))
     if (token) {
       navigation.navigate('Layout')
     }
