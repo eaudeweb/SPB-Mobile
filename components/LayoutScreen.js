@@ -13,7 +13,7 @@ import * as SecureStore from 'expo-secure-store';
 import { useDispatch } from 'react-redux';
 import { getAllInternships, getStudentInternships } from '../features/internships/internshipsSlice'
 import { getAllPartnerCompanies } from '../features/companies/companiesSlice';
-
+import { getCategories, getLocations } from '../features/filters/filtersSlice';
 export default function LayoutScreen(props) {
   const insets = useSafeAreaInsets();
   const Tab = createBottomTabNavigator()
@@ -32,6 +32,8 @@ export default function LayoutScreen(props) {
   useEffect(() => {
     dispatch(getAllInternships())
     dispatch(getAllPartnerCompanies())
+    dispatch(getCategories())
+    dispatch(getLocations())
     // dispatch(getStudentInternships())
     //prevent swiping back to the login screen after login occurred succesfully 
     // props.navigation.addListener('beforeRemove', (e) => {

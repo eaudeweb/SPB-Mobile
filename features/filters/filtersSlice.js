@@ -1,18 +1,47 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import filterCategories from "../../utils/FilterCategoriesJson"
+import filterService from "./filtersActions"
 
 const { categories, locations } = filterCategories
 
 const initialState = {
-  categories: categories,
-  locations: locations,
+  categories: [],
+  locations: [],
   selectedFilter: null,
   internshipsFilter: {
-    categories: [],
-    cities: [],
-    companies: []
+    category: [],
+    location: [],
+    company: []
   }
 }
+
+export const getCategories = createAsyncThunk('filters/getCategories', async (payload, thunkAPI) => {
+  try {
+    return await filterService.getCategories()
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
+export const getLocations = createAsyncThunk('filters/getLocations', async (payload, thunkAPI) => {
+  try {
+    return await filterService.getLocations()
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
 
 const filtersSlice = createSlice({
   name: 'filters',
@@ -26,27 +55,49 @@ const filtersSlice = createSlice({
       state.selectedFilter = payload
     },
     updateFilterList: (state, { payload }) => {
-      const { type, newArr } = payload
+      const { type, value } = payload
       switch (type) {
-        case 'categories':
-          state.internshipsFilter.categories = newArr;
+        case 'category':
+          state.internshipsFilter.category = value;
           break;
-        case 'cities':
-          state.internshipsFilter.cities = newArr;
+        case 'location':
+          state.internshipsFilter.location = value;
           break;
-        case 'companies':
-          state.internshipsFilter.companies = newArr;
+        case 'company':
+          state.internshipsFilter.company = value;
           break;
       }
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getCategories.pending, (state) => {
+        // state.isLoading = true
+      })
+      .addCase(getCategories.fulfilled, (state, action) => {
+        // state.isLoading = false
+        state.categories = action.payload
+      })
+      .addCase(getCategories.rejected, (state, action) => {
+        // state.isLoading = false
+        // state.isError = true
+        // state.message = action.payload
+      })
+      .addCase(getLocations.pending, (state) => {
+        // state.isLoading = true
+      })
+      .addCase(getLocations.fulfilled, (state, action) => {
+        // state.isLoading = false
+        state.locations = action.payload
+      })
+      .addCase(getLocations.rejected, (state, action) => {
+        // state.isLoading = false
+        // state.isError = true
+        // state.message = action.payload
+      })
   }
 })
-// const onFormChange = (value, inputType) => {
-//   setFormData(prevState => ({
-//     ...prevState,
-//     [inputType]: value
-//   }))
-// }
+
 export const filtersActions = filtersSlice.actions
 // export const { completeSwipeableDemo } = companiesSlice.actions  <<<- action
 export default filtersSlice.reducer

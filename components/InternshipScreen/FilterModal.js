@@ -11,8 +11,12 @@ export default function FilterModal(props) {
   const { selectedFilter, internshipsFilter } = useSelector(state => state.filters)
   const dispatch = useDispatch()
   const { resetSelectedFilter, updateFilterList } = filtersActions
-  const companies = [...new Set(internships.map(internship => internship.companyName))].sort();
-
+  const companies = [...new Set(internships.map(internship => internship.company.name))].sort();
+  const currentFilters = {
+    category: internshipsFilter.category,
+    location: internshipsFilter.location,
+    company: internshipsFilter.company
+  }
   const handleSave = () => {
     setModalVisible(false)
   }
@@ -20,7 +24,6 @@ export default function FilterModal(props) {
     dispatch(resetSelectedFilter())
     setModalVisible(false)
   }
-
 
   const Option = ({ option, handlePress }) => (
     <TouchableHighlight onPress={handlePress}>
@@ -38,26 +41,51 @@ export default function FilterModal(props) {
     </TouchableOpacity>
 
   )
-  const handleCompanyFilterPress = (companyName) => {
-    const isCompanySelected = internshipsFilter.companies.find(company => companyName === company)
-    let newArr = [...internshipsFilter.companies]
-    if (isCompanySelected) {
-      newArr.splice(newArr.indexOf(companyName), 1)
-      dispatch(updateFilterList({ type: 'companies', newArr: newArr }))
-    } else {
-      newArr.push(companyName)
-      dispatch(updateFilterList({ type: 'companies', newArr: newArr }))
-    }
+  const handleCompanyFilterPress = (company) => {
+    internshipsFilter.company.name === company.name ?
+      dispatch(updateFilterList({ type: 'company', value: '' }))
+      :
+      dispatch(updateFilterList({ type: 'company', value: company }))
+  }
+
+  const handleCategoryFilterPress = (category) => {
+    internshipsFilter.category.name === category.name ?
+      dispatch(updateFilterList({ type: 'category', value: '' }))
+      :
+      dispatch(updateFilterList({ type: 'category', value: category }))
+  }
+
+  const handleLocationFilterPress = (location) => {
+    internshipsFilter.location.name === location.name ?
+      dispatch(updateFilterList({ type: 'location', value: '' }))
+      :
+      dispatch(updateFilterList({ type: 'location', value: location }))
   }
 
   const CompaniesFilter = () => {
-    return companies.map((company, index) => {
-      return internshipsFilter.companies.find(companyName => companyName === company) ?
-        <SelectedOption key={index} option={company} handlePress={() => handleCompanyFilterPress(company)} />
+    return props.companies.map((company, index) => {
+      return internshipsFilter.company.name?.includes(company.name) ?
+        <SelectedOption key={index} option={company.name} handlePress={() => handleCompanyFilterPress(company)} />
         :
-        <Option key={index} option={company} handlePress={() => handleCompanyFilterPress(company)} />
+        <Option key={index} option={company.name} handlePress={() => handleCompanyFilterPress(company)} />
     })
 
+  }
+  const CategoriesFilter = () => {
+    return props.categories.map((category, index) => {
+      return internshipsFilter.category.name?.includes(category.name) ?
+        <SelectedOption key={index} option={category.name} handlePress={() => handleCategoryFilterPress(category)} />
+        :
+        <Option key={index} option={category.name} handlePress={() => handleCategoryFilterPress(category)} />
+    })
+  }
+  const LocationsFilter = () => {
+    return props.locations.map((location, index) => {
+      return internshipsFilter.location === location ?
+        <SelectedOption key={index} option={location.name} handlePress={() => handleLocationFilterPress(location)} />
+        :
+        <Option key={index} option={location.name} handlePress={() => handleLocationFilterPress(location)} />
+    })
   }
 
   return (
@@ -80,10 +108,20 @@ export default function FilterModal(props) {
             <Text style={styles.modalTitle}>Companies</Text>
             <ScrollView style={{ width: '100%' }}>
               {selectedFilter === 'companies' && <CompaniesFilter />}
+              {selectedFilter === 'city' && <LocationsFilter />}
+              {selectedFilter === 'categories' && <CategoriesFilter />}
+              {/* {selectedFilter === 'categories' && props.categories.map((category, index) => <Option key={index} option={category.name} handlePress={() => handleCompanyFilterPress(company)} />)} */}
             </ScrollView>
-            <TouchableHighlight style={styles.saveButton} onPress={handleSave}>
-              <Text style={[styles.textStyle, { fontSize: 16 }]}>Apply filter</Text>
-            </TouchableHighlight>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 10 }}>
+              <TouchableHighlight style={styles.saveButton} onPress={handleSave}>
+                <Text style={styles.buttonText}>Apply filter</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight style={[styles.saveButton, { backgroundColor: colors.indicators.red }]} onPress={handleSave}>
+                <Text style={styles.buttonText}>Clear filter</Text>
+              </TouchableHighlight>
+            </View>
+
           </View>
         </View>
 
@@ -118,7 +156,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   optionText: {
-    color: 'white',
+    color: colors.secondary.lightGrey,
     fontSize: font.size.l,
   },
   optionWrapperSelected: {
@@ -135,10 +173,14 @@ const styles = StyleSheet.create({
     fontSize: font.size.l,
   },
   saveButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: colors.indicators.green,
     padding: 10,
     marginTop: 10,
     marginBottom: 10,
     borderRadius: 5
+  },
+  buttonText: {
+    color: colors.main.white,
+    fontSize: 16
   }
 })

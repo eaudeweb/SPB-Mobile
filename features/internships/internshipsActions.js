@@ -5,9 +5,11 @@ const ALL_INTERNSHIPS_URL = 'https://staging.stagiipebune.ro/api/v1/students/job
 const STUDENT_INTERNSHIPS_URL = 'https://staging.stagiipebune.ro/api/v1/me/jobs'
 const GET_APPLICATION_URL = (companyId, jobId, applicationType) => `https://staging.stagiipebune.ro/api/v1/companies/${companyId}/jobs/${jobId}/${applicationType}`
 
+const sortInternshipsByDate = (internships) => internships.sort((a, b) => new Date(b.start_date) - new Date(a.start_date))
 const getSortedInternships = (internships) => {
   //internships are sorted from old to new, grouped by company
-  const internshipsByDate = internships.sort((a, b) => new Date(b.start_date) - new Date(a.start_date))
+  const internshipsByDate = sortInternshipsByDate(internships)
+
   const getInternshipsByCompany = () => {
     const companies = [...new Set(internshipsByDate.map(internship => internship.company.name))]; // [ 'A', 'B']
     const internships = []
@@ -24,8 +26,6 @@ const getSortedInternships = (internships) => {
 }
 
 const getAllInternships = async () => {
-  console.log(await tokenLogic.getToken(),)
-
   const response = await axios.get(ALL_INTERNSHIPS_URL, {
     headers: {
       'Accept': 'application/json',
@@ -35,9 +35,32 @@ const getAllInternships = async () => {
   })
   const studentInternships = response.data.filter(internship => internship.can_apply === 'already_applied')
   return {
-    allInternships: getSortedInternships(response.data),
+    internships: response.data,
+    sortedInternships: getSortedInternships(response.data),
     studentInternships: getSortedInternships(studentInternships)
   }
+}
+
+const getInternshipsBySearch = async (params) => {
+  console.log(params)
+  //?company=5&categories=1&location=bucuresti&search=clatite
+  const { company, category, location } = params
+  const companyParam = company.name ? `?company=${company.id}` : ''
+  const categoryParam = category.name ? `&categories=${category.id}` : ''
+  const locationParam = location.name ? `&location=${location.slug}` : ''
+  const URL = ALL_INTERNSHIPS_URL + companyParam + categoryParam + locationParam
+  console.log(URL)
+  const response = await axios.get(URL, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      "X-CSRFToken": await tokenLogic.getToken(),
+    },
+  })
+
+  console.log(getSortedInternships(response.data))
+  return getSortedInternships(response.data)
+
 }
 
 const getStudentInternships = async () => {
@@ -74,7 +97,8 @@ const internshipsService = {
   getAllInternships,
   applyToInternship,
   withdrawFromInternship,
-  getStudentInternships
+  getStudentInternships,
+  getInternshipsBySearch
 }
 
 export default internshipsService

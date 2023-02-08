@@ -1,8 +1,9 @@
 import { createSlice, current, createAsyncThunk } from "@reduxjs/toolkit"
-import internshipsService from "./internshipsService"
+import internshipsService from "./internshipsActions"
 
 const initialState = {
   internships: [],
+  sortedInternships: [],
   studentInternships: [],
   application: {
     isLoading: false,
@@ -22,6 +23,7 @@ export const getAllInternships = createAsyncThunk('internships/getAll', async (i
   try {
     return await internshipsService.getAllInternships()
   } catch (error) {
+    getIntersnshipsBySearch
     const message =
       (error.response &&
         error.response.data &&
@@ -75,6 +77,21 @@ export const withdrawFromInternship = createAsyncThunk('internship/withdraw', as
     return thunkAPI.rejectWithValue(message)
   }
 })
+
+export const getInternshipsBySearch = createAsyncThunk('studentInternships/search', async (params, thunkAPI) => {
+  try {
+    return await internshipsService.getInternshipsBySearch(params)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
 
 export
   const internshipsSlice = createSlice({
@@ -143,7 +160,8 @@ export
         })
         .addCase(getAllInternships.fulfilled, (state, action) => {
           state.isLoading = false
-          state.internships = action.payload.allInternships
+          state.internships = action.payload.internships
+          state.sortedInternships = action.payload.sortedInternships
           state.studentInternships = action.payload.studentInternships
         })
         .addCase(getAllInternships.rejected, (state, action) => {
@@ -182,6 +200,18 @@ export
           state.studentInternships = action.payload
         })
         .addCase(getStudentInternships.rejected, (state, action) => {
+        })
+        .addCase(getInternshipsBySearch.pending, (state) => {
+          state.isLoading = true
+          // state.studentInternships = []
+        })
+        .addCase(getInternshipsBySearch.fulfilled, (state, action) => {
+          // state.studentInternships = action.payload
+          state.isLoading = false
+        })
+        .addCase(getInternshipsBySearch.rejected, (state, action) => {
+          state.isLoading = false
+
         })
 
     }

@@ -17,18 +17,18 @@ export default function InternshipsFilter(props) {
     dispatch(updateSelectedFilter(filterCategory))
     setModalVisible(true)
   }
-
+  // console.log(internshipsFilter)
   return (
     <View style={styles.container}>
       <Text style={styles.filterDescriptionText}>FILTER BY: </Text>
       <View style={styles.filterContainer}>
         <TouchableOpacity onPress={() => handleFilterTap('categories')}>
-          {internshipsFilter.categories.length > 0 ?
+          {internshipsFilter.category.name ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>Categories</Text>
-              <View style={styles.filterNumberCounter}>
+              {/* <View style={styles.filterNumberCounter}>
                 <Text style={styles.filterNumberCounterText}>{internshipsFilter.categories.length}</Text>
-              </View>
+              </View> */}
             </View>
             :
             <View style={styles.filterButton}>
@@ -38,12 +38,9 @@ export default function InternshipsFilter(props) {
 
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleFilterTap('city')}>
-          {internshipsFilter.cities.length > 0 ?
+          {internshipsFilter.location.name ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>City</Text>
-              <View style={styles.filterNumberCounter}>
-                <Text style={styles.filterNumberCounterText}>{internshipsFilter.cities.length}</Text>
-              </View>
             </View>
             :
             <View style={styles.filterButton}>
@@ -52,12 +49,12 @@ export default function InternshipsFilter(props) {
           }
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleFilterTap('companies')}>
-          {internshipsFilter.companies.length > 0 ?
+          {internshipsFilter.company.name ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>Companies</Text>
-              <View style={styles.filterNumberCounter}>
+              {/* <View style={styles.filterNumberCounter}>
                 <Text style={styles.filterNumberCounterText}>{internshipsFilter.companies.length}</Text>
-              </View>
+              </View> */}
             </View>
             :
             <View style={styles.filterButton}>
@@ -66,7 +63,6 @@ export default function InternshipsFilter(props) {
           }
         </TouchableOpacity>
       </View>
-      {/* TODO implement multi select, integrate with redux */}
       <FilterModal
         {...props}
         modalVisible={modalVisible}
@@ -80,6 +76,7 @@ export default function InternshipsFilter(props) {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 10,
+    marginBottom: 20
   },
   filterDescriptionText: {
     color: colors.secondary.lightGrey

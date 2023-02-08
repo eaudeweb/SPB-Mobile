@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, View, Platform, Text } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../utils/InternshipListItem'
@@ -7,13 +7,14 @@ import { colors, font } from '../../styles/globalStyle'
 import { useSelector } from 'react-redux';
 
 export default function InternshipsList(props) {
-
   const styles = getStyles(useBottomTabBarHeight())
-  const { internships } = useSelector(state => state.internships)
-
+  const { sortedInternships } = useSelector(state => state.internships)
+  const { internshipsFilter } = useSelector(state => state.filters)
+  useEffect(() => {
+  }, [internshipsFilter])
   return (
     <View style={styles.container}>
-      {internships?.map((item, index) => (
+      {sortedInternships?.map((item, index) => (
         <View key={index}>
           <Text style={styles.companyTitle}>{item.companyName}</Text>
           {item.internships?.map((internship, index) => <InternshipListItem {...props} internship={internship} parentRoute={useRoute().name} key={index} />)}
