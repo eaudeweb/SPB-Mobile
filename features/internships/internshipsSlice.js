@@ -203,15 +203,16 @@ export
         })
         .addCase(getInternshipsBySearch.pending, (state) => {
           state.isLoading = true
-          // state.studentInternships = []
+
         })
         .addCase(getInternshipsBySearch.fulfilled, (state, action) => {
           // state.studentInternships = action.payload
           state.isLoading = false
+          state.sortedInternships = action.payload
+
         })
         .addCase(getInternshipsBySearch.rejected, (state, action) => {
           state.isLoading = false
-
         })
 
     }

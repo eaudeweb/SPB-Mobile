@@ -11,7 +11,6 @@ import Loading from './Loading'
 export default function CompaniesScreen({ navigation }) {
   const { companies, isLoading } = useSelector(state => state.companies)
   const dispatch = useDispatch()
-  // minHeight: companies.length !== ?? Dimensions.get('window').height * 0.82 - 100,
   const wrapperLoadingHeight = () => {
     if (companies?.length == 0) {
       return {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, StatusBar, Text } from 'react-native'
+import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Text } from 'react-native'
 import { SearchBar } from '@rneui/themed';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import InternshipsFilter from './InternshipsFilter';
@@ -9,30 +9,37 @@ import { colors, components } from '../../styles/globalStyle'
 import { useDispatch, useSelector } from 'react-redux';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import Loading from './Loading';
-import { getAllPartnerCompanies } from '../../features/companies/companiesSlice';
-import { getInternshipsBySearch } from '../../features/internships/internshipsSlice';
+import { filtersActions } from '../../features/filters/filtersSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import { getInternshipsBySearch } from '../../features/internships/internshipsSlice';
 export default function InternshipMain(props) {
   const styles = getStyles(useBottomTabBarHeight())
-  const dispatch = useDispatch()
-  const [searchText, setSearchText] = useState('')
-  const { internships, isLoading } = useSelector(state => state.internships)
   const { locations, categories, internshipsFilter } = useSelector(state => state.filters)
-  const test = () => {
-    const availableFilters = {
-      category: internshipsFilter.category,
-      location: internshipsFilter.location,
-      company: internshipsFilter.company
+  const { companies } = useSelector(state => state.companies)
+  const dispatch = useDispatch()
+  const [searchText, setSearchText] = useState(internshipsFilter.search)
+  const [wasSearchUsed, setWasSearchUsed] = useState(false)
+  const { internships, isLoading } = useSelector(state => state.internships)
+  const { updateFilterList } = filtersActions
+
+  const updateSearch = (text) => {
+    const newFilters = {
+      ...internshipsFilter,
+      search: text
     }
-    dispatch(getInternshipsBySearch(availableFilters))
+    dispatch(updateFilterList(newFilters))
+    setSearchText(text)
+  }
+  const handleSearch = () => {
+    // console.log(internshipsFilter)
+    setWasSearchUsed(true)
+    dispatch(getInternshipsBySearch(internshipsFilter))
   }
   const getAvailableCategories = (internships) => {
     const categoriesIds = []
     internships.forEach(internship => {
       internship.categories.forEach(category => {
         if (categories.includes(category)) {
-          // alert('deja e')
         } else {
           categoriesIds.push(category)
         }
@@ -63,36 +70,72 @@ export default function InternshipMain(props) {
         companiesArr.push({ name: internship.company.name, id: internship.company.id })
       }
     })
-    return companiesArr
-  }
+    const mainPartnerCompanies = companies.filter(company => company.status === 2)
+    const regularPartners = companies.filter(company => company.status === 1)
+    //TODO REVISIT THIS AND REFACTOR TO A MORE EFFICIENT SOLUTION
+    const filteredCompaniesArr = []
+    mainPartnerCompanies.forEach(partnerCompany => {
+      companiesArr.find(company => company.id === partnerCompany.id) ?
+        filteredCompaniesArr.push({ name: partnerCompany.name, id: partnerCompany.id })
+        :
+        ''
+    })
+    regularPartners.forEach(partnerCompany => {
+      companiesArr.find(company => company.id === partnerCompany.id) ?
+        filteredCompaniesArr.push({ name: partnerCompany.name, id: partnerCompany.id })
+        :
+        ''
+    })
+    companiesArr.forEach(company => {
+      if (filteredCompaniesArr.find(partnerCompany => partnerCompany.id === company.id)) {
+        console.log('ye')
+      } else {
+        filteredCompaniesArr.push(company)
+      }
+    })
 
-  //TODO cities/categories/companies use form 
-  // TODO add clear filters button/option 
-  const updateSearch = (text) => {
-    setSearchText(text)
+    return filteredCompaniesArr
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Text style={components.screenHeader}>{true && 'INTERNSHIPS'}</Text>
-        {/* TODO implement search bar  */}
-        <TouchableOpacity style={{ backgroundColor: 'dodgerblue', padding: 20 }} onPress={test}>
-          <Text>GET INTERNSHIPS BY FILTER</Text>
-        </TouchableOpacity>
-        <SearchBar
-          onChangeText={updateSearch}
-          value={searchText}
-          placeholder={'Search'}
-          placeholderTextColor={colors.secondary.lightGrey}
-          containerStyle={styles.searchContainer}
-          inputContainerStyle={styles.inputContainer}
-          inputStyle={styles.inputStyle}
-          searchIcon={
-            <FaIcon name={'search'} size={18} color={colors.secondary.lightGrey} />
+        <Text style={components.screenHeader}>INTERNSHIPS</Text>
+        <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
+          <View style={{ flex: 1 }}>
+            <SearchBar
+              onChangeText={updateSearch}
+              value={searchText}
+              placeholder={'Search'}
+              placeholderTextColor={colors.secondary.lightGrey}
+              containerStyle={styles.searchContainer}
+              inputContainerStyle={styles.inputContainer}
+              inputStyle={styles.inputStyle}
+              searchIcon={
+                ''
+              }
+              showLoading={isLoading}
+            />
+          </View>
+          {
+            internshipsFilter.search ?
+              <TouchableOpacity style={{ justifyContent: 'center', padding: 10 }} onPress={handleSearch}>
+                <View style={{ justifyContent: 'center', padding: 10 }}>
+                  <FaIcon name={'search'} size={26} color={colors.secondary.lightGrey} />
+                </View>
+              </TouchableOpacity>
+              :
+              ''
           }
+        </View>
+        <InternshipsFilter
+          categories={getAvailableCategories(internships)}
+          locations={getAvailableLocations(internships)}
+          companies={getAvailableCompanies(internships)}
+          wasSearchUsed={wasSearchUsed}
+          setWasSearchUsed={setWasSearchUsed}
+          setSearchText={setSearchText}
         />
-        <InternshipsFilter categories={getAvailableCategories(internships)} locations={getAvailableLocations(internships)} companies={getAvailableCompanies(internships)} />
         {isLoading ?
           <Loading />
           :
@@ -100,7 +143,7 @@ export default function InternshipMain(props) {
         }
       </ScrollView>
 
-    </SafeAreaView>
+    </SafeAreaView >
   )
 }
 
@@ -116,6 +159,7 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   inputContainer: {
     borderRadius: 10,
     backgroundColor: '#424242',
+
   },
   inputStyle: {
     color: colors.secondary.lightGrey

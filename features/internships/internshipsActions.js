@@ -42,13 +42,14 @@ const getAllInternships = async () => {
 }
 
 const getInternshipsBySearch = async (params) => {
-  console.log(params)
   //?company=5&categories=1&location=bucuresti&search=clatite
   const { company, category, location } = params
-  const companyParam = company.name ? `?company=${company.id}` : ''
+  const companyParam = company.name ? `&company=${company.id}` : ''
   const categoryParam = category.name ? `&categories=${category.id}` : ''
   const locationParam = location.name ? `&location=${location.slug}` : ''
-  const URL = ALL_INTERNSHIPS_URL + companyParam + categoryParam + locationParam
+  const searchParam = params.search ? `&search=${params.search}` : ''
+  const URL = ALL_INTERNSHIPS_URL + '?' + companyParam + categoryParam + locationParam + searchParam
+
   console.log(URL)
   const response = await axios.get(URL, {
     headers: {
@@ -57,10 +58,7 @@ const getInternshipsBySearch = async (params) => {
       "X-CSRFToken": await tokenLogic.getToken(),
     },
   })
-
-  console.log(getSortedInternships(response.data))
   return getSortedInternships(response.data)
-
 }
 
 const getStudentInternships = async () => {
@@ -71,7 +69,6 @@ const getStudentInternships = async () => {
       "X-CSRFToken": await tokenLogic.getToken(),
     },
   })
-  console.log('response')
   return response
 }
 
@@ -79,7 +76,7 @@ const applyToInternship = async (companyId, jobId) => {
   const response = await axios.post(GET_APPLICATION_URL(companyId, jobId, 'apply'), {
     headers: {
       "X-CSRFToken": await tokenLogic.getToken(),
-    },
+    }
   })
   return response.data
 }

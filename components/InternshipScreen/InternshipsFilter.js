@@ -5,19 +5,36 @@ import { colors, font } from '../../styles/globalStyle';
 import FilterModal from './FilterModal'
 import { useDispatch, useSelector } from 'react-redux';
 import { filtersActions } from '../../features/filters/filtersSlice';
+import FaIcon from 'react-native-vector-icons/FontAwesome5'
+import { getInternshipsBySearch } from '../../features/internships/internshipsSlice';
 
 export default function InternshipsFilter(props) {
   const dispatch = useDispatch()
   const { internshipsFilter } = useSelector(state => state.filters)
-  const { updateSelectedFilter } = filtersActions
+  const { updateSelectedFilter, updateFilterList } = filtersActions
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState(null)
-
+  const { wasSearchUsed, setWasSearchUsed, setSearchText } = props
   const handleFilterTap = (filterCategory) => {
     dispatch(updateSelectedFilter(filterCategory))
     setModalVisible(true)
   }
-  // console.log(internshipsFilter)
+  const handleAllFiltersClear = () => {
+    const clearedFilters = {
+      category: '',
+      location: '',
+      company: '',
+      search: ''
+    }
+    setSearchText('')
+    setWasSearchUsed(false)
+    dispatch(updateFilterList(clearedFilters))
+    dispatch(getInternshipsBySearch(clearedFilters))
+  }
+  const areFiltersActive = () => {
+    const { category, location, company } = internshipsFilter
+    if (category || location || company || wasSearchUsed) return true
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.filterDescriptionText}>FILTER BY: </Text>
@@ -26,16 +43,12 @@ export default function InternshipsFilter(props) {
           {internshipsFilter.category.name ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>Categories</Text>
-              {/* <View style={styles.filterNumberCounter}>
-                <Text style={styles.filterNumberCounterText}>{internshipsFilter.categories.length}</Text>
-              </View> */}
             </View>
             :
             <View style={styles.filterButton}>
               <Text style={styles.filterText}>Categories</Text>
             </View>
           }
-
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleFilterTap('city')}>
           {internshipsFilter.location.name ?
@@ -62,6 +75,17 @@ export default function InternshipsFilter(props) {
             </View>
           }
         </TouchableOpacity>
+        {
+          areFiltersActive() ?
+            <TouchableOpacity onPress={() => handleAllFiltersClear()}>
+              <View style={styles.filterButtonActive}>
+                <FaIcon name={'times'} size={18} color={colors.main.accent} />
+
+              </View>
+            </TouchableOpacity>
+            :
+            ''
+        }
       </View>
       <FilterModal
         {...props}

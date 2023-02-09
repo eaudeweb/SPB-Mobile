@@ -9,9 +9,10 @@ const initialState = {
   locations: [],
   selectedFilter: null,
   internshipsFilter: {
-    category: [],
-    location: [],
-    company: []
+    category: '',
+    location: '',
+    company: '',
+    search: ''
   }
 }
 
@@ -55,18 +56,7 @@ const filtersSlice = createSlice({
       state.selectedFilter = payload
     },
     updateFilterList: (state, { payload }) => {
-      const { type, value } = payload
-      switch (type) {
-        case 'category':
-          state.internshipsFilter.category = value;
-          break;
-        case 'location':
-          state.internshipsFilter.location = value;
-          break;
-        case 'company':
-          state.internshipsFilter.company = value;
-          break;
-      }
+      state.internshipsFilter = payload
     }
   },
   extraReducers: (builder) => {
