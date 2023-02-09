@@ -12,13 +12,13 @@ export default function FilterModal(props) {
   const { selectedFilter, internshipsFilter } = useSelector(state => state.filters)
   const dispatch = useDispatch()
   const { resetSelectedFilter, updateFilterList } = filtersActions
-  const companies = [...new Set(internships.map(internship => internship.company.name))].sort();
   const [currentFilters, setCurrentFilters] = useState({
     category: internshipsFilter.category,
     location: internshipsFilter.location,
     company: internshipsFilter.company,
     search: internshipsFilter.search
   })
+  console.log(internshipsFilter)
   const handleSave = () => {
     if (currentFilters === internshipsFilter) {
       setModalVisible(false)

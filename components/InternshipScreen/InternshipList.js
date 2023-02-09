@@ -11,15 +11,19 @@ export default function InternshipsList(props) {
   const { sortedInternships } = useSelector(state => state.internships)
   const { internshipsFilter } = useSelector(state => state.filters)
   useEffect(() => {
+
   }, [internshipsFilter])
   return (
     <View style={styles.container}>
-      {sortedInternships?.map((item, index) => (
-        <View key={index}>
-          <Text style={styles.companyTitle}>{item.companyName}</Text>
-          {item.internships?.map((internship, index) => <InternshipListItem {...props} internship={internship} parentRoute={useRoute().name} key={index} />)}
-        </View>
-      ))}
+      {sortedInternships.length ?
+        sortedInternships.map((item, index) => (
+          <View key={index}>
+            <Text style={styles.companyTitle}>{item.companyName}</Text>
+            {item.internships?.map((internship, index) => <InternshipListItem {...props} internship={internship} parentRoute={useRoute().name} key={index} />)}
+          </View>
+        ))
+        :
+        <Text style={styles.text}>No internships available for you at the moment</Text>}
     </View>
   )
 }
@@ -31,6 +35,11 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   companyTitle: {
     color: colors.main.accent,
     fontSize: font.size.l,
+    marginHorizontal: 10
+  },
+  text: {
+    color: colors.main.white,
+    fontSize: font.size.m,
     marginHorizontal: 10
   }
 })

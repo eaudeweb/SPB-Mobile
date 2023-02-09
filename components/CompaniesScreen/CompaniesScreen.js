@@ -5,7 +5,6 @@ import LoopText from 'react-native-loop-text'
 import { colors, font, spacing } from "../../styles/globalStyle"
 import { Dimensions } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
-import { resetFilters, getInternshipsByCompany } from '../../features/internships/internshipsSlice';
 import Loading from './Loading'
 
 export default function CompaniesScreen({ navigation }) {
@@ -25,7 +24,6 @@ export default function CompaniesScreen({ navigation }) {
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>20+ </Text>WEBINARS</Text>
   ]
   const handleClick = (companyName) => {
-    // dispatch(getInternshipsByCompany(companyName))
     navigation.navigate('Internships')
   }
 
