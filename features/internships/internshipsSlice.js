@@ -23,7 +23,6 @@ export const getAllInternships = createAsyncThunk('internships/getAll', async (i
   try {
     return await internshipsService.getAllInternships()
   } catch (error) {
-    getIntersnshipsBySearch
     const message =
       (error.response &&
         error.response.data &&
@@ -92,6 +91,20 @@ export const getInternshipsBySearch = createAsyncThunk('studentInternships/searc
   }
 })
 
+export const changeInternshipApplicationStatus = createAsyncThunk('studentInternships/changeStatus', async (payload, thunkAPI) => {
+  const { jobId, status } = payload
+  try {
+    return await internshipsService.changeInternshipApplicationStatus(jobId, status)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
 
 export
   const internshipsSlice = createSlice({
@@ -119,38 +132,41 @@ export
 
       //   state.internshipsAppliedTo = newArr
       // },
-      toggleAcceptedStatus: (state, { payload }) => {
-        const newArr = state.internshipsAppliedTo
-        const internshipIndex = newArr.findIndex(internship => internship.id === payload.id)
-        if (newArr[internshipIndex].acceptedStatus) {
-          newArr[internshipIndex].acceptedStatus = false
-        } else {
-          newArr[internshipIndex].acceptedStatus = true
-          newArr[internshipIndex].interviewStatus = false
 
+      // ACCEPTED = 3
+      // APPLIED = 1
+      // INTERVIEW = 2
+      toggleAcceptedStatus: (state, { payload }) => {
+        const newArr = state.studentInternships
+        const internshipIndex = newArr.findIndex(internship => internship.id === payload.id)
+        if (newArr[internshipIndex].status === 3) {
+          newArr[internshipIndex].status = 1
+        } else {
+          newArr[internshipIndex].status = 3
         }
         state.internshipsAppliedTo = newArr
       },
       toggleInterviewStatus: (state, { payload }) => {
-        const newArr = state.internshipsAppliedTo
+        const newArr = state.studentInternships
         const internshipIndex = newArr.findIndex(internship => internship.id === payload.id)
-        if (newArr[internshipIndex].interviewStatus) {
-          newArr[internshipIndex].interviewStatus = false
+        if (newArr[internshipIndex]?.status === 2) {
+          newArr[internshipIndex].status = 1
         } else {
-          newArr[internshipIndex].interviewStatus = true
-          newArr[internshipIndex].acceptedStatus = false
+          newArr[internshipIndex].status = 2
         }
         state.internshipsAppliedTo = newArr
       },
       updateLocalInternshipApplied: (state, { payload }) => {
-        const companyIndex = current(state.internships).map(obj => obj.companyName).indexOf(payload.company.name)
-        const internshipIndex = current(state.internships)[companyIndex].internships.findIndex(internship => internship.id == payload.id)
-        state.internships = [...state.internships, state.internships[companyIndex].internships[internshipIndex].can_apply = 'already_applied']
+        const companyIndex = current(state.sortedInternships).map(obj => obj.companyName).indexOf(payload.company.name)
+        const internshipIndex = current(state.sortedInternships)[companyIndex].internships.findIndex(internship => internship.id == payload.id)
+        state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].can_apply = 'already_applied']
+        // state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = new Date()]
       },
       updateLocalInternshipWithdrew: (state, { payload }) => {
-        const companyIndex = current(state.internships).map(obj => obj.companyName).indexOf(payload.company.name)
-        const internshipIndex = current(state.internships)[companyIndex].internships.findIndex(internship => internship.id == payload.id)
-        state.internships = [...state.internships, state.internships[companyIndex].internships[internshipIndex].can_apply = true]
+        const companyIndex = current(state.sortedInternships).map(obj => obj.companyName).indexOf(payload.company.name)
+        const internshipIndex = current(state.sortedInternships)[companyIndex].internships.findIndex(internship => internship.id == payload.id)
+        state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].can_apply = true]
+        // state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = '']
       },
     },
     extraReducers: (builder) => {
@@ -162,7 +178,7 @@ export
           state.isLoading = false
           state.internships = action.payload.internships
           state.sortedInternships = action.payload.sortedInternships
-          state.studentInternships = action.payload.studentInternships
+          // state.studentInternships = action.payload.studentInternships
         })
         .addCase(getAllInternships.rejected, (state, action) => {
           state.isLoading = false
@@ -194,25 +210,38 @@ export
           state.application.message = action.payload
         })
         .addCase(getStudentInternships.pending, (state) => {
-          state.studentInternships = []
+          state.isLoading = true
         })
         .addCase(getStudentInternships.fulfilled, (state, action) => {
           state.studentInternships = action.payload
+          state.isLoading = false
         })
         .addCase(getStudentInternships.rejected, (state, action) => {
+          state.isLoading = false
+
         })
         .addCase(getInternshipsBySearch.pending, (state) => {
           state.isLoading = true
-
         })
         .addCase(getInternshipsBySearch.fulfilled, (state, action) => {
           // state.studentInternships = action.payload
           state.isLoading = false
           state.sortedInternships = action.payload
-
         })
         .addCase(getInternshipsBySearch.rejected, (state, action) => {
           state.isLoading = false
+        })
+        .addCase(changeInternshipApplicationStatus.pending, (state) => {
+          // state.isLoading = true
+        })
+        .addCase(changeInternshipApplicationStatus.fulfilled, (state, action) => {
+          state.application.isSuccess = true
+          // state.studentInternships = action.payload
+          // state.isLoading = false
+          // state.sortedInternships = action.payload
+        })
+        .addCase(changeInternshipApplicationStatus.rejected, (state, action) => {
+          // state.isLoading = false
         })
 
     }

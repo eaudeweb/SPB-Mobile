@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import { getAllInternships, getStudentInternships } from '../features/internships/internshipsSlice'
 import { getAllPartnerCompanies } from '../features/companies/companiesSlice';
 import { getCategories, getLocations } from '../features/filters/filtersSlice';
+
 export default function LayoutScreen(props) {
   const insets = useSafeAreaInsets();
   const Tab = createBottomTabNavigator()
@@ -21,7 +22,7 @@ export default function LayoutScreen(props) {
     companies: 'Companies',
     internships: 'Internships',
     news: 'News',
-    events: 'Calendar',
+    events: 'Events',
     profile: 'Profile'
   }
   const getToken = async () => {
@@ -79,17 +80,11 @@ export default function LayoutScreen(props) {
         tabBarLabelStyle: styles.tabBarLabel,
         headerShown: false
       })}
-
     >
       <Tab.Screen name={screen.companies}>
         {(props) => <CompaniesScreen {...props} text='Props passing test' />}
       </Tab.Screen>
-      <Tab.Screen name={screen.internships} component={InternshipsScreen}
-        options={{
-          tabBarStyle: { display: 'none' }
-
-        }}
-      />
+      <Tab.Screen name={screen.internships} component={InternshipsScreen} />
       <Tab.Screen name={screen.news} component={NewsScreen} />
       <Tab.Screen name={screen.events} component={EventsScreen} />
       <Tab.Screen name={screen.profile}  >

@@ -13,7 +13,7 @@ const getAllPartnerCompanies = async () => {
       "X-CSRFToken": token,
     }
   })
-  const partners = await axios.get(COMPANIES_URL + '?partnerships=1', {
+  const partners = await axios.get(COMPANIES_URL + '?partnerships=0', {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json; charset=UTF-8',

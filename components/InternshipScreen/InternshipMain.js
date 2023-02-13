@@ -12,6 +12,8 @@ import Loading from './Loading';
 import { filtersActions } from '../../features/filters/filtersSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getInternshipsBySearch } from '../../features/internships/internshipsSlice';
+import moment from 'moment';
+
 export default function InternshipMain(props) {
   const styles = getStyles(useBottomTabBarHeight())
   const { locations, categories, internshipsFilter } = useSelector(state => state.filters)
@@ -31,7 +33,6 @@ export default function InternshipMain(props) {
     setSearchText(text)
   }
   const handleSearch = () => {
-    // console.log(internshipsFilter)
     setWasSearchUsed(true)
     dispatch(getInternshipsBySearch(internshipsFilter))
   }
@@ -87,10 +88,9 @@ export default function InternshipMain(props) {
         ''
     })
     companiesArr.forEach(company => {
-      if (filteredCompaniesArr.find(partnerCompany => partnerCompany.id === company.id)) {
-        console.log('ye')
-      } else {
+      if (!filteredCompaniesArr.find(partnerCompany => partnerCompany.id === company.id)) {
         filteredCompaniesArr.push(company)
+
       }
     })
 

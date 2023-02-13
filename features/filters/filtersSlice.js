@@ -1,8 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
-import filterCategories from "../../utils/FilterCategoriesJson"
 import filterService from "./filtersActions"
-
-const { categories, locations } = filterCategories
 
 const initialState = {
   categories: [],

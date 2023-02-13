@@ -7,7 +7,7 @@ import { filtersActions } from '../../features/filters/filtersSlice';
 import { getInternshipsBySearch } from '../../features/internships/internshipsSlice';
 
 export default function FilterModal(props) {
-  const { modalVisible, setModalVisible } = props
+  const { modalVisible, setModalVisible, setWasSeachUsed } = props
   const { internships } = useSelector(state => state.internships)
   const { selectedFilter, internshipsFilter } = useSelector(state => state.filters)
   const dispatch = useDispatch()
@@ -18,7 +18,6 @@ export default function FilterModal(props) {
     company: internshipsFilter.company,
     search: internshipsFilter.search
   })
-  console.log(internshipsFilter)
   const handleSave = () => {
     if (currentFilters === internshipsFilter) {
       setModalVisible(false)
@@ -48,7 +47,6 @@ export default function FilterModal(props) {
         <FaIcon name={'check'} size={18} color={colors.indicators.green} />
       </View >
     </TouchableOpacity>
-
   )
 
   const handleFilterPress = (data, type) => {
@@ -87,7 +85,7 @@ export default function FilterModal(props) {
 
     dispatch(updateFilterList(newFilters))
     dispatch(getInternshipsBySearch(newFilters))
-    setWasSeachUsed(false)
+    // setWasSeachUsed(false)
     setModalVisible(false)
   }
   const CompaniesFilter = () => {

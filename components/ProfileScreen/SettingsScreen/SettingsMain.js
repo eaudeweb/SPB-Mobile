@@ -41,7 +41,6 @@ export default function SettingsMain({ navigation }) {
             placeholderTextColor='white'
           />
         </View>
-        <Text>TEST</Text>
         <View>
           <Text style={styles.labelText}>Phone number</Text>
           <TextInput

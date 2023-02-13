@@ -6,6 +6,8 @@ import { completeSwipeableDemo } from '../features/animations/animationsSlice';
 import { internshipsActions } from '../features/internships/internshipsSlice'
 import { colors, font, spacing } from '../styles/globalStyle';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
+import moment from 'moment';
+import { changeInternshipApplicationStatus } from '../features/internships/internshipsSlice';
 
 export default function InternshipListItem({ navigation, internship, parentRoute, swipeable, index }) {
   const dispatch = useDispatch()
@@ -14,12 +16,10 @@ export default function InternshipListItem({ navigation, internship, parentRoute
 
   const newRoute = parentRoute === 'InternshipMain' ? 'InternshipDetail' : 'ApplicationDetail';
   const swipeRef = React.useRef()
-
   const PaymentInformation = ({ is_paid, payment }) => {
     let text = ''
-
     if (is_paid && payment.length > 0) {
-      text = "PAID: " + payment + " EUR"
+      text = "PAID: " + payment
     } else if (is_paid) {
       text = "PAID"
     } else {
@@ -43,11 +43,15 @@ export default function InternshipListItem({ navigation, internship, parentRoute
 
   const renderLeftActions = (internship) => {
     const handleAccepted = () => {
+      const newStatus = internship.status === 3 ? 1 : 3
       dispatch(toggleAcceptedStatus(internship))
+      dispatch(changeInternshipApplicationStatus({ jobId: internship.id, status: newStatus }))
       swipeRef?.current?.close()
     }
     const handleInterview = () => {
+      const newStatus = internship.status === 2 ? 1 : 2
       dispatch(toggleInterviewStatus(internship))
+      dispatch(changeInternshipApplicationStatus({ jobId: internship.id, status: newStatus }))
       swipeRef?.current?.close()
     }
 
@@ -88,11 +92,10 @@ export default function InternshipListItem({ navigation, internship, parentRoute
     );
   };
   const getInternshipStatusBorder = (internship) => {
-    if (internship.acceptedStatus) {
+    if (internship.status === 3) {
       return { borderColor: styles.statusColor.green }
-    } else if (internship.interviewStatus) {
+    } else if (internship.status === 2) {
       return { borderColor: styles.statusColor.yellow }
-
     }
   }
   const borderColor = getInternshipStatusBorder(internship)
@@ -102,7 +105,7 @@ export default function InternshipListItem({ navigation, internship, parentRoute
       ref={swipeRef}
       friction={2}
       renderLeftActions={swipeable ? () => renderLeftActions(internship) : null}
-      renderRightActions={swipeable ? renderRightActions : null}
+    // renderRightActions={swipeable ? renderRightActions : null}
     >
       <View style={[styles.internshipWrapper, borderColor]}>
         <TouchableHighlight onPress={() => navigation.navigate(newRoute, { internship })} >
@@ -111,12 +114,12 @@ export default function InternshipListItem({ navigation, internship, parentRoute
             <View style={styles.detailsWrapper}>
               <PaymentInformation is_paid={internship.is_paid} payment={internship.payment} />
               <Text style={styles.detailsText}>{internship.start_date}</Text>
-              <Text style={styles.detailsText}>{internship.office_location.toUpperCase()}</Text>
+              <Text style={styles.detailsText}>{internship.office_location?.toUpperCase()}</Text>
             </View>
             {
               !swipeable ?
                 <View>
-                  <Text style={styles.applicantsLow}>APPLICANTS: LOW</Text>
+                  {/* <Text style={styles.applicantsLow}>APPLICANTS: LOW</Text> */}
                   {/* <Text style={styles.applicantsFair}>APPLICANTS: FAIR</Text>
               <Text style={styles.applicantsHigh}>APPLICANTS: HIGH</Text> */}
                 </View>
@@ -126,16 +129,16 @@ export default function InternshipListItem({ navigation, internship, parentRoute
             <Text style={styles.internshipCompany}>{internship.company.name}</Text>
 
             {
-              !internship.acceptedStatus && !internship.interviewStatus && swipeable ?
+              internship.status === 1 && swipeable ?
                 <View style={styles.statusTextWrapper}>
                   <FaIcon name="clipboard" size={16} color={colors.secondary.lightGrey} />
-                  <Text style={styles.statusText}>Applied</Text>
+                  <Text style={styles.statusText}>Applied {moment(internship.applied).fromNow()}</Text>
                 </View>
                 :
                 ''
             }
             {
-              internship.acceptedStatus ?
+              internship.status == 3 ?
                 <View style={styles.statusTextWrapper}>
                   <FaIcon name="thumbs-up" size={16} color={colors.indicators.green} />
                   <Text style={[styles.statusText, styles.applicantsLow]}>Accepted</Text>
@@ -144,7 +147,7 @@ export default function InternshipListItem({ navigation, internship, parentRoute
                 ''
             }
             {
-              internship.interviewStatus ?
+              internship.status == 2 ?
                 <View style={styles.statusTextWrapper}>
                   <FaIcon name="microphone" size={16} color={colors.indicators.orange} />
                   <Text style={[styles.statusText, styles.applicantsFair]}>Interview</Text>
@@ -152,25 +155,25 @@ export default function InternshipListItem({ navigation, internship, parentRoute
                 :
                 ''
             }
-            {
+            {/* {
               internship.can_apply === 'already_applied' && !swipeable ?
                 <View style={styles.statusTextWrapper}>
                   <FaIcon name="clipboard" size={16} color={colors.secondary.lightGrey} />
-                  <Text style={styles.statusText}>Applied</Text>
+                  <Text style={styles.statusText}>Applied </Text>
                 </View>
                 :
                 ''
+            } */}
+            {internship.applied && !swipeable ?
+              <View style={styles.statusTextWrapper}>
+                <FaIcon name="clipboard" size={16} color={colors.secondary.lightGrey} />
+                <Text style={styles.statusText}>Applied {moment(internship.applied).fromNow()}</Text>
+              </View>
+              :
+              ''
             }
           </View>
-
         </TouchableHighlight>
-        {internship.applied ?
-          <TouchableHighlight style={{ flexDirection: 'row', marginBottom: 10 }}>
-            <Text style={{ color: 'white' }}>Applied 2 weeks ago</Text>
-          </TouchableHighlight>
-          :
-          ''
-        }
       </View>
     </Swipeable >
   )

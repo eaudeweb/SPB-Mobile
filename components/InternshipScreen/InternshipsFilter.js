@@ -92,6 +92,7 @@ export default function InternshipsFilter(props) {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         selectedFilter={selectedFilter}
+        setWasSearchUsed={setWasSearchUsed}
       />
     </View >
   )

@@ -1,11 +1,11 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
-
+import moment from "moment";
 const ALL_INTERNSHIPS_URL = 'https://staging.stagiipebune.ro/api/v1/students/jobs/'
 const STUDENT_INTERNSHIPS_URL = 'https://staging.stagiipebune.ro/api/v1/me/jobs'
 const GET_APPLICATION_URL = (companyId, jobId, applicationType) => `https://staging.stagiipebune.ro/api/v1/companies/${companyId}/jobs/${jobId}/${applicationType}`
+const GET_STATUS_CHANGE_URL = (jobId, status) => `https://staging.stagiipebune.ro/api/v1/students/${jobId}/jobs/${status}/change_status`
 
-const sortInternshipsByDate = (internships) => internships.sort((a, b) => new Date(b.start_date) - new Date(a.start_date))
 const getSortedInternships = (internships) => {
   //internships are sorted from old to new, grouped by company
   const internshipsByDate = sortInternshipsByDate(internships)
@@ -25,6 +25,15 @@ const getSortedInternships = (internships) => {
   return getInternshipsByCompany()
 }
 
+const sortInternshipsByDate = (internships) => {
+  const format = "DD/mm/yyyy - hh:mm:ss"
+  // return moment(a.createdAt).diff(b.createdAt);
+
+  // console.log(internships.sort((a, b) => moment(a.validated, format) - moment(b.validated, format)))
+  return internships.sort((a, b) => moment(a.validated, format).diff(b.validated, format))
+}
+
+
 const getAllInternships = async () => {
   const response = await axios.get(ALL_INTERNSHIPS_URL, {
     headers: {
@@ -33,6 +42,8 @@ const getAllInternships = async () => {
       "X-CSRFToken": await tokenLogic.getToken(),
     },
   })
+
+  // test(response.data)
   const studentInternships = response.data.filter(internship => internship.can_apply === 'already_applied')
   return {
     internships: response.data,
@@ -42,7 +53,6 @@ const getAllInternships = async () => {
 }
 
 const getInternshipsBySearch = async (params) => {
-  //?company=5&categories=1&location=bucuresti&search=clatite
   const { company, category, location } = params
   const companyParam = company.name ? `&company=${company.id}` : ''
   const categoryParam = category.name ? `&categories=${category.id}` : ''
@@ -69,7 +79,7 @@ const getStudentInternships = async () => {
       "X-CSRFToken": await tokenLogic.getToken(),
     },
   })
-  return response
+  return response.data
 }
 
 const applyToInternship = async (companyId, jobId) => {
@@ -90,12 +100,21 @@ const withdrawFromInternship = async (companyId, jobId) => {
   return response.data
 }
 
+const changeInternshipApplicationStatus = async (jobId, newStatus) => {
+  const response = await axios.post(GET_STATUS_CHANGE_URL(jobId, newStatus), {
+    headers: {
+      "X-CSRFToken": await tokenLogic.getToken(),
+    },
+  })
+  return response.data
+}
 const internshipsService = {
   getAllInternships,
   applyToInternship,
   withdrawFromInternship,
   getStudentInternships,
-  getInternshipsBySearch
+  getInternshipsBySearch,
+  changeInternshipApplicationStatus
 }
 
 export default internshipsService

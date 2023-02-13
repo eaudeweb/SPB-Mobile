@@ -10,11 +10,14 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { colors, font } from '../../../styles/globalStyle';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-
+import Loading from '../../InternshipScreen/Loading'
+import { getStudentInternships } from '../../../features/internships/internshipsSlice';
+import { useDispatch } from 'react-redux';
 
 export default function ApplicationList(props) {
+  const dispatch = useDispatch()
   const styles = getStyles(useBottomTabBarHeight())
-  const { studentInternships } = useSelector(state => state.internships)
+  const { isLoading, studentInternships } = useSelector(state => state.internships)
   const [applications, setApplications] = useState(studentInternships)
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true)
   const [applicationsFilter, setApplicationsFilter] = useState({
@@ -39,10 +42,9 @@ export default function ApplicationList(props) {
     )
   }
 
-
   useEffect(() => {
-    setApplications(studentInternships)
-  }, [studentInternships])
+    dispatch(getStudentInternships())
+  }, [])
   useEffect(() => {
     if (applicationsFilter.accepted && applicationsFilter.interview && applicationsFilter.applied) {
       setApplications(studentInternships)
@@ -97,13 +99,12 @@ export default function ApplicationList(props) {
 
           </Collapsible>
         </View>
-        {applications?.map((item, index) => (
-          <View key={index}>
-            <Text style={styles.companyTitle}>{item.companyName}</Text>
-            {item.internships?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)}
-          </View>
-        ))}
-        {/* {applications?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)} */}
+        {isLoading ?
+          <Loading />
+          :
+          ''
+        }
+        {studentInternships?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)}
       </ScrollView>
     </View>
   )

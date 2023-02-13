@@ -5,7 +5,7 @@ import CVMain from './CVScreen/CVMain';
 import SettingsMain from './SettingsScreen/SettingsMain';
 import CustomTabBar from '../../utils/CustomTabBar';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation, route }) {
   const Tab = createMaterialTopTabNavigator();
   // TODO move to separate file and import 
   const screens = [
@@ -26,23 +26,12 @@ export default function ProfileScreen() {
     <Tab.Navigator
       initialRouteName='Applications'
       screenOptions={{
-        tabBarContentContainerStyle: {
-          backgroundColor: 'none'
-        },
-        tabBarActiveTintColor: '#F26649',
-        tabBarInactiveTintColor: 'grey',
-        tabBarIndicatorStyle: {
-          backgroundColor: '#F26649'
-        },
-        tabBarStyle: {
-          backgroundColor: '#212121',
-          borderWidth: 0
-        },
+
       }}
       tabBar={(props) => < CustomTabBar {...props} screens={screens} />}
     >
       <Tab.Screen name="Applications">
-        {(props) => <ApplicationsMain {...props} />}
+        {(props) => <ApplicationsMain {...props} profileNavigation={navigation} profileRoute={route} />}
       </Tab.Screen>
       <Tab.Screen name="CV">
         {(props) => <CVMain {...props} />}

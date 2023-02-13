@@ -6,28 +6,27 @@ import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import { Dimensions } from 'react-native';
 
 
-const EventListItem = ({ event, navigation }) => {
+const EventListItem = ({ event, props }) => {
   const childrenScreen = event.type === 'event' ? 'EventDetail' : 'WebinarDetail'
-
+  const { navigation } = props
   return (
     <TouchableHighlight
       style={styles.eventContainer}
-      onPress={() => navigation.navigate(childrenScreen)}
+      onPress={() => navigation.navigate('EventDetail', event)}
     >
       <View style={styles.innerContainer}>
         <View>
-          <Text style={styles.title}>{event.name}</Text>
-          <Text style={styles.companyName}>{event.company}</Text>
+          <Text style={styles.title}>{event.title}</Text>
+          <Text style={styles.companyName}>{event.company.name}</Text>
           <View style={styles.horizontalContainer}>
             <View>
               <View style={styles.timeInformationContainer}>
                 <FaIcon name={'calendar-alt'} size={font.size.s} style={styles.timeInformationIcon} />
-                <Text style={styles.timeInformationText}>{event.date}</Text>
-                <Text style={styles.timeInformationText}>{event.time}</Text>
+                <Text style={styles.timeInformationText}>{event.starts_at}</Text>
               </View>
               <View style={styles.seatingContainer}>
                 <FaIcon name={'users'} size={font.size.s} style={styles.seatingIcon} />
-                <Text style={styles.seatingText}>{event.availableSeats}</Text>
+                <Text style={styles.seatingText}>{event.remaining}</Text>
               </View>
             </View>
             <View>
