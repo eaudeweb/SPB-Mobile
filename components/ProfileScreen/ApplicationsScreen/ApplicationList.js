@@ -9,7 +9,6 @@ import Collapsible from 'react-native-collapsible';
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { colors, font } from '../../../styles/globalStyle';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
-import IonIcon from 'react-native-vector-icons/Ionicons'
 import Loading from '../../InternshipScreen/Loading'
 import { getStudentInternships } from '../../../features/internships/internshipsSlice';
 import { useDispatch } from 'react-redux';
@@ -21,22 +20,22 @@ export default function ApplicationList(props) {
   const [applications, setApplications] = useState(studentInternships)
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true)
   const [applicationsFilter, setApplicationsFilter] = useState({
-    accepted: true,
-    interview: true,
-    applied: true
+    accepted: false,
+    interview: false,
+    applied: false
   })
-  const handleFilterTap = (type) => {
-    const newFilter = { ...applicationsFilter }
-    newFilter[type] = !newFilter[type]
-
-    setApplicationsFilter(newFilter)
+  const handleFilterTap = (filterType) => {
+    setApplicationsFilter({
+      ...applicationsFilter,
+      [filterType]: !applicationsFilter[filterType]
+    })
   }
   const FilterButton = ({ name, type, active }) => {
     return (
       <TouchableOpacity onPress={() => handleFilterTap(type)}>
         <View style={active ? styles.filterButtonWrapperActive : styles.filterButtonWrapper}>
           <Text style={active ? styles.filterButtonTextActive : styles.filterButtonText} >{name}</Text>
-          <IonIcon name={active ? 'checkmark-circle-outline' : 'checkmark-outline'} size={22} color={active ? colors.main.cappuccino : colors.secondary.lightGrey} />
+          <FaIcon name={active ? 'check' : 'times'} size={18} color={active ? colors.main.cappuccino : colors.secondary.lightGrey} />
         </View>
       </TouchableOpacity>
     )
@@ -45,41 +44,22 @@ export default function ApplicationList(props) {
   useEffect(() => {
     dispatch(getStudentInternships())
   }, [])
-  useEffect(() => {
-    if (applicationsFilter.accepted && applicationsFilter.interview && applicationsFilter.applied) {
-      setApplications(studentInternships)
-    } else {
-      if (applicationsFilter.accepted && applicationsFilter.interview) {
-        const updatedApplications = internshipsAppliedTo.filter(application => {
-          return application.interviewStatus || application.acceptedStatus
-        })
-        setApplications(updatedApplications)
-      } else if (applicationsFilter.accepted && applicationsFilter.applied) {
-        const updatedApplications = internshipsAppliedTo.filter(application => {
-          return application.accepted || !application.interviewStatus
-        })
-        setApplications(updatedApplications)
-      } else if (applicationsFilter.interview && applicationsFilter.applied) {
-        const updatedApplications = internshipsAppliedTo.filter(application => {
-          return application.interviewStatus || !application.acceptedStatus
-        })
-        setApplications(updatedApplications)
-      } else if (applicationsFilter.accepted) {
-        const updatedApplications = internshipsAppliedTo.filter(application => application.acceptedStatus)
-        setApplications(updatedApplications)
-      } else if (applicationsFilter.interview) {
-        const updatedApplications = internshipsAppliedTo.filter(application => application.interviewStatus)
-        setApplications(updatedApplications)
-      } else if (applicationsFilter.applied) {
-        const updatedApplications = internshipsAppliedTo.filter(application => {
-          return !application.interviewStatus && !application.acceptedStatus
-        })
-        setApplications(updatedApplications)
-      } else {
-        setApplications([])
-      }
-    }
 
+  //  TODO refactor
+  const filterInternships = () => {
+    // ACCEPTED = 3 | INTERVIEW = 2 | APPLIED = 1   <<< job status meaning
+    const { accepted, interview, applied } = applicationsFilter
+    const acceptedInternships = studentInternships.filter(application => accepted ? application.status === 3 : '')
+    const interviewInternships = studentInternships.filter(application => interview ? application.status === 2 : '')
+    const appliedInternships = studentInternships.filter(application => applied ? application.status === 1 : '')
+    const filteredResults = [...acceptedInternships, ...interviewInternships, ...appliedInternships]
+    const result = filteredResults.length > 0 ? filteredResults : studentInternships
+
+    setApplications(result)
+  }
+
+  useEffect(() => {
+    filterInternships()
   }, [applicationsFilter, studentInternships])
 
   return (
@@ -96,7 +76,6 @@ export default function ApplicationList(props) {
               <FilterButton name={'Interview'} type={'interview'} active={applicationsFilter.interview} />
               <FilterButton name={'Pending'} type={'applied'} active={applicationsFilter.applied} />
             </View>
-
           </Collapsible>
         </View>
         {isLoading ?
@@ -104,7 +83,7 @@ export default function ApplicationList(props) {
           :
           ''
         }
-        {studentInternships?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)}
+        {applications?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)}
       </ScrollView>
     </View>
   )
@@ -132,6 +111,7 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   filterButtonWrapperActive: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    justifyItems: 'center',
     backgroundColor: colors.buttonBackground.orange,
     borderRadius: 5,
     paddingVertical: 10,
@@ -147,6 +127,7 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   filterButtonWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    justifyItems: 'center',
     backgroundColor: colors.secondary.mediumGrey,
     borderRadius: 5,
     paddingVertical: 10,

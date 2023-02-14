@@ -32,6 +32,7 @@ export default function InternshipsFilter(props) {
     dispatch(updateFilterList(clearedFilters))
     dispatch(getInternshipsBySearch(clearedFilters))
   }
+
   const areFiltersActive = () => {
     const { category, location, company } = internshipsFilter
     if (category || location || company || wasSearchUsed) return true

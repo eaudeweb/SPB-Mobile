@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react';
-import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Text } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Text, RefreshControl } from 'react-native'
 import { SearchBar } from '@rneui/themed';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import InternshipsFilter from './InternshipsFilter';
@@ -11,8 +10,7 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import Loading from './Loading';
 import { filtersActions } from '../../features/filters/filtersSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { getInternshipsBySearch } from '../../features/internships/internshipsSlice';
-import moment from 'moment';
+import { getInternshipsBySearch, refreshInternshipsBySearch } from '../../features/internships/internshipsSlice';
 
 export default function InternshipMain(props) {
   const styles = getStyles(useBottomTabBarHeight())
@@ -21,8 +19,27 @@ export default function InternshipMain(props) {
   const dispatch = useDispatch()
   const [searchText, setSearchText] = useState(internshipsFilter.search)
   const [wasSearchUsed, setWasSearchUsed] = useState(false)
-  const { internships, isLoading } = useSelector(state => state.internships)
+  const { internships, isLoading, isRefreshLoading } = useSelector(state => state.internships)
   const { updateFilterList } = filtersActions
+  const [currentFilters, setCurrentFilters] = useState(internshipsFilter)
+  // dispatch(getInternshipsBySearch(newFilters))
+
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    // setTimeout(() => {
+    //   setRefreshing(false);
+    // }, 2000);
+    const clearedFilters = {
+      category: '',
+      location: '',
+      company: '',
+      search: ''
+    }
+    dispatch(refreshInternshipsBySearch(clearedFilters))
+    dispatch(updateFilterList(clearedFilters))
+
+  }, []);
 
   const updateSearch = (text) => {
     const newFilters = {
@@ -71,17 +88,17 @@ export default function InternshipMain(props) {
         companiesArr.push({ name: internship.company.name, id: internship.company.id })
       }
     })
-    const mainPartnerCompanies = companies.filter(company => company.status === 2)
-    const regularPartners = companies.filter(company => company.status === 1)
+    // const mainPartnerCompanies = companies.filter(company => company.status === 2)
+    // const regularPartners = companies.filter(company => company.status === 1)
     //TODO REVISIT THIS AND REFACTOR TO A MORE EFFICIENT SOLUTION
     const filteredCompaniesArr = []
-    mainPartnerCompanies.forEach(partnerCompany => {
+    companies.mainPartners?.forEach(partnerCompany => {
       companiesArr.find(company => company.id === partnerCompany.id) ?
         filteredCompaniesArr.push({ name: partnerCompany.name, id: partnerCompany.id })
         :
         ''
     })
-    regularPartners.forEach(partnerCompany => {
+    companies.partners?.forEach(partnerCompany => {
       companiesArr.find(company => company.id === partnerCompany.id) ?
         filteredCompaniesArr.push({ name: partnerCompany.name, id: partnerCompany.id })
         :
@@ -97,9 +114,15 @@ export default function InternshipMain(props) {
     return filteredCompaniesArr
   }
 
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isRefreshLoading} onRefresh={onRefresh} />
+        }
+      >
+
         <Text style={components.screenHeader}>INTERNSHIPS</Text>
         <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
           <View style={{ flex: 1 }}>

@@ -6,7 +6,8 @@ import { colors, font, spacing } from "../../styles/globalStyle"
 import { Dimensions } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading'
-
+import { getInternshipsBySearch } from '../../features/internships/internshipsSlice'
+import { filtersActions } from '../../features/filters/filtersSlice'
 export default function CompaniesScreen({ navigation }) {
   const { companies, isLoading } = useSelector(state => state.companies)
   const dispatch = useDispatch()
@@ -17,16 +18,51 @@ export default function CompaniesScreen({ navigation }) {
       }
     }
   }
+
   //TODO move to store
   const jumbotronTextArr = [
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>15+ </Text>COMPANIES</Text>,
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>35+ </Text>INTERNSHIPS</Text>,
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>20+ </Text>WEBINARS</Text>
   ]
-  const handleClick = (companyName) => {
+  const handlePress = (company) => {
+    const newFilters = {
+      category: '',
+      location: '',
+      company: company,
+      search: ''
+    }
+    dispatch(filtersActions.updateFilterList(newFilters))
+    dispatch(getInternshipsBySearch(newFilters))
     navigation.navigate('Internships')
   }
 
+  const Company = ({ company, isMainPartner, index }) => {
+    return (
+      <TouchableOpacity
+        style={isMainPartner ? styles.partnerCompanyWrapper : [styles.companyWrapper, index === companies.length - 1 ? { borderBottomWidth: 0 } : '']}
+        key={index}
+        onPress={() => handlePress(company)}
+      >
+        {company.notifications ?
+          <View style={styles.companyNotificationWrapper}>
+            <Text style={styles.companyNotificationText}>{company.notifications}</Text>
+          </View>
+          :
+          ''
+        }
+        <Image source={{ uri: company.logo }} style={styles.companyLogo} />
+      </TouchableOpacity>
+    )
+  }
+  const renderCompanies = () => {
+    return (
+      <>
+        {companies.mainPartners?.map((company, index) => <Company company={company} isMainPartner={true} key={index} index={index} />)}
+        {companies.partners?.map((company, index) => <Company company={company} isMainPartner={false} key={index} index={index} />)}
+      </>
+    )
+  }
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -46,23 +82,7 @@ export default function CompaniesScreen({ navigation }) {
                 {isLoading ?
                   <Loading />
                   :
-                  companies?.map((company, index) => (
-                    //TODO go to internships filtered by company
-                    <TouchableOpacity
-                      style={company.name === "Bitdefender" ? styles.partnerCompanyWrapper : [styles.companyWrapper, index === companies.length - 1 ? { borderBottomWidth: 0 } : '']}
-                      key={index}
-                      onPress={() => handleClick(company.name)}
-                    >
-                      {company.notifications ?
-                        <View style={styles.companyNotificationWrapper}>
-                          <Text style={styles.companyNotificationText}>{company.notifications}</Text>
-                        </View>
-                        :
-                        ''
-                      }
-                      <Image source={{ uri: company.logo }} style={styles.companyLogo} />
-                    </TouchableOpacity>
-                  ))
+                  renderCompanies()
                 }
 
               </View>

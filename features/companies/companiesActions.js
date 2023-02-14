@@ -6,14 +6,14 @@ const COMPANIES_URL = 'https://staging.stagiipebune.ro/api/v1/companies/all-comp
 
 const getAllPartnerCompanies = async () => {
   token = await tokenLogic.getToken()
-  const mainPartners = await axios.get(COMPANIES_URL + '?partnerships=2', {
+  const getMainPartners = await axios.get(COMPANIES_URL + '?partnerships=2', {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json; charset=UTF-8',
       "X-CSRFToken": token,
     }
   })
-  const partners = await axios.get(COMPANIES_URL + '?partnerships=0', {
+  const getPartners = await axios.get(COMPANIES_URL + '?partnerships=0', {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json; charset=UTF-8',
@@ -22,8 +22,8 @@ const getAllPartnerCompanies = async () => {
   })
   // const companies = [[...mainPartners.data]]
   // console.log('token')
-  const companies = [...mainPartners.data, ...partners.data]
-  return companies
+  // const companies = [...getMainPartners.data, ...getPartners.data]
+  return { mainPartners: getMainPartners.data, partners: getPartners.data }
 }
 
 

@@ -116,16 +116,6 @@ export default function InternshipListItem({ navigation, internship, parentRoute
               <Text style={styles.detailsText}>{internship.start_date}</Text>
               <Text style={styles.detailsText}>{internship.office_location?.toUpperCase()}</Text>
             </View>
-            {
-              !swipeable ?
-                <View>
-                  {/* <Text style={styles.applicantsLow}>APPLICANTS: LOW</Text> */}
-                  {/* <Text style={styles.applicantsFair}>APPLICANTS: FAIR</Text>
-              <Text style={styles.applicantsHigh}>APPLICANTS: HIGH</Text> */}
-                </View>
-                :
-                ''
-            }
             <Text style={styles.internshipCompany}>{internship.company.name}</Text>
 
             {
@@ -155,15 +145,7 @@ export default function InternshipListItem({ navigation, internship, parentRoute
                 :
                 ''
             }
-            {/* {
-              internship.can_apply === 'already_applied' && !swipeable ?
-                <View style={styles.statusTextWrapper}>
-                  <FaIcon name="clipboard" size={16} color={colors.secondary.lightGrey} />
-                  <Text style={styles.statusText}>Applied </Text>
-                </View>
-                :
-                ''
-            } */}
+
             {internship.applied && !swipeable ?
               <View style={styles.statusTextWrapper}>
                 <FaIcon name="clipboard" size={16} color={colors.secondary.lightGrey} />

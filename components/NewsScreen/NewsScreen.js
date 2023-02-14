@@ -94,7 +94,8 @@ export default function NewsMain({ navigation }) {
       <ScrollView style={styles.container}>
         <Text style={styles.header}>News</Text>
         <View style={styles.innerContainer}>
-          {newsList.map((listItem, index) => generateListItem(listItem, index))}
+          {/* {newsList.map((listItem, index) => generateListItem(listItem, index))} */}
+          <Text style={{ color: 'white' }}>No news yet</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

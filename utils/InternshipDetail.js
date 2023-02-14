@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, View, Text, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import { applyToInternship, withdrawFromInternship, resetApplicationStatus, updateLocalInternshipApplied, updateLocalInternshipWithdrew } from '../features/internships/internshipsSlice'
+import {
+  applyToInternship,
+  withdrawFromInternship,
+  resetApplicationStatus,
+  updateLocalInternshipApplied,
+  updateLocalInternshipWithdrew,
+  getStudentInternships
+} from '../features/internships/internshipsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 import { colors, font } from '../styles/globalStyle'
 import reactStringReplace from 'react-string-replace';
@@ -30,6 +37,7 @@ export default function InternshipDetail({ route, navigation }) {
     setInternship({ ...internship, can_apply: 'already_applied' })
     dispatch(updateLocalInternshipApplied(internship))
     dispatch(applyToInternship(payload))
+    // dispatch(getStudentInternships())
   }
   const handleWithdrawPress = () => {
     const payload = {
@@ -39,6 +47,7 @@ export default function InternshipDetail({ route, navigation }) {
     setInternship({ ...internship, can_apply: true })
     dispatch(updateLocalInternshipWithdrew(internship))
     dispatch(withdrawFromInternship(payload))
+    // dispatch(getStudentInternships())
   }
   useEffect(() => {
     if (application.isApplySuccess) {

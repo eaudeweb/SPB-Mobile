@@ -71,6 +71,25 @@ const getInternshipsBySearch = async (params) => {
   return getSortedInternships(response.data)
 }
 
+const refreshInternshipsBySearch = async (params) => {
+  const { company, category, location } = params
+  const companyParam = company.name ? `&company=${company.id}` : ''
+  const categoryParam = category.name ? `&categories=${category.id}` : ''
+  const locationParam = location.name ? `&location=${location.slug}` : ''
+  const searchParam = params.search ? `&search=${params.search}` : ''
+  const URL = ALL_INTERNSHIPS_URL + '?' + companyParam + categoryParam + locationParam + searchParam
+
+  console.log(URL)
+  const response = await axios.get(URL, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      "X-CSRFToken": await tokenLogic.getToken(),
+    },
+  })
+  return getSortedInternships(response.data)
+}
+
 const getStudentInternships = async () => {
   const response = await axios.get(STUDENT_INTERNSHIPS_URL, {
     headers: {
@@ -114,6 +133,7 @@ const internshipsService = {
   withdrawFromInternship,
   getStudentInternships,
   getInternshipsBySearch,
+  refreshInternshipsBySearch,
   changeInternshipApplicationStatus
 }
 

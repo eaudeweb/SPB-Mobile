@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Pressable, View, ScrollView, Text, TouchableHighlight, TouchableOpacity, Modal } from 'react-native'
 import { colors, font } from '../../styles/globalStyle'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
@@ -18,6 +18,9 @@ export default function FilterModal(props) {
     company: internshipsFilter.company,
     search: internshipsFilter.search
   })
+  useEffect(() => {
+    setCurrentFilters(internshipsFilter)
+  }, [internshipsFilter])
   const handleSave = () => {
     if (currentFilters === internshipsFilter) {
       setModalVisible(false)
@@ -61,6 +64,7 @@ export default function FilterModal(props) {
         [type]: data
       }))
   }
+
   const handleClearFilter = () => {
     let filter
     switch (selectedFilter) {

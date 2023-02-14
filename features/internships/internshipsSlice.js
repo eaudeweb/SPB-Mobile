@@ -2,6 +2,11 @@ import { createSlice, current, createAsyncThunk } from "@reduxjs/toolkit"
 import internshipsService from "./internshipsActions"
 
 const initialState = {
+  isLoading: false,
+  isSuccess: false,
+  isError: false,
+  isRefreshLoading: false,
+  message: '',
   internships: [],
   sortedInternships: [],
   studentInternships: [],
@@ -11,12 +16,8 @@ const initialState = {
     isApplySuccess: false,
     isWithdrawSuccess: false,
     isError: false,
-    message: null
+    message: ''
   },
-  isLoading: false,
-  isError: false,
-  message: '',
-  internshipsAppliedTo: []
 }
 
 export const getAllInternships = createAsyncThunk('internships/getAll', async (internships, thunkAPI) => {
@@ -91,6 +92,20 @@ export const getInternshipsBySearch = createAsyncThunk('studentInternships/searc
   }
 })
 
+export const refreshInternshipsBySearch = createAsyncThunk('studentInternships/refresh', async (params, thunkAPI) => {
+  try {
+    return await internshipsService.refreshInternshipsBySearch(params)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
 export const changeInternshipApplicationStatus = createAsyncThunk('studentInternships/changeStatus', async (payload, thunkAPI) => {
   const { jobId, status } = payload
   try {
@@ -118,20 +133,14 @@ export
         state.application.isApplySuccess = false
         state.application.isWithdrawSuccess = false
         state.application.isError = false
-        state.application.message = null
+        state.application.message = ''
+
       },
       getInternshipsByCompany: (state, { payload }) => {
         const filterInternships = internships.filter(internships => internships.company.name === payload)
 
         state.internships = filterInternships
       },
-      // applyToInternship: (state, { payload }) => {
-      //   const newArr = state.internshipsAppliedTo
-      //   if (newArr.find(internship => internship.id === payload.id)) return
-      //   newArr.push({ ...payload, acceptedStatus: false, interviewStatus: false })
-
-      //   state.internshipsAppliedTo = newArr
-      // },
 
       // ACCEPTED = 3
       // APPLIED = 1
@@ -144,7 +153,7 @@ export
         } else {
           newArr[internshipIndex].status = 3
         }
-        state.internshipsAppliedTo = newArr
+        state.studentInternships = newArr
       },
       toggleInterviewStatus: (state, { payload }) => {
         const newArr = state.studentInternships
@@ -154,18 +163,22 @@ export
         } else {
           newArr[internshipIndex].status = 2
         }
-        state.internshipsAppliedTo = newArr
+        state.studentInternships = newArr
       },
       updateLocalInternshipApplied: (state, { payload }) => {
-        const companyIndex = current(state.sortedInternships).map(obj => obj.companyName).indexOf(payload.company.name)
-        const internshipIndex = current(state.sortedInternships)[companyIndex].internships.findIndex(internship => internship.id == payload.id)
-        state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].can_apply = 'already_applied']
+        const newInternships = state.sortedInternships
+        const companyIndex = state.sortedInternships.map(obj => obj.companyName).indexOf(payload.company.name)
+        const internshipIndex = state.sortedInternships[companyIndex].internships.findIndex(internship => internship.id == payload.id)
+        state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = new Date()]
+        const internship = state.sortedInternships[companyIndex].internships[internshipIndex]
+        internship.apply = new Date()
+        console.log(current(internship))
         // state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = new Date()]
       },
       updateLocalInternshipWithdrew: (state, { payload }) => {
         const companyIndex = current(state.sortedInternships).map(obj => obj.companyName).indexOf(payload.company.name)
         const internshipIndex = current(state.sortedInternships)[companyIndex].internships.findIndex(internship => internship.id == payload.id)
-        state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].can_apply = true]
+        state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = '']
         // state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = '']
       },
     },
@@ -222,14 +235,34 @@ export
         })
         .addCase(getInternshipsBySearch.pending, (state) => {
           state.isLoading = true
+          state.isSuccess = false
         })
         .addCase(getInternshipsBySearch.fulfilled, (state, action) => {
           // state.studentInternships = action.payload
           state.isLoading = false
+          state.isSuccess = true
           state.sortedInternships = action.payload
         })
         .addCase(getInternshipsBySearch.rejected, (state, action) => {
           state.isLoading = false
+          state.isSuccess = false
+        })
+        .addCase(refreshInternshipsBySearch.pending, (state) => {
+          state.isLoading = true
+          state.isSuccess = false
+          state.isRefreshLoading = true
+        })
+        .addCase(refreshInternshipsBySearch.fulfilled, (state, action) => {
+          // state.studentInternships = action.payload
+          state.isLoading = false
+          state.isSuccess = true
+          state.sortedInternships = action.payload
+          state.isRefreshLoading = false
+        })
+        .addCase(refreshInternshipsBySearch.rejected, (state, action) => {
+          state.isLoading = false
+          state.isSuccess = false
+          state.isRefreshLoading = false
         })
         .addCase(changeInternshipApplicationStatus.pending, (state) => {
           // state.isLoading = true
@@ -243,7 +276,6 @@ export
         .addCase(changeInternshipApplicationStatus.rejected, (state, action) => {
           // state.isLoading = false
         })
-
     }
   })
 
