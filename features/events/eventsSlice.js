@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit"
 import eventsService from "./eventsActions"
 
 const initialState = {
@@ -9,7 +9,6 @@ const initialState = {
   events: [],
   booking: {
     isLoading: false,
-    isSuccess: false,
     isBookingSuccessful: false,
     isCancelSuccesful: false,
     isError: false,
@@ -59,11 +58,39 @@ export const unbookEventSeat = createAsyncThunk('events/unbookSeat', async (even
   }
 })
 
-
 const eventsSlice = createSlice({
   name: 'events',
   initialState,
   reducers: {
+    resetBookingStatus: (state) => {
+      state.booking.isLoading = false
+      state.booking.isBookingSuccessful = false
+      state.booking.isCancelSuccesful = false
+      state.booking.isError = false
+      state.booking.message = null
+    },
+    updateLocalEvents: (state, { payload }) => {
+      console.log(payload)
+      const { id, newQueue } = payload
+      console.log(newQueue)
+      const newEventArr = state.events
+      const getEventIndex = (eventId, arr) => arr.findIndex(event => event.id == eventId)
+      if (newQueue === 'upcoming') {
+        const index = getEventIndex(id, newEventArr.reserved)
+        const event = newEventArr.reserved[index]
+        event.reg_state = 'cancelled'
+        newEventArr.upcoming.push(event)
+        newEventArr.reserved.splice(index, 1)
+        state.events = newEventArr
+      } else {
+        const index = getEventIndex(id, newEventArr.upcoming)
+        const event = newEventArr.upcoming[index]
+        event.reg_state = 'accepted'
+        newEventArr.reserved.push(event)
+        newEventArr.upcoming.splice(index, 1)
+        state.events = newEventArr
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -84,6 +111,8 @@ const eventsSlice = createSlice({
       })
       .addCase(bookEventSeat.fulfilled, (state, action) => {
         state.isBookingSuccessful = true
+        state.booking.isLoading = false
+
       })
       .addCase(bookEventSeat.rejected, (state, action) => {
         state.booking.isLoading = false
@@ -95,13 +124,13 @@ const eventsSlice = createSlice({
       })
       .addCase(unbookEventSeat.fulfilled, (state, action) => {
         state.booking.isCancelSuccesful = true
+        state.booking.isLoading = false
       })
       .addCase(unbookEventSeat.rejected, (state, action) => {
         state.booking.isLoading = false
         state.booking.isError = true
         state.booking.message = action.payload
       })
-
 
   }
 })

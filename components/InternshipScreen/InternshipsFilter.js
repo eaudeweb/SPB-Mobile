@@ -11,6 +11,7 @@ import { getInternshipsBySearch } from '../../features/internships/internshipsSl
 export default function InternshipsFilter(props) {
   const dispatch = useDispatch()
   const { internshipsFilter } = useSelector(state => state.filters)
+  const { isLoading } = useSelector(state => state.internships)
   const { updateSelectedFilter, updateFilterList } = filtersActions
   const [modalVisible, setModalVisible] = useState(false)
   const [selectedFilter, setSelectedFilter] = useState(null)
@@ -39,7 +40,7 @@ export default function InternshipsFilter(props) {
     <View style={styles.container}>
       <Text style={styles.filterDescriptionText}>FILTER BY: </Text>
       <View style={styles.filterContainer}>
-        <TouchableOpacity onPress={() => handleFilterTap('categories')}>
+        <TouchableOpacity onPress={() => handleFilterTap('categories')} disabled={isLoading}>
           {internshipsFilter.category.name ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>Categories</Text>
@@ -50,7 +51,7 @@ export default function InternshipsFilter(props) {
             </View>
           }
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleFilterTap('city')}>
+        <TouchableOpacity onPress={() => handleFilterTap('city')} disabled={isLoading}>
           {internshipsFilter.location.name ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>City</Text>
@@ -61,7 +62,7 @@ export default function InternshipsFilter(props) {
             </View>
           }
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleFilterTap('companies')}>
+        <TouchableOpacity onPress={() => handleFilterTap('companies')} disabled={isLoading}>
           {internshipsFilter.company.name ?
             <View style={styles.filterButtonActive}>
               <Text style={styles.filterTextActive}>Companies</Text>

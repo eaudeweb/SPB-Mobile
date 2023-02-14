@@ -1,26 +1,33 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, SafeAreaView, View, Text, Image, ScrollView, TouchableHighlight, StatusBar, ActivityIndicator } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import NotificationsModal from '../../utils/NotificationsModal'
 import { colors, font } from '../../styles/globalStyle'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
-import { bookEventSeat, unbookEventSeat } from '../../features/events/eventsSlice'
+import { bookEventSeat, eventsActions, unbookEventSeat } from '../../features/events/eventsSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
 export default function EventDetail({ props }) {
+  const { updateLocalEvents } = eventsActions
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const { navigation, route } = props
+  const { isBookingSuccesful, isCancelSuccesful } = useSelector(state => state.events.booking)
   const { booking } = useSelector(state => state.events)
-  const event = route.params
+  const [event, setEvent] = useState(route.params)
   const url = 'https://staging.stagiipebune.ro'
+
   const handleSeatBooking = () => {
+    setEvent({ ...event, reg_state: 'accepted' })
     dispatch(bookEventSeat(event.id))
+    dispatch(updateLocalEvents({ id: event.id, newQueue: 'reserved' }))
   }
   const handleSeatUnbooking = () => {
+    setEvent({ ...event, reg_state: 'cancelled' })
     dispatch(unbookEventSeat(event.id))
+    dispatch(updateLocalEvents({ id: event.id, newQueue: 'upcoming' }))
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <View marginBottom={10}>
@@ -41,38 +48,20 @@ export default function EventDetail({ props }) {
         <NotificationsModal modalVisible={modalVisible} setModalVisible={setModalVisible} />
       </ScrollView >
       <View style={styles.bottomButtonsWrapper}>
-        {/* <View width={'60%'}>
-          {internship.can_apply !== 'already_applied' ?
-            <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress}>
-              <View>
-                {application.isLoading ?
-                  <ActivityIndicator size="small" color={colors.main.cappuccino} />
-                  :
-                  <Text style={styles.bottomButtonText}>Apply</Text>
-                }
-              </View>
-            </TouchableHighlight>
-            :
-            <TouchableHighlight style={styles.bottomButton} onPress={handleWithdrawPress}>
-              <View>
-                {application.isLoading ?
-                  <ActivityIndicator size="small" color={colors.main.accent} />
-                  :
-                  <Text style={[styles.bottomButtonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
-                }
-              </View>
-            </TouchableHighlight>
-          }
-        </View> */}
         <View width={'50%'}>
-          <TouchableHighlight style={styles.bottomButton} onPress={() => handleSeatBooking()}>
-            {booking.isLoading ?
+          {booking.isLoading ?
+            <TouchableHighlight style={styles.bottomButton} >
               <ActivityIndicator size="small" color={colors.main.accent} />
+            </TouchableHighlight> :
+            event.reg_state == "accepted" ?
+              <TouchableHighlight style={styles.bottomButton} onPress={() => handleSeatUnbooking()}>
+                <Text style={[styles.bottomButtonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
+              </TouchableHighlight>
               :
-              <Text style={styles.bottomButtonText}>Book Seat</Text>
-
-            }
-          </TouchableHighlight>
+              <TouchableHighlight style={styles.bottomButton} onPress={() => handleSeatBooking()}>
+                <Text style={styles.bottomButtonText}>Book Seat</Text>
+              </TouchableHighlight>
+          }
         </View>
         <View width={'25%'}>
           <TouchableHighlight style={styles.bottomButton} onPress={() => alert("Ding")}>

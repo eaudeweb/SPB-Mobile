@@ -26,7 +26,18 @@ export default function ProfileScreen({ navigation, route }) {
     <Tab.Navigator
       initialRouteName='Applications'
       screenOptions={{
-
+        tabBarContentContainerStyle: {
+          backgroundColor: 'none'
+        },
+        tabBarActiveTintColor: '#F26649',
+        tabBarInactiveTintColor: 'grey',
+        tabBarIndicatorStyle: {
+          backgroundColor: '#F26649'
+        },
+        tabBarStyle: {
+          backgroundColor: '#212121',
+          borderWidth: 0,
+        },
       }}
       tabBar={(props) => < CustomTabBar {...props} screens={screens} />}
     >

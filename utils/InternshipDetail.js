@@ -22,7 +22,6 @@ export default function InternshipDetail({ route, navigation }) {
     const replacementFunction = (match, index) => <Text style={{ fontWeight: font.fontWeight.xbold, color: colors.main.accent }} key={index}>{match}</Text>;
     return reactStringReplace(text, regex, replacementFunction);
   }
-  console.log(route.name)
   const handleApplyPress = () => {
     const payload = {
       companyId: internship.company.id,
@@ -64,7 +63,6 @@ export default function InternshipDetail({ route, navigation }) {
       dispatch(resetApplicationStatus())
     }
     if (application.isError) {
-
       Toast.show({
         type: 'error',
         text1: 'Could not perform action',

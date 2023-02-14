@@ -1,14 +1,29 @@
 import React from 'react'
-import { StyleSheet, View, TouchableHighlight, Text } from 'react-native'
+import { StyleSheet, View, TouchableHighlight, Text, ActivityIndicator } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { colors, font } from '../styles/globalStyle'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import { Dimensions } from 'react-native';
-
+import { useSelector, useDispatch } from 'react-redux'
+import { eventsActions } from '../features/events/eventsSlice'
+import { bookEventSeat, unbookEventSeat } from '../features/events/eventsSlice'
 
 const EventListItem = ({ event, props }) => {
   const childrenScreen = event.type === 'event' ? 'EventDetail' : 'WebinarDetail'
+  const { updateLocalEvents } = eventsActions
+  const { booking } = useSelector(state => state.events)
   const { navigation } = props
+  const dispatch = useDispatch()
+
+  const handleSeatBooking = () => {
+    dispatch(bookEventSeat(event.id))
+    dispatch(updateLocalEvents({ id: event.id, newQueue: 'reserved' }))
+  }
+  const handleSeatUnbooking = () => {
+    dispatch(unbookEventSeat(event.id))
+    dispatch(updateLocalEvents({ id: event.id, newQueue: 'upcoming' }))
+  }
+
   return (
     <TouchableHighlight
       style={styles.eventContainer}
@@ -30,9 +45,19 @@ const EventListItem = ({ event, props }) => {
               </View>
             </View>
             <View>
-              <TouchableHighlight style={styles.bookEventButton} onPress={() => alert('Joined event')}>
+              {/* <TouchableHighlight style={styles.bookEventButton} onPress={() => alert('Joined event')}>
                 <Text style={styles.buttonText}>Book seat</Text>
-              </TouchableHighlight>
+              </TouchableHighlight> */}
+              {
+                event.reg_state == "accepted" ?
+                  <TouchableHighlight style={styles.bookEventButton} onPress={() => handleSeatUnbooking()}>
+                    <Text style={[styles.buttonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
+                  </TouchableHighlight>
+                  :
+                  <TouchableHighlight style={styles.bookEventButton} onPress={() => handleSeatBooking()}>
+                    <Text style={styles.buttonText}>Book Seat</Text>
+                  </TouchableHighlight>
+              }
             </View>
           </View>
 

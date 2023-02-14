@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, SafeAreaView, ScrollView, View, StatusBar, Text } from 'react-native'
+import { StyleSheet, SafeAreaView, ScrollView, View, StatusBar, Text, ActivityIndicator } from 'react-native'
 import EventListItem from '../../utils/EventListItem'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSelector } from 'react-redux';
@@ -9,21 +9,10 @@ import { getEvents } from '../../features/events/eventsSlice';
 import { useDispatch } from 'react-redux';
 import moment from 'moment';
 export default function EventsListScreen(props) {
-  const { events, isLoading } = useSelector(state => state.events)
+  const { events, booking, isLoading } = useSelector(state => state.events)
   const styles = getStyles(useBottomTabBarHeight())
   const dispatch = useDispatch()
-  const eventsExist = () => {
-    const { upcoming, reserved, recordings } = events
-    if (upcoming?.length || reserved?.length || recordings?.length) {
-      return true
-    } else {
-      return false
-    }
-  }
-  const Events = () => {
 
-
-  }
   useEffect(() => {
     dispatch(getEvents())
   }, [])
@@ -46,7 +35,10 @@ export default function EventsListScreen(props) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView >
-        <Text style={components.screenHeader}>EVENTS</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={components.screenHeader}>EVENTS </Text>
+          {booking.isLoading ? <ActivityIndicator size="small" color={colors.main.accent} /> : ''}
+        </View>
         <View >
           {events.upcoming?.length ? <EventSectionItem eventsType={"Upcoming"} events={events.upcoming} /> : ''}
           {events.reserved?.length ? <EventSectionItem eventsType={"Reserved"} events={events.reserved} /> : ''}
