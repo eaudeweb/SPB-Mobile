@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState, useCallback } from 'react'
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity, RefreshControl } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../../utils/InternshipListItem'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -10,13 +10,13 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import { colors, font } from '../../../styles/globalStyle';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import Loading from '../../InternshipScreen/Loading'
-import { getStudentInternships } from '../../../features/internships/internshipsSlice';
+import { getStudentInternships, refreshStudentInternships } from '../../../features/internships/internshipsSlice';
 import { useDispatch } from 'react-redux';
 
 export default function ApplicationList(props) {
   const dispatch = useDispatch()
   const styles = getStyles(useBottomTabBarHeight())
-  const { isLoading, studentInternships } = useSelector(state => state.internships)
+  const { isLoading, studentInternships, isRefreshLoading } = useSelector(state => state.internships)
   const [applications, setApplications] = useState(studentInternships)
   const [isFilterCollapsed, setIsFilterCollapsed] = useState(true)
   const [applicationsFilter, setApplicationsFilter] = useState({
@@ -30,6 +30,12 @@ export default function ApplicationList(props) {
       [filterType]: !applicationsFilter[filterType]
     })
   }
+  const onRefresh = useCallback(() => {
+
+    dispatch(refreshStudentInternships())
+
+  }, []);
+
   const FilterButton = ({ name, type, active }) => {
     return (
       <TouchableOpacity onPress={() => handleFilterTap(type)}>
@@ -64,7 +70,11 @@ export default function ApplicationList(props) {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isRefreshLoading} onRefresh={onRefresh} />
+        }
+      >
         <View style={{ margin: 10 }}>
           <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={() => setIsFilterCollapsed(!isFilterCollapsed)}>
             <Text style={{ color: '#F26649', fontSize: 18 }}>Filter:</Text>
@@ -81,9 +91,8 @@ export default function ApplicationList(props) {
         {isLoading ?
           <Loading />
           :
-          ''
+          applications?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)
         }
-        {applications?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)}
       </ScrollView>
     </View>
   )

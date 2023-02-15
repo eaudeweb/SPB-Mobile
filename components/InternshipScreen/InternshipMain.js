@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { StyleSheet, ScrollView, SafeAreaView, View, StatusBar, Text, RefreshControl } from 'react-native'
 import { SearchBar } from '@rneui/themed';
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
@@ -24,12 +24,7 @@ export default function InternshipMain(props) {
   const [currentFilters, setCurrentFilters] = useState(internshipsFilter)
   // dispatch(getInternshipsBySearch(newFilters))
 
-  const [refreshing, setRefreshing] = React.useState(false);
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    // setTimeout(() => {
-    //   setRefreshing(false);
-    // }, 2000);
+  const onRefresh = useCallback(() => {
     const clearedFilters = {
       category: '',
       location: '',

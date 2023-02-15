@@ -48,6 +48,20 @@ export const getStudentInternships = createAsyncThunk('studentInternships/get', 
   }
 })
 
+export const refreshStudentInternships = createAsyncThunk('studentInternships/refreshApplications', async (internships, thunkAPI) => {
+  try {
+    return await internshipsService.refreshStudentInternships()
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
 export const applyToInternship = createAsyncThunk('internship/apply', async (payload, thunkAPI) => {
   const { companyId, jobId } = payload
   try {
@@ -231,7 +245,19 @@ export
         })
         .addCase(getStudentInternships.rejected, (state, action) => {
           state.isLoading = false
-
+        })
+        .addCase(refreshStudentInternships.pending, (state) => {
+          state.isLoading = true
+          state.isRefreshLoading = true
+        })
+        .addCase(refreshStudentInternships.fulfilled, (state, action) => {
+          state.studentInternships = action.payload
+          state.isLoading = false
+          state.isRefreshLoading = false
+        })
+        .addCase(refreshStudentInternships.rejected, (state, action) => {
+          state.isLoading = false
+          state.isRefreshLoading = false
         })
         .addCase(getInternshipsBySearch.pending, (state) => {
           state.isLoading = true
@@ -276,6 +302,7 @@ export
         .addCase(changeInternshipApplicationStatus.rejected, (state, action) => {
           // state.isLoading = false
         })
+
     }
   })
 

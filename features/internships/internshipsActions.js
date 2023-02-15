@@ -101,6 +101,18 @@ const getStudentInternships = async () => {
   return response.data
 }
 
+const refreshStudentInternships = async () => {
+  const response = await axios.get(STUDENT_INTERNSHIPS_URL, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      "X-CSRFToken": await tokenLogic.getToken(),
+    },
+  })
+  return response.data
+}
+
+
 const applyToInternship = async (companyId, jobId) => {
   const response = await axios.post(GET_APPLICATION_URL(companyId, jobId, 'apply'), {
     headers: {
@@ -132,6 +144,7 @@ const internshipsService = {
   applyToInternship,
   withdrawFromInternship,
   getStudentInternships,
+  refreshStudentInternships,
   getInternshipsBySearch,
   refreshInternshipsBySearch,
   changeInternshipApplicationStatus

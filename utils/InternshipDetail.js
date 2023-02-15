@@ -8,7 +8,6 @@ import {
   resetApplicationStatus,
   updateLocalInternshipApplied,
   updateLocalInternshipWithdrew,
-  getStudentInternships
 } from '../features/internships/internshipsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 import { colors, font } from '../styles/globalStyle'
