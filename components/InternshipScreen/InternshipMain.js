@@ -67,7 +67,6 @@ export default function InternshipMain(props) {
     internships.forEach(internship => {
       internship.location.forEach(location => {
         if (locations.includes(location)) {
-          // alert('deja e')
         } else {
           locationSlugs.push(location)
         }
@@ -117,7 +116,6 @@ export default function InternshipMain(props) {
           <RefreshControl refreshing={isRefreshLoading} onRefresh={onRefresh} />
         }
       >
-
         <Text style={components.screenHeader}>INTERNSHIPS</Text>
         <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>
           <View style={{ flex: 1 }}>
@@ -177,7 +175,6 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   inputContainer: {
     borderRadius: 10,
     backgroundColor: '#424242',
-
   },
   inputStyle: {
     color: colors.secondary.lightGrey

@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux';
 import { getAllInternships, getStudentInternships } from '../features/internships/internshipsSlice'
 import { getAllPartnerCompanies } from '../features/companies/companiesSlice';
 import { getCategories, getLocations } from '../features/filters/filtersSlice';
+import { getEvents } from '../features/events/eventsSlice';
 
 export default function LayoutScreen(props) {
   const insets = useSafeAreaInsets();
@@ -25,21 +26,18 @@ export default function LayoutScreen(props) {
     events: 'Events',
     profile: 'Profile'
   }
-  const getToken = async () => {
-    const result = await SecureStore.getItemAsync('authToken')
-    return result
-  }
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllInternships())
     dispatch(getAllPartnerCompanies())
     dispatch(getCategories())
     dispatch(getLocations())
+    dispatch(getEvents())
     // dispatch(getStudentInternships())
     //prevent swiping back to the login screen after login occurred succesfully 
-    // props.navigation.addListener('beforeRemove', (e) => {
-    //   e.preventDefault()
-    // })
+    props.navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault()
+    })
   }, [])
 
   return (

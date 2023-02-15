@@ -64,7 +64,7 @@ export default function EventDetail({ props }) {
           }
         </View>
         <View width={'25%'}>
-          <TouchableHighlight style={styles.bottomButton} onPress={() => alert("Ding")}>
+          <TouchableHighlight style={styles.bottomButton}>
             <View style={{ alignItems: 'center' }}>
               <FaIcon name={'bell'} size={20} color={colors.secondary.lightGrey} />
             </View>

@@ -8,8 +8,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loading from './Loading'
 import { getInternshipsBySearch } from '../../features/internships/internshipsSlice'
 import { filtersActions } from '../../features/filters/filtersSlice'
+
 export default function CompaniesScreen({ navigation }) {
   const { companies, isLoading } = useSelector(state => state.companies)
+  const { events } = useSelector(state => state.events)
+  const { internships } = useSelector(state => state.internships)
   const dispatch = useDispatch()
   const wrapperLoadingHeight = () => {
     if (companies?.length == 0) {
@@ -19,11 +22,25 @@ export default function CompaniesScreen({ navigation }) {
     }
   }
 
+  const roundToLowest5 = (number) => {
+    const roundedNumber = Math.round(number / 5) * 5
+    if (roundedNumber <= 5) {
+      return parseInt(number)
+    } else if (roundedNumber > number) {
+      return `${Math.round((number - 5) / 5) * 5}+`
+    } else {
+      return `${roundedNumber}+`
+    }
+  }
+  const internshipsNumber = roundToLowest5(internships?.length)
+  const companiesNumber = roundToLowest5(companies.mainPartners?.length + companies.partners?.length)
+  const eventsNumber = events.upcoming?.length > 0 ? roundToLowest5(events.upcoming?.length + events.reserved?.length) : 0
+
   //TODO move to store
   const jumbotronTextArr = [
-    <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>15+ </Text>COMPANIES</Text>,
-    <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>35+ </Text>INTERNSHIPS</Text>,
-    <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>20+ </Text>WEBINARS</Text>
+    <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>{companiesNumber} </Text>COMPANIES</Text>,
+    <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>{internshipsNumber} </Text>INTERNSHIPS</Text>,
+    <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>{eventsNumber} </Text>EVENTS</Text>
   ]
   const handlePress = (company) => {
     const newFilters = {

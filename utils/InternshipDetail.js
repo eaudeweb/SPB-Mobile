@@ -8,6 +8,8 @@ import {
   resetApplicationStatus,
   updateLocalInternshipApplied,
   updateLocalInternshipWithdrew,
+  updateLocalApplicationsApplied,
+  updateLocalApplicationsWithdrew
 } from '../features/internships/internshipsSlice'
 import { useSelector, useDispatch } from 'react-redux';
 import { colors, font } from '../styles/globalStyle'
@@ -33,20 +35,16 @@ export default function InternshipDetail({ route, navigation }) {
       companyId: internship.company.id,
       jobId: internship.id
     }
-    setInternship({ ...internship, can_apply: 'already_applied' })
-    dispatch(updateLocalInternshipApplied(internship))
+    // dispatch(updateLocalInternshipApplied(internship))
     dispatch(applyToInternship(payload))
-    // dispatch(getStudentInternships())
   }
   const handleWithdrawPress = () => {
     const payload = {
       companyId: internship.company.id,
       jobId: internship.id
     }
-    setInternship({ ...internship, can_apply: true })
-    dispatch(updateLocalInternshipWithdrew(internship))
+    // dispatch(updateLocalInternshipWithdrew(internship))
     dispatch(withdrawFromInternship(payload))
-    // dispatch(getStudentInternships())
   }
   useEffect(() => {
     if (application.isApplySuccess) {
@@ -55,20 +53,18 @@ export default function InternshipDetail({ route, navigation }) {
         text1: 'Applied successfully',
       });
 
-      setInternship({ ...internship, can_apply: 'already_applied' })
-      setInternship({ ...internship, applied: true })
+      setInternship({ ...internship, applied: new Date() })
       dispatch(updateLocalInternshipApplied(internship))
-      dispatch(resetApplicationStatus())
+      dispatch(updateLocalApplicationsApplied(internship))
     }
     if (application.isWithdrawSuccess) {
       Toast.show({
         type: 'error',
         text1: 'Withdrew successfully',
       });
-      setInternship({ ...internship, can_apply: true })
-      setInternship({ ...internship, applied: false })
+      setInternship({ ...internship, applied: '' })
       dispatch(updateLocalInternshipWithdrew(internship))
-      dispatch(resetApplicationStatus())
+      dispatch(updateLocalApplicationsWithdrew(internship))
     }
     if (application.isError) {
       Toast.show({
@@ -79,7 +75,16 @@ export default function InternshipDetail({ route, navigation }) {
     dispatch(resetApplicationStatus())
 
   }, [application])
-
+  const canWithdraw = () => {
+    const currentUnix = moment(new Date()).valueOf()
+    const applicationTime = moment(internship.applied).valueOf()
+    const result = moment(currentUnix - applicationTime).valueOf()
+    if (result >= 86400000) {
+      return false
+    } else {
+      return true
+    }
+  }
   return (
     <View style={styles.container}>
       <View marginBottom={10}>
@@ -129,8 +134,8 @@ export default function InternshipDetail({ route, navigation }) {
       </ScrollView>
       <View style={styles.bottomButtonsWrapper}>
         <View width={'60%'}>
-          {route.name === "InternshipDetail" ?
-            internship.can_apply !== 'already_applied' ?
+          {
+            internship.applied.length === 0 ?
               <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress}>
                 <View>
                   {application.isLoading ?
@@ -141,38 +146,19 @@ export default function InternshipDetail({ route, navigation }) {
                 </View>
               </TouchableHighlight>
               :
-              <TouchableHighlight style={styles.bottomButton} onPress={handleWithdrawPress}>
-                <View>
-                  {application.isLoading ?
-                    <ActivityIndicator size="small" color={colors.main.accent} />
-                    :
-                    <Text style={[styles.bottomButtonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
-                  }
-                </View>
-              </TouchableHighlight>
-            :
-            !internship.applied ?
-              <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress}>
-                <View>
-                  {application.isLoading ?
-                    <ActivityIndicator size="small" color={colors.main.cappuccino} />
-                    :
-                    <Text style={styles.bottomButtonText}>Apply</Text>
-                  }
-                </View>
-              </TouchableHighlight>
-              :
-              <TouchableHighlight style={styles.bottomButton} onPress={handleWithdrawPress}>
-                <View>
-                  {application.isLoading ?
-                    <ActivityIndicator size="small" color={colors.main.accent} />
-                    :
-                    <Text style={[styles.bottomButtonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
-                  }
-                </View>
-              </TouchableHighlight>
+              canWithdraw() ?
+                <TouchableHighlight style={styles.bottomButton} onPress={handleWithdrawPress}>
+                  <View>
+                    {application.isLoading ?
+                      <ActivityIndicator size="small" color={colors.main.accent} />
+                      :
+                      <Text style={[styles.bottomButtonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
+                    }
+                  </View>
+                </TouchableHighlight>
+                :
+                ''
           }
-
         </View>
         <View width={'30%'}>
           <TouchableHighlight style={styles.bottomButton} onPress={() => onShare(base_url + internship.url)}>
@@ -263,6 +249,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingVertical: 10,
+    backgroundColor: 'transparent'
+
   },
   bottomButton: {
     backgroundColor: colors.secondary.mediumGrey,

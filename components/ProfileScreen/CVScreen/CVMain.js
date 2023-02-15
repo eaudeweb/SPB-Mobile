@@ -1,23 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScrollView, StyleSheet, View, Text, Image } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import * as Progress from 'react-native-progress';
+import { useDispatch, useSelector } from 'react-redux';
+import { getProfileData } from '../../../features/profile/profileSlice';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 export default function CVMain() {
+  const dispatch = useDispatch()
+  const styles = getStyles(useBottomTabBarHeight())
+
+  const { data, isLoading } = useSelector(state => state.profile)
+
+  useEffect(() => {
+    dispatch(getProfileData())
+  }, [])
+
+  if (isLoading) {
+    return <Text style={{ color: 'white' }}>LOADINg</Text>
+  }
   const AboutCategory = ({ category, categoryName }) => {
     return (
       <View style={categoryStyle.outerWrapper}>
         <View style={categoryStyle.innerWrapper}>
           <View style={styles.textWrap}>
-            {category?.length ?
-              <Ionicon name={'checkmark-circle-outline'} style={categoryStyle.checkMarkIcon} />
-              :
-              <Ionicon name={'close-circle-outline'} style={categoryStyle.closeIcon} />
-            }
             <Text style={styles.infoText}>{categoryName}:</Text>
           </View>
           <View style={categoryStyle.textListWrap}>
-            {category?.map((item, index) => <Text key={index} style={categoryStyle.testListItem}> {item}</Text>)}
+            {category?.map((item, index) => <Text key={index} style={{ flexWrap: 'wrap', color: 'white', }}>{item}{category.length - 1 === index ? '' : ', '}</Text>)}
           </View>
         </View>
       </View>
@@ -27,14 +37,16 @@ export default function CVMain() {
   const EducationComponent = ({ data }) => {
     const EducationItem = ({ item }) => {
       return (
-        <View style={categoryStyle.outerWrapper}>
-          <View style={categoryStyle.innerWrapper}>
-            <View style={{ flex: 2, alignItems: 'center' }}>
-              <Text style={styles.infoTextBold}>{item.startYear} - {item.gradulationYear}</Text>
-            </View>
-            <View style={{ flex: 3 }}>
-              <Text style={styles.infoTextBold}>{item.institution}</Text>
-              <Text style={styles.infoText}>Specialization: {item.specialization}</Text>
+        <View style={styles.section}>
+          <View style={categoryStyle.outerWrapper}>
+            <View style={categoryStyle.innerWrapper}>
+              <View style={{ flex: 2, alignItems: 'flex-start' }}>
+                <Text style={styles.infoTextBold}>{item.start_year} - {item.end_year}</Text>
+              </View>
+              <View style={{ flex: 5 }}>
+                <Text style={styles.infoTextBold}>{item.institution}</Text>
+                <Text style={[styles.infoText, { fontSize: 16 }]}>Specialization in: {item.speciality}</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -44,21 +56,23 @@ export default function CVMain() {
     return (
       <View>
         <Text style={styles.infoTextBold}>EDUCATION</Text>
-        {data?.map((item, index) => <EducationItem item={item} key={index} />)}
+        {data.map((item, index) => <EducationItem item={item} key={index} />)}
       </View>
     )
   }
   const ExperienceComponent = ({ data }) => {
     const ExperienceItem = ({ item }) => {
       return (
-        <View style={categoryStyle.outerWrapper}>
-          <View style={categoryStyle.innerWrapper}>
-            <View style={{ flex: 2, alignItems: 'center' }}>
-              <Text style={styles.infoTextBold}>{item.period}</Text>
-            </View>
-            <View style={{ flex: 3 }}>
-              <Text style={styles.infoTextBold}>{item.position} @ {item.company}</Text>
-              <Text style={styles.infoText}>{item.description}</Text>
+        <View style={styles.section}>
+          <View style={categoryStyle.outerWrapper}>
+            <View style={categoryStyle.innerWrapper}>
+              <View style={{ flex: 2, alignItems: 'center' }}>
+                <Text style={styles.infoTextBold}>{item.period}</Text>
+              </View>
+              <View style={{ flex: 5, marginLeft: 10 }}>
+                <Text style={styles.infoTextBold}>{item.position} @ {item.company}</Text>
+                <Text style={styles.infoText}>{item.description}</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -80,7 +94,7 @@ export default function CVMain() {
             <View style={{ flex: 2, alignItems: 'center' }}>
               <Text style={styles.infoTextBold}>{item.period}</Text>
             </View>
-            <View style={{ flex: 3 }}>
+            <View style={{ flex: 5, marginLeft: 10 }}>
               <Text style={styles.infoTextBold}>{item.title}</Text>
               <Text style={styles.infoText}>{item.description}</Text>
             </View>
@@ -95,106 +109,66 @@ export default function CVMain() {
       </View>
     )
   }
-  const profile = {
-    name: 'Gabriel Hazi',
-    phoneNumber: '0761234567',
-    email: 'hazigabriel@edw.ro',
-    avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8-7P2nXb6mo36Iq2N9W6ebtmvUaHOZ_VnkQ&usqp=CAU',
-    about: {
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.Aenean gravida pulvinar risus, ultrices iaculis mi faucibus eu.',
-      skills: ['React', 'React-Native', 'Git', 'Googling stuff'],
-      languages: ['English'],
-      hobbies: ['Cycling', 'Cooking'],
-      prefferedClasses: []
-    },
-    education: [
-      {
-        institution: 'EDW University',
-        specialization: 'Faculty of ReactJs',
-        startYear: '2022',
-        gradulationYear: '2022'
-      },
-      {
-        institution: 'EDW University',
-        specialization: 'Faculty of React Native',
-        startYear: '2022',
-        gradulationYear: '2022'
-      },
-    ],
-    experience: [
-      {
-        period: '2022',
-        position: 'Frontend developer',
-        company: 'Eau de Web',
-        description: 'Really cool stuff'
-      }
-    ],
-    extras: [
-      {
-        period: '2022-',
-        title: 'Falling off the bike enthusist',
-        description: 'Fell off the bike after encountering a piece of road left on the pavement, 10/10 would not repeat'
-      },
-    ]
-  }
 
   return (
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.cvWrap}>
           <View style={styles.section}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-              <Image source={{ uri: profile.avatar }} style={styles.avatar} />
-              <View>
-                <Text style={styles.nameText}>{profile.name}</Text>
-                <View flexDirection='row' alignItems='center'>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 10 }}>
+              <Image source={{ uri: data?.picture }} style={styles.avatar} />
+              <View  >
+                <Text style={styles.nameText}>{data.user?.first_name} {data.user?.last_name}</Text>
+                {/* <View flexDirection='row' alignItems='center'>
                   <Text style={[styles.infoText, { color: '#F26649' }]}>TOP 10%</Text>
                   <Ionicon name={'arrow-up-outline'} size={26} color={'#4CAF50'} />
-                </View>
+                </View> */}
               </View>
-              <View>
+              {/* <View>
                 <Progress.Circle
                   size={40}
-                  progress={0.99}
+                  progress={0.5}
                   borderWidth={0}
                   thickness={4}
                   showsText={true}
                   textStyle={{ color: 'white', fontSize: 11, fontWeight: 'bold' }}
                   color={'#F26649'}
                 />
-              </View>
+              </View> */}
             </View>
             <View style={{ flexDirection: 'row', width: '100%', flexWrap: 'wrap', justifyContent: 'center', paddingBottom: 10 }}>
               <Text style={styles.quotationMark}>“</Text>
-              <Text style={[styles.infoText, { flex: 10, textAlign: 'center' }]}>{profile.about.description}</Text>
+              <Text style={[styles.infoText, { flex: 10, textAlign: 'center' }]}>{data?.about_me}</Text>
               <Text style={[styles.quotationMark, { alignSelf: 'flex-end' }]}>”</Text>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', paddingBottom: 10 }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicon name={'call-outline'} size={26} color={'#0871D9'} />
-                <Text style={[styles.infoText, { color: '#0871D9', marginHorizontal: 5 }]}>{profile.phoneNumber}</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicon name={'mail-outline'} size={26} color={'#0871D9'} />
-                <Text style={[styles.infoText, { color: '#0871D9', marginHorizontal: 5 }]}>{profile.email}</Text>
-              </View>
+            <View>
+              <Text style={styles.infoText}>{data.faculty?.name}</Text>
+              <Text style={styles.infoText}>{data.faculty?.university}</Text>
+              <Text style={styles.infoText}>Last year grade: {data.faculty?.last_grade}</Text>
+
             </View>
           </View>
           <View style={styles.section}>
-            <AboutCategory category={profile.about.skills} categoryName="Skills" />
-            <AboutCategory category={profile.about.hobbies} categoryName="Hobbies:" />
-            <AboutCategory category={profile.about.languages} categoryName="Languages" />
-            <AboutCategory category={profile.about.prefferedClasses} categoryName="Favorite Classes" />
+            {data.skills?.length ? <AboutCategory category={data.skills} categoryName="Skills" /> : ''}
+            {data.hobbies?.length ? <AboutCategory category={data.data.hobbies} categoryName="Hobbies" /> : ''}
+            {data.languages?.length ? <AboutCategory category={data.languages} categoryName="Languages" /> : ''}
+            {data.prefered_courses?.length ?
+              <View style={categoryStyle.outerWrapper}>
+                <View style={categoryStyle.innerWrapper}>
+                  <View style={styles.textWrap}>
+                    <Text style={styles.infoText}>Prefered classes:</Text>
+                  </View>
+                  <View style={categoryStyle.textListWrap}>
+                    <Text style={{ color: 'white', }}>{data.prefered_courses} </Text>
+                  </View>
+                </View>
+              </View>
+              :
+              ''}
           </View>
-          <View style={styles.section}>
-            <EducationComponent data={profile.education} />
-          </View>
-          <View style={styles.section}>
-            <ExperienceComponent data={profile.experience} />
-          </View>
-          <View style={styles.section}>
-            <ExtraComponenet data={profile.extras} />
-          </View>
+          {data.education?.length ? <EducationComponent data={data.education} /> : ''}
+          {data.job_history?.length ? <ExperienceComponent data={data.job_history} /> : ''}
+          {data.projects?.length ? <ExtraComponenet data={data.projects} /> : ''}
         </View>
         <View style={styles.infoWrap}>
           <Text style={styles.infoText}>CV can be edited on our website</Text>
@@ -206,7 +180,7 @@ export default function CVMain() {
 
 const categoryStyle = StyleSheet.create({
   outerWrapper: {
-    marginVertical: 10
+    marginVertical: 10,
   },
   innerWrapper: {
     flexDirection: 'row',
@@ -219,12 +193,18 @@ const categoryStyle = StyleSheet.create({
     fontSize: 26,
     color: '#F44336'
   },
+  textListWrap: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginLeft: 10
+  }
 })
 
-const styles = StyleSheet.create({
+const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     marginHorizontal: 10,
-    paddingVertical: 10
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10
   },
   cvWrap: {
     borderWidth: 2,
@@ -244,7 +224,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderRadius: 100,
     borderWidth: 3,
-    borderColor: '#F26649'
+    borderColor: '#F26649',
+    backgroundColor: 'white'
 
   },
   nameText: {

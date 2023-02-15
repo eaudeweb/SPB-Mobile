@@ -45,9 +45,6 @@ const EventListItem = ({ event, props }) => {
               </View>
             </View>
             <View>
-              {/* <TouchableHighlight style={styles.bookEventButton} onPress={() => alert('Joined event')}>
-                <Text style={styles.buttonText}>Book seat</Text>
-              </TouchableHighlight> */}
               {
                 event.reg_state == "accepted" ?
                   <TouchableHighlight style={styles.bookEventButton} onPress={() => handleSeatUnbooking()}>

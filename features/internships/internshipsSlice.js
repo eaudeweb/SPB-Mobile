@@ -180,20 +180,26 @@ export
         state.studentInternships = newArr
       },
       updateLocalInternshipApplied: (state, { payload }) => {
-        const newInternships = state.sortedInternships
         const companyIndex = state.sortedInternships.map(obj => obj.companyName).indexOf(payload.company.name)
         const internshipIndex = state.sortedInternships[companyIndex].internships.findIndex(internship => internship.id == payload.id)
         state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = new Date()]
-        const internship = state.sortedInternships[companyIndex].internships[internshipIndex]
-        internship.apply = new Date()
-        console.log(current(internship))
-        // state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = new Date()]
       },
       updateLocalInternshipWithdrew: (state, { payload }) => {
         const companyIndex = current(state.sortedInternships).map(obj => obj.companyName).indexOf(payload.company.name)
         const internshipIndex = current(state.sortedInternships)[companyIndex].internships.findIndex(internship => internship.id == payload.id)
         state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = '']
-        // state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = '']
+      },
+      updateLocalApplicationsApplied: (state, { payload }) => {
+        const internship = {
+          ...payload,
+          applied: new Date()
+        }
+        state.studentInternships = [...state.studentInternships, internship]
+      },
+      updateLocalApplicationsWithdrew: (state, { payload }) => {
+        const newJobs = state.studentInternships
+        const index = state.studentInternships.findIndex(job => job.id === payload.id)
+        newJobs.splice(index, 1)
       },
     },
     extraReducers: (builder) => {
@@ -307,5 +313,12 @@ export
   })
 
 export const internshipsActions = internshipsSlice.actions
-export const { resetFilters, resetApplicationStatus, getInternshipsByCompany, updateLocalInternshipApplied, updateLocalInternshipWithdrew } = internshipsSlice.actions
+export const { resetFilters,
+  resetApplicationStatus,
+  getInternshipsByCompany,
+  updateLocalInternshipApplied,
+  updateLocalInternshipWithdrew,
+  updateLocalApplicationsApplied,
+  updateLocalApplicationsWithdrew
+} = internshipsSlice.actions
 export default internshipsSlice.reducer

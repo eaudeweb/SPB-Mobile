@@ -42,7 +42,7 @@ export default function App(props) {
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response.notification.request.content.data);
-      alert(response.notification.request.content.data.alertText)
+      // alert(response.notification.request.content.data.alertText)
     });
 
     return () => {
@@ -71,7 +71,7 @@ export default function App(props) {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
+        // alert('Failed to get push token for push notification!');
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;

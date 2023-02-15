@@ -23,8 +23,8 @@ export default function SettingsMain({ navigation }) {
   }
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.headerText}>Contact details</Text>
-      <View>
+      {/* <Text style={styles.headerText}>Contact details</Text> */}
+      {/* <View>
         <View>
           <Text style={styles.labelText}>First name</Text>
           <TextInput
@@ -57,17 +57,17 @@ export default function SettingsMain({ navigation }) {
             placeholderTextColor='white'
           />
         </View>
-      </View>
-      <View>
+      </View> */}
+      {/* <View>
         <TouchableHighlight style={styles.button}>
           <Text style={styles.labelText}>Change password</Text>
         </TouchableHighlight>
-      </View>
+      </View> */}
       <View>
         <Text style={styles.headerText}>Notifications</Text>
         <NotificationsRadioInput setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} />
       </View>
-      <TouchableHighlight style={[styles.button, { backgroundColor: 'red' }]} onPress={handleLogOut}>
+      <TouchableHighlight style={[styles.button, { backgroundColor: 'red', width: '100%' }]} onPress={handleLogOut}>
         <Text style={styles.labelText}>Log out</Text>
       </TouchableHighlight>
       <FeedbackModal modalVisible={modalVisible} setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} styles={styles} />
