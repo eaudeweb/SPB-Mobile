@@ -11,6 +11,8 @@ import Loading from './Loading';
 import { filtersActions } from '../../features/filters/filtersSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getInternshipsBySearch, refreshInternshipsBySearch } from '../../features/internships/internshipsSlice';
+import axios from 'axios';
+import { login } from '../../features/login/loginSlice';
 
 export default function InternshipMain(props) {
   const styles = getStyles(useBottomTabBarHeight())
@@ -24,17 +26,10 @@ export default function InternshipMain(props) {
   const [currentFilters, setCurrentFilters] = useState(internshipsFilter)
   // dispatch(getInternshipsBySearch(newFilters))
 
-  const onRefresh = useCallback(() => {
-    const clearedFilters = {
-      category: '',
-      location: '',
-      company: '',
-      search: ''
-    }
-    dispatch(refreshInternshipsBySearch(clearedFilters))
-    dispatch(updateFilterList(clearedFilters))
 
-  }, []);
+  const onRefresh = () => {
+    dispatch(refreshInternshipsBySearch(internshipsFilter))
+  }
 
   const updateSearch = (text) => {
     const newFilters = {
@@ -108,7 +103,6 @@ export default function InternshipMain(props) {
     return filteredCompaniesArr
   }
 
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -158,7 +152,6 @@ export default function InternshipMain(props) {
           <InternshipList {...props} />
         }
       </ScrollView>
-
     </SafeAreaView >
   )
 }

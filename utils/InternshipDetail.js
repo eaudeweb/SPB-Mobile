@@ -136,7 +136,7 @@ export default function InternshipDetail({ route, navigation }) {
         <View width={'60%'}>
           {
             internship.applied.length === 0 ?
-              <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress}>
+              <TouchableHighlight style={styles.bottomButton} onPress={handleApplyPress} disabled={application.isLoading}>
                 <View>
                   {application.isLoading ?
                     <ActivityIndicator size="small" color={colors.main.cappuccino} />
@@ -147,7 +147,7 @@ export default function InternshipDetail({ route, navigation }) {
               </TouchableHighlight>
               :
               canWithdraw() ?
-                <TouchableHighlight style={styles.bottomButton} onPress={handleWithdrawPress}>
+                <TouchableHighlight style={styles.bottomButton} onPress={handleWithdrawPress} disabled={application.isLoading}>
                   <View>
                     {application.isLoading ?
                       <ActivityIndicator size="small" color={colors.main.accent} />

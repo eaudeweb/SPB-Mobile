@@ -14,7 +14,6 @@ function LoadingScreen({ navigation }) {
 
   const checkForToken = async () => {
     const token = await tokenLogic.getToken().catch(error => console.log(error))
-    console.log(token)
     if (token) {
       navigation.navigate('Layout')
     } else {

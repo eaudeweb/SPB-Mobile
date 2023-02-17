@@ -35,9 +35,8 @@ export default function LayoutScreen(props) {
     dispatch(getEvents())
     // dispatch(getStudentInternships())
     //prevent swiping back to the login screen after login occurred succesfully 
-    props.navigation.addListener('beforeRemove', (e) => {
-      e.preventDefault()
-    })
+    props.navigation.setOptions({ gestureEnabled: false });
+
   }, [])
 
   return (

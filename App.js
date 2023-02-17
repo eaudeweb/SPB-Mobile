@@ -15,7 +15,6 @@ export default function App(props) {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-
   const Stack = createStackNavigator();
   const CustomDarkTheme = {
     ...DarkTheme,
@@ -44,7 +43,6 @@ export default function App(props) {
       console.log(response.notification.request.content.data);
       // alert(response.notification.request.content.data.alertText)
     });
-
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
@@ -91,7 +89,7 @@ export default function App(props) {
       trigger: { seconds: 1 },
     });
   }
-  if (1 + 1 === 2) { }
+
   return (
     <Provider store={store}>
       <NavigationContainer theme={CustomDarkTheme}>

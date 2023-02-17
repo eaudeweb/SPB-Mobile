@@ -1,26 +1,37 @@
 import React from 'react'
-import { useState, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { StyleSheet, View, Text, TextInput, TouchableHighlight, ScrollView, Platform } from 'react-native'
 import FeedbackModal from './FeedbackModal'
 import { NotificationsRadioInput } from './RadioInputs'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import * as SecureStore from 'expo-secure-store';
-import { useNavigation } from '@react-navigation/native'
+import { loginActions } from '../../../features/login/loginSlice'
+import { useDispatch } from 'react-redux'
 import tokenLogic from '../../../utils/tokenLogic'
-
+import { colors } from '../../../styles/globalStyle'
 export default function SettingsMain({ navigation }) {
   const [notificationsActive, setNotificationsActive] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const dispatch = useDispatch()
+
+  const getExpoToken = async () => {
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    return token
+  }
+  useEffect(() => {
+    getExpoToken().then(token => setExpoPushToken(token))
+  }, [])
+
   const styles = getStyles(useBottomTabBarHeight())
   // const navigation = useNavigation()
-  const handleLogOut = async () => {
-    SecureStore.deleteItemAsync('authToken').then(() => {
-      navigation.navigate('Login')
-
-    })
-
+  const handleLogOut = () => {
+    dispatch(loginActions.resetLogin())
+    navigation.navigate('Login')
+    tokenLogic.deleteToken()
 
   }
+
   return (
     <ScrollView style={styles.container}>
       {/* <Text style={styles.headerText}>Contact details</Text> */}
@@ -64,10 +75,14 @@ export default function SettingsMain({ navigation }) {
         </TouchableHighlight>
       </View> */}
       <View>
+        <Text style={{ color: 'white', marginBottom: 20 }}>ExponentPushToken(include entire line in POST): </Text>
+        <Text style={{ color: 'white' }}>{expoPushToken}</Text>
+      </View>
+      <View>
         <Text style={styles.headerText}>Notifications</Text>
         <NotificationsRadioInput setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} />
       </View>
-      <TouchableHighlight style={[styles.button, { backgroundColor: 'red', width: '100%' }]} onPress={handleLogOut}>
+      <TouchableHighlight style={[styles.button, { backgroundColor: colors.indicators.red, width: '100%' }]} onPress={handleLogOut}>
         <Text style={styles.labelText}>Log out</Text>
       </TouchableHighlight>
       <FeedbackModal modalVisible={modalVisible} setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} styles={styles} />

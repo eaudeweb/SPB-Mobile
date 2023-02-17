@@ -1,18 +1,34 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { StatusBar, StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity } from 'react-native'
+import { StatusBar, StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native'
 import SvgLogo from '../assets/SvgLogo'
 import OrangeStrokeSvg from '../assets/OrangeStroke'
 import { colors, spacing, font } from '../styles/globalStyle';
 import * as SecureStore from 'expo-secure-store';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import tokenLogic from '../utils/tokenLogic'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../features/login/loginSlice'
+import Toast from 'react-native-toast-message';
 
 function LoginScreen({ navigation }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
+  const dispatch = useDispatch()
+
+  const { isLoading, response } = useSelector(state => state.login)
+
   useEffect(() => {
-    checkForToken()
-  }, [])
+    if (response.token) {
+      saveToken(response.token)
+      checkForToken()
+    } else if (response.email || response.password || response.non_field_errors) {
+      Toast.show({
+        type: 'error',
+        text1: 'Incorrect information provided',
+      });
+    }
+  }, [response])
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -24,76 +40,88 @@ function LoginScreen({ navigation }) {
     }))
   }
   const saveToken = async (value) => {
-    const result = await SecureStore.setItemAsync('authToken', value)
-    return result
+    await SecureStore.setItemAsync('authToken', value)
   }
   const checkForToken = async () => {
     const token = await tokenLogic.getToken().catch(err => console.log(err))
     if (token) {
-      navigation.navigate('Layout')
+      navigation.navigate('Layout', { screen: 'Companies' })
     }
-
   }
   const handleAuth = async () => {
-    try {
-      const response = await fetch(
-        "https://staging.stagiipebune.ro/api/v1/token/general_auth",
-        {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email: formData.email, password: formData.password })
-        }
-      ).then((response) => response.json())
-        .then((responseJson) => {
-          if (responseJson.token) {
-            saveToken(responseJson.token)
-            checkForToken()
-          }
-        });
-    } catch (error) {
-      console.error(error);
-    } finally {
-    }
+    dispatch(login(formData))
+    // try {
+    //   const response = await fetch(
+    //     "https://staging.stagiipebune.ro/api/v1/token/general_auth",
+    //     {
+    //       method: 'POST',
+    //       headers: {
+    //         'Accept': 'application/json',
+    //         'Content-Type': 'application/json'
+    //       },
+    //       body: JSON.stringify({ email: formData.email, password: formData.password })
+    //     }
+    //   ).then((response) => response.json())
+    //     .then((responseJson) => {
+    //       if (responseJson.token) {
+    //         saveToken(responseJson.token)
+    //         checkForToken()
+    //       }
+    //     });
+    // } catch (error) {
+    //   console.error(error);
+    // } finally {
+    // }
   }
   // //setting > disable notifications, instead of the company name internship add a select w companies
   return (
-    <KeyboardAwareScrollView contentContainerStyle={styles.loginView} bounces={false}>
-      <SvgLogo style={styles.logo} customSize={{ width: customWidth, height: customWidth / 3 }} />
-      <View style={styles.content}>
-        <Text style={styles.sloganText}>The <Text style={{ color: colors.main.cappuccino }}>first,</Text></Text>
-        <Text style={[styles.sloganText, { color: colors.main.cappuccino }]}>popular,</Text>
-        <Text style={[styles.sloganText, { color: colors.main.cappuccino }]}>leading</Text>
-        <OrangeStrokeSvg />
-      </View>
-      <View style={[styles.content, { marginTop: 10 }]}>
-        <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>internship</Text>
-        <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>program in</Text>
-        <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>the country</Text>
-      </View>
-      <View style={[styles.content, { marginTop: 10 }]}>
-        <View style={[styles.inputWrapper, { marginBottom: 10 }]}>
-          <TextInput
-            style={styles.input} placeholder='E-mail'
-            placeholderTextColor={colors.secondary.lightGrey}
-            onChangeText={(value) => onFormChange(value, 'email')}
-          />
+    <KeyboardAwareScrollView contentContainerStyle={{ minHeight: '100%' }} bounces={false}>
+      <View style={styles.loginView}>
+        <SvgLogo style={styles.logo} customSize={{ width: customWidth, height: customWidth / 3 }} />
+        <View style={styles.content}>
+          <Text style={styles.sloganText}>The <Text style={{ color: colors.main.cappuccino }}>first,</Text></Text>
+          <Text style={[styles.sloganText, { color: colors.main.cappuccino }]}>popular,</Text>
+          <Text style={[styles.sloganText, { color: colors.main.cappuccino }]}>leading</Text>
+          <OrangeStrokeSvg />
         </View>
-        <View style={styles.inputWrapper}>
-          <TextInput
-            style={styles.input} placeholder='Password'
-            placeholderTextColor={colors.secondary.lightGrey}
-            onChangeText={(value) => onFormChange(value, 'password')}
-            secureTextEntry={true}
-          />
+        <View style={[styles.content, { marginTop: 10 }]}>
+          <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>internship</Text>
+          <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>program in</Text>
+          <Text style={[styles.sloganText, { color: colors.main.turquoise }]}>the country</Text>
         </View>
-      </View>
-      <View style={[styles.content, { marginTop: 20 }]}>
-        <TouchableOpacity style={styles.loginButton} onPress={handleAuth}>
-          <Text style={[styles.buttonText, { color: colors.secondary.nearBlack }]}  >Log in</Text>
-        </TouchableOpacity>
+        <View style={[styles.content, { marginTop: 10 }]}>
+          <View style={[styles.inputWrapper, { marginBottom: 10 }]}>
+            <TextInput
+              style={styles.input} placeholder='E-mail'
+              placeholderTextColor={colors.secondary.lightGrey}
+              onChangeText={(value) => onFormChange(value, 'email')}
+            />
+          </View>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input} placeholder='Password'
+              placeholderTextColor={colors.secondary.lightGrey}
+              onChangeText={(value) => onFormChange(value, 'password')}
+              secureTextEntry={true}
+            />
+          </View>
+        </View>
+        <View style={[styles.content, { marginTop: 20 }]}>
+          <TouchableOpacity style={styles.loginButton} onPress={handleAuth}>
+            {isLoading ?
+              <View style={{ alignContent: 'center' }}>
+                <Text style={[styles.buttonText, { color: 'transparent', textAlign: 'center' }]}  >
+                  .
+                  <ActivityIndicator size="small" color={colors.secondary.nearBlack} style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }} />
+                </Text>
+              </View>
+              :
+              <Text style={[styles.buttonText, { color: colors.secondary.nearBlack }]}>Log in</Text>
+
+            }
+          </TouchableOpacity>
+        </View>
+        <Toast />
       </View>
     </KeyboardAwareScrollView>
   )
@@ -136,7 +164,7 @@ const styles = StyleSheet.create({
   inputWrapper: {
     backgroundColor: colors.secondary.mediumGrey,
     padding: 5,
-    borderRadius: 10
+    borderRadius: 10,
   },
 
   input: {
