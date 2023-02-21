@@ -30,7 +30,6 @@ export default function App(props) {
       shouldSetBadge: false
     })
   })
-
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 

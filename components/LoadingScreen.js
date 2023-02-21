@@ -4,13 +4,15 @@ import SvgLogo from '../assets/SvgLogo'
 import { colors, spacing, font } from '../styles/globalStyle';
 import * as SecureStore from 'expo-secure-store';
 import tokenLogic from '../utils/tokenLogic';
+import { useIsFocused } from '@react-navigation/native';
 
 function LoadingScreen({ navigation }) {
+  const isFocused = useIsFocused()
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
   useEffect(() => {
     checkForToken()
       .catch(err => console.log(err))
-  }, [])
+  }, [isFocused])
 
   const checkForToken = async () => {
     const token = await tokenLogic.getToken().catch(error => console.log(error))

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { StyleSheet, Platform, View, Text } from 'react-native'
+import { StyleSheet, Platform, View, Text, BackHandler } from 'react-native'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
 import CompaniesScreen from './CompaniesScreen/CompaniesScreen';
 import InternshipsScreen from './InternshipScreen/IntershipsScreen';
@@ -10,15 +10,33 @@ import NewsScreen from './NewsScreen/NewsScreen'
 import { colors } from '../styles/globalStyle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
-import { useDispatch } from 'react-redux';
-import { getAllInternships, getStudentInternships } from '../features/internships/internshipsSlice'
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllInternships } from '../features/internships/internshipsSlice'
 import { getAllPartnerCompanies } from '../features/companies/companiesSlice';
 import { getCategories, getLocations } from '../features/filters/filtersSlice';
 import { getEvents } from '../features/events/eventsSlice';
+import tokenLogic from '../utils/tokenLogic';
+import { loginActions } from '../features/login/loginSlice';
 
 export default function LayoutScreen(props) {
   const insets = useSafeAreaInsets();
   const Tab = createBottomTabNavigator()
+  const dispatch = useDispatch()
+  const internshipsData = useSelector(state => state.internships)
+  const events = useSelector(state => state.events)
+  // const { isInternshipsLoading: isLoading, isRefreshLoading } = internshipsData
+  // const { booking, isEventsLoading: loading } = useSelector(state => state.events)
+  const isTokenValid = async () => await tokenLogic.getToken().then(response => response)
+  useEffect(() => {
+    tokenLogic.getToken().then(response => {
+      if (!response) {
+        dispatch(loginActions.resetLogin())
+        props.navigation.navigate('Login')
+        tokenLogic.deleteToken()
+      }
+    })
+  }, [internshipsData.isRefreshLoading, internshipsData.isLoading, internshipsData.application, events.isLoading, events.booking])
+
   const screen = {
     companies: 'Companies',
     internships: 'Internships',
@@ -26,18 +44,21 @@ export default function LayoutScreen(props) {
     events: 'Events',
     profile: 'Profile'
   }
-  const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllInternships())
     dispatch(getAllPartnerCompanies())
     dispatch(getCategories())
     dispatch(getLocations())
     dispatch(getEvents())
-    // dispatch(getStudentInternships())
-    //prevent swiping back to the login screen after login occurred succesfully 
     props.navigation.setOptions({ gestureEnabled: false });
-
   }, [])
+
+  BackHandler.addEventListener('hardwareBackPress', () => {
+    props.navigation.addListener("beforeRemove", (e) => {
+      // Prevent default behavior of leaving the screen
+      e.preventDefault();
+    })
+  })
 
   return (
     <Tab.Navigator
@@ -85,7 +106,7 @@ export default function LayoutScreen(props) {
       <Tab.Screen name={screen.news} component={NewsScreen} />
       <Tab.Screen name={screen.events} component={EventsScreen} />
       <Tab.Screen name={screen.profile}  >
-        {(props) => <ProfileScreen  {...props} />}
+        {(props) => <ProfileScreen  {...props} rootNavigation={props.navigation} />}
       </Tab.Screen>
     </Tab.Navigator>
   )
@@ -100,7 +121,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   tabBarItem: {
-    height: Platform.OS === 'ios' ? '200%' : '100%',
+    height: Platform.OS === 'ios' ? Platform.isPad ? '100%' : '200%' : '100%',
   },
   tabBarLabel: {
     marginBottom: 5,

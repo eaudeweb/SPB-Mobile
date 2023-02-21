@@ -70,9 +70,7 @@ const eventsSlice = createSlice({
       state.booking.message = null
     },
     updateLocalEvents: (state, { payload }) => {
-      console.log(payload)
       const { id, newQueue } = payload
-      console.log(newQueue)
       const newEventArr = state.events
       const getEventIndex = (eventId, arr) => arr.findIndex(event => event.id == eventId)
       if (newQueue === 'upcoming') {

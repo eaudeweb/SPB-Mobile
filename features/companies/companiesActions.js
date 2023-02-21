@@ -20,9 +20,6 @@ const getAllPartnerCompanies = async () => {
       "X-CSRFToken": token
     }
   })
-  // const companies = [[...mainPartners.data]]
-  // console.log('token')
-  // const companies = [...getMainPartners.data, ...getPartners.data]
   return { mainPartners: getMainPartners.data, partners: getPartners.data }
 }
 

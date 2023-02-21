@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { StatusBar, StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { StatusBar, StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity, ActivityIndicator, BackHandler } from 'react-native'
 import SvgLogo from '../assets/SvgLogo'
 import OrangeStrokeSvg from '../assets/OrangeStroke'
 import { colors, spacing, font } from '../styles/globalStyle';
@@ -10,12 +10,20 @@ import tokenLogic from '../utils/tokenLogic'
 import { useDispatch, useSelector } from 'react-redux'
 import { login } from '../features/login/loginSlice'
 import Toast from 'react-native-toast-message';
+import { useIsFocused, CommonActions } from '@react-navigation/native';
 
-function LoginScreen({ navigation }) {
+function LoginScreen({ navigation, route }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
   const dispatch = useDispatch()
+  const isFocused = useIsFocused();
 
   const { isLoading, response } = useSelector(state => state.login)
+
+  BackHandler.addEventListener('hardwareBackPress', () => {
+    navigation.addListener("beforeRemove", (e) => {
+      e.preventDefault();
+    })
+  })
 
   useEffect(() => {
     if (response.token) {
@@ -29,6 +37,8 @@ function LoginScreen({ navigation }) {
     }
   }, [response])
 
+
+  // https://github.com/react-navigation/react-navigation/issues/10394 
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -50,28 +60,7 @@ function LoginScreen({ navigation }) {
   }
   const handleAuth = async () => {
     dispatch(login(formData))
-    // try {
-    //   const response = await fetch(
-    //     "https://staging.stagiipebune.ro/api/v1/token/general_auth",
-    //     {
-    //       method: 'POST',
-    //       headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //       },
-    //       body: JSON.stringify({ email: formData.email, password: formData.password })
-    //     }
-    //   ).then((response) => response.json())
-    //     .then((responseJson) => {
-    //       if (responseJson.token) {
-    //         saveToken(responseJson.token)
-    //         checkForToken()
-    //       }
-    //     });
-    // } catch (error) {
-    //   console.error(error);
-    // } finally {
-    // }
+
   }
   // //setting > disable notifications, instead of the company name internship add a select w companies
   return (

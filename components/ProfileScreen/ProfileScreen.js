@@ -5,7 +5,7 @@ import CVMain from './CVScreen/CVMain';
 import SettingsMain from './SettingsScreen/SettingsMain';
 import CustomTabBar from '../../utils/CustomTabBar';
 
-export default function ProfileScreen({ navigation, route }) {
+export default function ProfileScreen({ navigation, route, rootNavigation }) {
   const Tab = createMaterialTopTabNavigator();
   // TODO move to separate file and import 
   const screens = [
@@ -48,7 +48,7 @@ export default function ProfileScreen({ navigation, route }) {
         {(props) => <CVMain {...props} />}
       </Tab.Screen>
       <Tab.Screen name="Settings">
-        {(props) => <SettingsMain {...props} />}
+        {(props) => <SettingsMain {...props} rootNavigation={rootNavigation} />}
       </Tab.Screen>
     </Tab.Navigator >
   )

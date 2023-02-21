@@ -7,6 +7,7 @@ import filtersReducer from "../features/filters/filtersSlice";
 import eventsReducer from "../features/events/eventsSlice";
 import profileReducer from "../features/profile/profileSlice";
 import loginReducer from "../features/login/loginSlice";
+
 export const store = configureStore({
   reducer: {
     login: loginReducer,

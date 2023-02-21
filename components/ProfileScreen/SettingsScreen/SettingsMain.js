@@ -5,16 +5,17 @@ import FeedbackModal from './FeedbackModal'
 import { NotificationsRadioInput } from './RadioInputs'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import * as SecureStore from 'expo-secure-store';
+import * as Notifications from 'expo-notifications';
 import { loginActions } from '../../../features/login/loginSlice'
 import { useDispatch } from 'react-redux'
 import tokenLogic from '../../../utils/tokenLogic'
 import { colors } from '../../../styles/globalStyle'
-export default function SettingsMain({ navigation }) {
+
+export default function SettingsMain({ navigation, rootNavigation }) {
   const [notificationsActive, setNotificationsActive] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
   const [expoPushToken, setExpoPushToken] = useState('');
   const dispatch = useDispatch()
-
   const getExpoToken = async () => {
     const token = (await Notifications.getExpoPushTokenAsync()).data;
     return token
@@ -29,7 +30,6 @@ export default function SettingsMain({ navigation }) {
     dispatch(loginActions.resetLogin())
     navigation.navigate('Login')
     tokenLogic.deleteToken()
-
   }
 
   return (

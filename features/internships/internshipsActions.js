@@ -60,7 +60,6 @@ const getInternshipsBySearch = async (params) => {
   const searchParam = params.search ? `&search=${params.search}` : ''
   const URL = ALL_INTERNSHIPS_URL + '?' + companyParam + categoryParam + locationParam + searchParam
 
-  console.log(URL)
   const response = await axios.get(URL, {
     headers: {
       'Accept': 'application/json',
@@ -79,7 +78,6 @@ const refreshInternshipsBySearch = async (params) => {
   const searchParam = params.search ? `&search=${params.search}` : ''
   const URL = ALL_INTERNSHIPS_URL + '?' + companyParam + categoryParam + locationParam + searchParam
 
-  console.log(URL)
   const response = await axios.get(URL, {
     headers: {
       'Accept': 'application/json',

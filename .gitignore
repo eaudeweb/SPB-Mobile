@@ -9,7 +9,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-test_login_credentials.js
+google-services.json
 
 # macOS
 .DS_Store
