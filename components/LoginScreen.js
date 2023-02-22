@@ -8,9 +8,12 @@ import * as SecureStore from 'expo-secure-store';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import tokenLogic from '../utils/tokenLogic'
 import { useDispatch, useSelector } from 'react-redux'
-import { login } from '../features/login/loginSlice'
+import { login, addNotificationToken } from '../features/login/loginSlice'
 import Toast from 'react-native-toast-message';
-import { useIsFocused, CommonActions } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
+import jwtDecode from 'jwt-decode'
+
+import * as Notifications from 'expo-notifications';
 
 function LoginScreen({ navigation, route }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
@@ -24,11 +27,23 @@ function LoginScreen({ navigation, route }) {
       e.preventDefault();
     })
   })
-
+  const getNotificationTokenData = async () => {
+    const authTokenExpiration = jwtDecode(response.token).exp * 1000
+    const expo_token = (await Notifications.getExpoPushTokenAsync()).data
+    // (new Date(authTokenExpiration).toISOString())
+    // (await Notifications.getExpoPushTokenAsync()).data
+    const data = {
+      expiry_date: new Date(authTokenExpiration).toISOString(),
+      expo_token: expo_token
+    }
+    return data
+  }
   useEffect(() => {
     if (response.token) {
       saveToken(response.token)
       checkForToken()
+      dispatch(addNotificationToken(getNotificationTokenData()))
+      // console.log(getNotificationTokenData())
     } else if (response.email || response.password || response.non_field_errors) {
       Toast.show({
         type: 'error',

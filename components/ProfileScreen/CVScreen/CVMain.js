@@ -1,24 +1,13 @@
 import React, { useEffect } from 'react'
 import { ScrollView, StyleSheet, View, Text, Image } from 'react-native'
-import Ionicon from 'react-native-vector-icons/Ionicons'
-import * as Progress from 'react-native-progress';
-import { useDispatch, useSelector } from 'react-redux';
-import { getProfileData } from '../../../features/profile/profileSlice';
+import { useSelector } from 'react-redux';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 export default function CVMain() {
-  const dispatch = useDispatch()
   const styles = getStyles(useBottomTabBarHeight())
+  const { data } = useSelector(state => state.profile)
 
-  const { data, isLoading } = useSelector(state => state.profile)
 
-  useEffect(() => {
-    dispatch(getProfileData())
-  }, [])
-
-  if (isLoading) {
-    return <Text style={{ color: 'white' }}>LOADINg</Text>
-  }
   const AboutCategory = ({ category, categoryName }) => {
     return (
       <View style={categoryStyle.outerWrapper}>

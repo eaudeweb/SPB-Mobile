@@ -1,14 +1,15 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 
-const LOGIN_URL = 'https://staging.stagiipebune.ro/api/v1/token/general_auth/'
+const LOGIN_URL = 'https://staging.stagiipebune.ro/api/v1/token/general_auth'
+const NOTIFICATION_TOKEN_URL = "https://staging.stagiipebune.ro/api/v1/me/profile/mobile-tokens/"
 
 const login = async (loginForm) => {
   const { email, password } = loginForm
   let response
   try {
     await fetch(
-      "https://staging.stagiipebune.ro/api/v1/token/general_auth",
+      LOGIN_URL,
       {
         method: 'POST',
         headers: {
@@ -27,34 +28,43 @@ const login = async (loginForm) => {
   return response
 }
 
-// const handleAuth = async () => {
-//   try {
-//     const response = await fetch(
-//       "https://staging.stagiipebune.ro/api/v1/token/general_auth",
-//       {
-//         method: 'POST',
-//         headers: {
-//           'Accept': 'application/json',
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ email: formData.email, password: formData.password })
-//       }
-//     ).then((response) => response.json())
-//       .then((responseJson) => {
-//         if (responseJson.token) {
-//           saveToken(responseJson.token)
-//           checkForToken()
-//         }
-//       });
-//   } catch (error) {
-//     console.error(error);
-//   } finally {
-//   }
-// }
+const addNotificationToken = async (tokenData) => {
+  let response
+  try {
+    await fetch(
+      NOTIFICATION_TOKEN_URL,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "X-CSRFToken": await tokenLogic.getToken(),
+        },
+        body: JSON.stringify(await tokenData)
+      }
+    ).then(response => response.json())
+      .then((responseJson) => {
+        response = responseJson
+      });
+  } catch (error) {
+    console.error(error);
+  }
+  return response
+}
 
+const deleteNotificationToken = async (id) => {
+  const response = await axios.delete(`${NOTIFICATION_TOKEN_URL}${id}/`, {
+    headers: {
+      "X-CSRFToken": await tokenLogic.getToken(),
+    },
+  })
+  return response.data
+}
 
 const loginService = {
-  login
+  login,
+  addNotificationToken,
+  deleteNotificationToken
 }
 
 export default loginService

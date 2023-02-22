@@ -11,9 +11,9 @@ import Loading from './Loading';
 import { filtersActions } from '../../features/filters/filtersSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getInternshipsBySearch, refreshInternshipsBySearch } from '../../features/internships/internshipsSlice';
-import axios from 'axios';
-import { login } from '../../features/login/loginSlice';
-
+import jwtDecode from 'jwt-decode';
+import moment from 'moment';
+import tokenLogic from '../../utils/tokenLogic';
 export default function InternshipMain(props) {
   const styles = getStyles(useBottomTabBarHeight())
   const { locations, categories, internshipsFilter } = useSelector(state => state.filters)
@@ -24,8 +24,6 @@ export default function InternshipMain(props) {
   const { internships, isLoading, isRefreshLoading } = useSelector(state => state.internships)
   const { updateFilterList } = filtersActions
   const [currentFilters, setCurrentFilters] = useState(internshipsFilter)
-  // dispatch(getInternshipsBySearch(newFilters))
-
 
   const onRefresh = () => {
     dispatch(refreshInternshipsBySearch(internshipsFilter))

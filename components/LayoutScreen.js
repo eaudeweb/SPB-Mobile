@@ -17,6 +17,7 @@ import { getCategories, getLocations } from '../features/filters/filtersSlice';
 import { getEvents } from '../features/events/eventsSlice';
 import tokenLogic from '../utils/tokenLogic';
 import { loginActions } from '../features/login/loginSlice';
+import * as Notifications from 'expo-notifications';
 
 export default function LayoutScreen(props) {
   const insets = useSafeAreaInsets();
@@ -27,13 +28,16 @@ export default function LayoutScreen(props) {
   // const { isInternshipsLoading: isLoading, isRefreshLoading } = internshipsData
   // const { booking, isEventsLoading: loading } = useSelector(state => state.events)
   const isTokenValid = async () => await tokenLogic.getToken().then(response => response)
+
   useEffect(() => {
+    //whenever an internship/event action is performed we verify the validity of the token, and if the token is valid user is logged out
     tokenLogic.getToken().then(response => {
       if (!response) {
         dispatch(loginActions.resetLogin())
         props.navigation.navigate('Login')
         tokenLogic.deleteToken()
       }
+
     })
   }, [internshipsData.isRefreshLoading, internshipsData.isLoading, internshipsData.application, events.isLoading, events.booking])
 

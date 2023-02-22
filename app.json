@@ -2,7 +2,7 @@
   "expo": {
     "name": "Stagii pe Bune",
     "slug": "StagiiPeBune",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -23,12 +23,13 @@
     },
     "android": {
       "package": "com.StagiiPeBune",
-      "versionCode": 7,
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "config": {
+        "googleServiceFile": "process.env.GOOGLE_SERVICES_JSON",
         "googleMaps": {
           "apiKey": "AIzaSyCp-BUoX8B8699rkbnb2P2CK4gXSeesVcc"
         }
