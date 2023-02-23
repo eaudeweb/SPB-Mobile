@@ -11,9 +11,8 @@ import Loading from './Loading';
 import { filtersActions } from '../../features/filters/filtersSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getInternshipsBySearch, refreshInternshipsBySearch } from '../../features/internships/internshipsSlice';
-import jwtDecode from 'jwt-decode';
-import moment from 'moment';
-import tokenLogic from '../../utils/tokenLogic';
+import { eventsActions } from '../../features/events/eventsSlice';
+
 export default function InternshipMain(props) {
   const styles = getStyles(useBottomTabBarHeight())
   const { locations, categories, internshipsFilter } = useSelector(state => state.filters)
@@ -107,6 +106,7 @@ export default function InternshipMain(props) {
         refreshControl={
           <RefreshControl refreshing={isRefreshLoading} onRefresh={onRefresh} />
         }
+        style={{ minHeight: '100%' }}
       >
         <Text style={components.screenHeader}>INTERNSHIPS</Text>
         <View style={{ flexDirection: 'row', justifyContent: "space-between" }}>

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { ScrollView, StyleSheet, View, Text, Image } from 'react-native'
 import { useSelector } from 'react-redux';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { colors, font } from '../../../styles/globalStyle'
 
 export default function CVMain() {
   const styles = getStyles(useBottomTabBarHeight())
@@ -13,7 +14,7 @@ export default function CVMain() {
       <View style={categoryStyle.outerWrapper}>
         <View style={categoryStyle.innerWrapper}>
           <View style={styles.textWrap}>
-            <Text style={styles.infoText}>{categoryName}:</Text>
+            <Text style={[styles.infoText, styles.categoryText]}>{categoryName}:</Text>
           </View>
           <View style={categoryStyle.textListWrap}>
             {category?.map((item, index) => <Text key={index} style={{ flexWrap: 'wrap', color: 'white', }}>{item}{category.length - 1 === index ? '' : ', '}</Text>)}
@@ -44,7 +45,7 @@ export default function CVMain() {
 
     return (
       <View>
-        <Text style={styles.infoTextBold}>EDUCATION</Text>
+        <Text style={[styles.infoTextBold, styles.categoryText]}>EDUCATION</Text>
         {data.map((item, index) => <EducationItem item={item} key={index} />)}
       </View>
     )
@@ -70,7 +71,7 @@ export default function CVMain() {
 
     return (
       <View>
-        <Text style={styles.infoTextBold}>EXPERIENCE</Text>
+        <Text style={[styles.infoTextBold, styles.categoryText]}>EXPERIENCE</Text>
         {data?.map((item, index) => <ExperienceItem item={item} key={index} />)}
       </View>
     )
@@ -93,7 +94,7 @@ export default function CVMain() {
     }
     return (
       <View>
-        <Text style={styles.infoTextBold}>PROJECTS & EXTRACURRICULAR ACTIVITIES</Text>
+        <Text style={[styles.infoTextBold, styles.categoryText]}>PROJECTS & EXTRACURRICULAR ACTIVITIES</Text>
         {data?.map((item, index) => <ExtraItem item={item} key={index} />)}
       </View>
     )
@@ -145,7 +146,7 @@ export default function CVMain() {
               <View style={categoryStyle.outerWrapper}>
                 <View style={categoryStyle.innerWrapper}>
                   <View style={styles.textWrap}>
-                    <Text style={styles.infoText}>Prefered classes:</Text>
+                    <Text style={[styles.infoText, styles.categoryText]}>Prefered classes:</Text>
                   </View>
                   <View style={categoryStyle.textListWrap}>
                     <Text style={{ color: 'white', }}>{data.prefered_courses} </Text>
@@ -183,7 +184,7 @@ const categoryStyle = StyleSheet.create({
     color: '#F44336'
   },
   textListWrap: {
-    flex: 1,
+    flex: 5,
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginLeft: 10
@@ -227,11 +228,18 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    flex: 2
+  },
+  categoryText: {
+    fontWeight: font.fontWeight.xbold,
+    color: colors.main.accent
   },
   infoWrap: {
-    marginVertical: 20,
+    marginTop: 20,
+    marginBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10,
     justifyContent: 'center',
     alignItems: 'center',
+
   },
   infoTextBold: {
     color: 'white',

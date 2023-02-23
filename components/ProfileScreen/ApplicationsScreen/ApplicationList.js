@@ -31,9 +31,7 @@ export default function ApplicationList(props) {
     })
   }
   const onRefresh = useCallback(() => {
-
     dispatch(refreshStudentInternships())
-
   }, []);
 
   const FilterButton = ({ name, type, active }) => {
@@ -74,6 +72,7 @@ export default function ApplicationList(props) {
         refreshControl={
           <RefreshControl refreshing={isRefreshLoading} onRefresh={onRefresh} />
         }
+        style={{ minHeight: '100%' }}
       >
         <View style={{ margin: 10 }}>
           <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={() => setIsFilterCollapsed(!isFilterCollapsed)}>

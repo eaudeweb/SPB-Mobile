@@ -3,6 +3,7 @@ import eventsService from "./eventsActions"
 
 const initialState = {
   isLoading: false,
+  isRefreshLoading: false,
   isSuccess: false,
   isError: false,
   message: null,
@@ -17,6 +18,20 @@ const initialState = {
 }
 
 export const getEvents = createAsyncThunk('events/get', async (_, thunkAPI) => {
+  try {
+    return await eventsService.getEvents()
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
+export const getRefreshedEvents = createAsyncThunk('events/refresh', async (_, thunkAPI) => {
   try {
     return await eventsService.getEvents()
   } catch (error) {
@@ -70,15 +85,23 @@ const eventsSlice = createSlice({
       state.booking.message = null
     },
     updateLocalEvents: (state, { payload }) => {
-      const { id, newQueue } = payload
+      const { id, new_reg_state } = payload
       const newEventArr = state.events
       const getEventIndex = (eventId, arr) => arr.findIndex(event => event.id == eventId)
-      if (newQueue === 'upcoming') {
+      //todo this is not completed and only work for cancelled and cancelled pending
+      if (new_reg_state === 'cancelled') {
         const index = getEventIndex(id, newEventArr.reserved)
         const event = newEventArr.reserved[index]
         event.reg_state = 'cancelled'
         newEventArr.upcoming.push(event)
         newEventArr.reserved.splice(index, 1)
+        state.events = newEventArr
+      } else if (new_reg_state === 'cancelledPending') {
+        const index = getEventIndex(id, newEventArr.upcoming)
+        const event = newEventArr.upcoming[index]
+        event.reg_state = 'cancelled'
+        newEventArr.upcoming.push(event)
+        newEventArr.upcoming.splice(index, 1)
         state.events = newEventArr
       } else {
         const index = getEventIndex(id, newEventArr.upcoming)
@@ -88,6 +111,18 @@ const eventsSlice = createSlice({
         newEventArr.upcoming.splice(index, 1)
         state.events = newEventArr
       }
+    },
+    resetEvents: (state) => {
+      state.isLoading = false
+      state.isSuccess = false
+      state.isError = false
+      state.message = null
+      state.events = []
+      state.booking.isLoading = false
+      state.booking.isBookingSuccessful = false
+      state.booking.isCancelSuccesful = false
+      state.booking.isError = false
+      state.booking.message = null
     }
   },
   extraReducers: (builder) => {
@@ -101,6 +136,21 @@ const eventsSlice = createSlice({
       })
       .addCase(getEvents.rejected, (state, action) => {
         state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getRefreshedEvents.pending, (state) => {
+        state.isLoading = true
+        state.isRefreshLoading = true
+      })
+      .addCase(getRefreshedEvents.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isRefreshLoading = false
+        state.events = action.payload
+      })
+      .addCase(getRefreshedEvents.rejected, (state, action) => {
+        state.isLoading = false
+        state.isRefreshLoading = false
         state.isError = true
         state.message = action.payload
       })

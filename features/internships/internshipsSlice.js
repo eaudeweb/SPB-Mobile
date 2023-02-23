@@ -201,6 +201,22 @@ export
         const index = state.studentInternships.findIndex(job => job.id === payload.id)
         newJobs.splice(index, 1)
       },
+      resetInternships: (state) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.isError = false
+        state.isRefreshLoading = false
+        state.message = ''
+        state.internships = []
+        state.sortedInternships = []
+        state.studentInternships = []
+        state.application.isLoading = false
+        state.application.isSuccess = false
+        state.application.isApplySuccess = false
+        state.application.isWithdrawSuccess = false
+        state.application.isError = false
+        state.application.message = ''
+      }
     },
     extraReducers: (builder) => {
       builder

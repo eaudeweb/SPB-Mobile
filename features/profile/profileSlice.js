@@ -28,6 +28,13 @@ export
     name: 'profile',
     initialState,
     reducers: {
+      resetProfile: (state) => {
+        state.isLoading = false
+        state.isSuccess = false
+        state.isError = false
+        state.message = ''
+        state.data = ''
+      }
     },
     extraReducers: (builder) => {
       builder

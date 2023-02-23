@@ -45,13 +45,14 @@ const FeedbackRadioInput = (props) => {
   const { feedbackProvided, setFeedbackProvided } = props
 
   const feedbackModalOptions = [
-    {
-      key: true,
-      text: 'I got an internship'
-    },
+
     {
       key: false,
       text: 'No'
+    },
+    {
+      key: true,
+      text: 'I got an internship'
     }
   ]
 

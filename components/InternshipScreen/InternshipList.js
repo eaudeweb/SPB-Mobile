@@ -30,7 +30,7 @@ export default function InternshipsList(props) {
 
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
-    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10
+    // paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10
   },
   companyTitle: {
     color: colors.main.accent,

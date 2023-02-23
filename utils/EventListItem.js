@@ -15,15 +15,44 @@ const EventListItem = ({ event, props }) => {
   const { navigation } = props
   const dispatch = useDispatch()
 
-  const handleSeatBooking = () => {
-    dispatch(bookEventSeat(event.id))
-    dispatch(updateLocalEvents({ id: event.id, newQueue: 'reserved' }))
-  }
+  // const handleSeatBooking = () => {
+  //   dispatch(bookEventSeat(event.id))
+  //   dispatch(updateLocalEvents({ id: event.id, newQueue: 'reserved' }))
+  // }
   const handleSeatUnbooking = () => {
     dispatch(unbookEventSeat(event.id))
-    dispatch(updateLocalEvents({ id: event.id, newQueue: 'upcoming' }))
+    dispatch(updateLocalEvents({ id: event.id, new_reg_state: event.reg_state === 'pending' ? 'cancelledPending' : 'cancelled' }))
   }
 
+  const ActionButton = () => {
+    if (event.reg_state === 'accepted') {
+      return (
+        <TouchableHighlight style={styles.bookEventButton} onPress={() => handleSeatUnbooking()}>
+          <Text style={[styles.buttonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
+        </TouchableHighlight>
+      )
+    } else if (event.reg_state === 'pending') {
+      return (
+        <TouchableHighlight style={[styles.bookEventButton, { backgroundColor: colors.secondary.mediumGrey }]} onPress={() => handleSeatUnbooking()}>
+          <Text style={[styles.buttonText, { color: colors.indicators.orange }]}>Withdraw </Text>
+        </TouchableHighlight>
+
+      )
+    } else {
+      return ''
+    }
+  }
+  const getParticipantsIconColor = () => {
+    if (event.accepted === event.participant_limit) {
+      return {
+        color: colors.indicators.orange
+      }
+    } else {
+      return {
+        color: colors.indicators.green
+      }
+    }
+  }
   return (
     <TouchableHighlight
       style={styles.eventContainer}
@@ -40,21 +69,22 @@ const EventListItem = ({ event, props }) => {
                 <Text style={styles.timeInformationText}>{event.starts_at}</Text>
               </View>
               <View style={styles.seatingContainer}>
-                <FaIcon name={'users'} size={font.size.s} style={styles.seatingIcon} />
-                <Text style={styles.seatingText}>{event.remaining}</Text>
+                <FaIcon name={'users'} size={font.size.s} style={[styles.seatingIcon, getParticipantsIconColor()]} />
+                <Text style={[styles.seatingText, getParticipantsIconColor()]}>{event.accepted}</Text>
+                <Text style={[styles.seatingText, getParticipantsIconColor()]}> / {event.participant_limit}</Text>
               </View>
+              {
+                event.reg_state === 'pending' ?
+                  <View style={styles.seatingContainer}>
+                    <FaIcon name={'clock'} size={font.size.s} style={[styles.seatingIcon, { color: colors.indicators.orange }]} />
+                    <Text style={[styles.seatingText, { color: colors.indicators.orange }]}>On waiting list</Text>
+                  </View>
+                  :
+                  ''
+              }
             </View>
             <View>
-              {
-                event.reg_state == "accepted" ?
-                  <TouchableHighlight style={styles.bookEventButton} onPress={() => handleSeatUnbooking()}>
-                    <Text style={[styles.buttonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
-                  </TouchableHighlight>
-                  :
-                  <TouchableHighlight style={styles.bookEventButton} onPress={() => handleSeatBooking()}>
-                    <Text style={styles.buttonText}>Book Seat</Text>
-                  </TouchableHighlight>
-              }
+              <ActionButton />
             </View>
           </View>
 

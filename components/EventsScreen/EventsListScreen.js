@@ -1,21 +1,25 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, SafeAreaView, ScrollView, View, StatusBar, Text, ActivityIndicator } from 'react-native'
+import { StyleSheet, SafeAreaView, ScrollView, View, StatusBar, Text, ActivityIndicator, RefreshControl } from 'react-native'
 import EventListItem from '../../utils/EventListItem'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSelector } from 'react-redux';
 import { colors, spacing, font, components } from '../../styles/globalStyle';
 import Loading from './Loading';
-import { getEvents } from '../../features/events/eventsSlice';
+import { getEvents, getRefreshedEvents } from '../../features/events/eventsSlice';
 import { useDispatch } from 'react-redux';
-import moment from 'moment';
+
 export default function EventsListScreen(props) {
-  const { events, booking, isLoading } = useSelector(state => state.events)
+  const { events, booking, isLoading, isRefreshLoading } = useSelector(state => state.events)
   const styles = getStyles(useBottomTabBarHeight())
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getEvents())
   }, [])
+
+  const onRefresh = () => {
+    dispatch(getRefreshedEvents())
+  }
   const EventSectionItem = ({ eventsType, events }) => {
     return (
       <View>
@@ -34,7 +38,12 @@ export default function EventsListScreen(props) {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView >
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={isRefreshLoading} onRefresh={onRefresh} />
+        }
+        style={{ minHeight: '100%' }}
+      >
         <View style={{ flexDirection: 'row' }}>
           <Text style={components.screenHeader}>EVENTS </Text>
           {booking.isLoading ? <ActivityIndicator size="small" color={colors.main.accent} /> : ''}

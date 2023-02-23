@@ -6,6 +6,10 @@ import { NotificationsRadioInput } from './RadioInputs'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import * as Notifications from 'expo-notifications';
 import { loginActions } from '../../../features/login/loginSlice'
+import { internshipsActions } from '../../../features/internships/internshipsSlice'
+import { companiesActions } from '../../../features/companies/companiesSlice'
+import { eventsActions } from '../../../features/events/eventsSlice'
+import { profileActions } from '../../../features/profile/profileSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import tokenLogic from '../../../utils/tokenLogic'
 import { colors } from '../../../styles/globalStyle'
@@ -17,7 +21,7 @@ export default function SettingsMain({ navigation, rootNavigation }) {
   const [expoPushToken, setExpoPushToken] = useState('');
   const dispatch = useDispatch()
   const { notificationToken } = useSelector(state => state.login)
-  console.log(notificationToken)
+
   const getExpoToken = async () => {
     const token = (await Notifications.getExpoPushTokenAsync()).data;
     return token
@@ -27,56 +31,20 @@ export default function SettingsMain({ navigation, rootNavigation }) {
   }, [])
 
   const styles = getStyles(useBottomTabBarHeight())
-  // const navigation = useNavigation()
   const handleLogOut = () => {
     dispatch(loginActions.resetLogin())
     dispatch(deleteNotificationToken(notificationToken.id))
     navigation.navigate('Login')
     tokenLogic.deleteToken()
+    dispatch(internshipsActions.resetInternships())
+    dispatch(companiesActions.resetCompanies())
+    dispatch(eventsActions.resetEvents())
+    dispatch(profileActions.resetProfile())
+
   }
 
   return (
     <ScrollView style={styles.container}>
-      {/* <Text style={styles.headerText}>Contact details</Text> */}
-      {/* <View>
-        <View>
-          <Text style={styles.labelText}>First name</Text>
-          <TextInput
-            style={styles.inputContainer}
-            placeholder={'Gabriel'}
-            placeholderTextColor='white'
-          />
-        </View>
-        <View>
-          <Text style={styles.labelText}>Last name</Text>
-          <TextInput
-            style={styles.inputContainer}
-            placeholder={'Hazi'}
-            placeholderTextColor='white'
-          />
-        </View>
-        <View>
-          <Text style={styles.labelText}>Phone number</Text>
-          <TextInput
-            style={styles.inputContainer}
-            placeholder={'076123456'}
-            placeholderTextColor='white'
-          />
-        </View>
-        <View>
-          <Text style={styles.labelText}>Email</Text>
-          <TextInput
-            style={styles.inputContainer}
-            placeholder={'hazigabriel@edw.ro'}
-            placeholderTextColor='white'
-          />
-        </View>
-      </View> */}
-      {/* <View>
-        <TouchableHighlight style={styles.button}>
-          <Text style={styles.labelText}>Change password</Text>
-        </TouchableHighlight>
-      </View> */}
       <View>
         <Text style={{ color: 'white', marginBottom: 20 }}>ExponentPushToken(include entire line in POST): </Text>
         <Text style={{ color: 'white' }}>{expoPushToken}</Text>

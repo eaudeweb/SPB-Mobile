@@ -31,6 +31,12 @@ const companiesSlice = createSlice({
       state.isLoading = false
       state.isSuccess = false
       state.isError = false
+    },
+    resetCompanies: (state) => {
+      state.companies = []
+      state.isLoading = false
+      state.isSuccess = false
+      state.isError = false
     }
   },
   extraReducers: (builder) => {
