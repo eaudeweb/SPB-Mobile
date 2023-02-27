@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity, RefreshControl } from 'react-native'
+import { View, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, RefreshControl } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import InternshipListItem from '../../../utils/InternshipListItem'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -67,7 +67,7 @@ export default function ApplicationList(props) {
   }, [applicationsFilter, studentInternships])
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={isRefreshLoading} onRefresh={onRefresh} />
@@ -93,7 +93,7 @@ export default function ApplicationList(props) {
           applications?.map((internship, index) => <InternshipListItem {...props} index={index} internship={internship} swipeable={true} parentRoute={useRoute().name} key={index} />)
         }
       </ScrollView>
-    </View>
+    </SafeAreaView>
   )
 }
 

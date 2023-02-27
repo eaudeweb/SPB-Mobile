@@ -67,7 +67,6 @@ const components = StyleSheet.create({
     marginHorizontal: spacing.s,
     fontSize: font.size.xl,
     fontWeight: font.fontWeight.bold,
-    marginVertical: 10
   }
 })
 

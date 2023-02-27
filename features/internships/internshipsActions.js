@@ -11,12 +11,33 @@ const getSortedInternships = (internships) => {
   const internshipsByDate = sortInternshipsByDate(internships)
 
   const getInternshipsByCompany = () => {
-    const companies = [...new Set(internshipsByDate.map(internship => internship.company.name))]; // [ 'A', 'B']
+    // const companies = [...new Set(internshipsByDate.map(internship => internship.company.name))]; // [ 'A', 'B']
+    const getCompanies = () => {
+      let companiesObjects = []
+      internshipsByDate.forEach(internship => {
+        if (companiesObjects.find(company => company.id === internship.company.id)) {
+        } else {
+          companiesObjects.push(internship.company)
+
+        }
+      })
+      return companiesObjects
+    }
+    const companies = getCompanies()
     const internships = []
     companies.map(company => {
-      const companyInternships = internshipsByDate.filter(internship => internship.company.name === company)
+      let companyInternships = []
+      if (company.affiliated_company) {
+        const affiliatedCompany = companies.find(companyListItem => companyListItem.id === company.affiliatedCompany)
+        companyInternships = internshipsByDate.filter(internship => internship.company.name === company.name || internship.company.name === affiliatedCompany?.name)
+      } else {
+        companyInternships = internshipsByDate.filter(internship => internship.company.name === company.name)
+      }
+      // function above test if company has an affiliated company and add the internships from main comp and affiliated comp in the same arr
+      // companyInternships = internshipsByDate.filter(internship => internship.company.name === company.name)
+
       internships.push({
-        companyName: company,
+        companyName: company.name,
         internships: companyInternships
       })
     })
@@ -43,7 +64,6 @@ const getAllInternships = async () => {
     },
   })
 
-  // test(response.data)
   const studentInternships = response.data.filter(internship => internship.can_apply === 'already_applied')
   return {
     internships: response.data,
@@ -54,12 +74,13 @@ const getAllInternships = async () => {
 
 const getInternshipsBySearch = async (params) => {
   const { company, category, location } = params
-  const companyParam = company.name ? `&company=${company.id}` : ''
+  const companyParam = company.id ? `&company=${parseInt(company.id)}` : ''
   const categoryParam = category.name ? `&categories=${category.id}` : ''
   const locationParam = location.name ? `&location=${location.slug}` : ''
   const searchParam = params.search ? `&search=${params.search}` : ''
   const URL = ALL_INTERNSHIPS_URL + '?' + companyParam + categoryParam + locationParam + searchParam
-
+  console.log(company)
+  console.log(URL)
   const response = await axios.get(URL, {
     headers: {
       'Accept': 'application/json',
@@ -117,6 +138,7 @@ const applyToInternship = async (companyId, jobId) => {
       "X-CSRFToken": await tokenLogic.getToken(),
     }
   })
+  console.log(response)
   return response.data
 }
 

@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { StatusBar, StyleSheet, View, Text, TextInput, Dimensions, TouchableOpacity, ActivityIndicator, BackHandler } from 'react-native'
 import SvgLogo from '../assets/SvgLogo'
 import OrangeStrokeSvg from '../assets/OrangeStroke'
@@ -12,7 +11,11 @@ import { login, addNotificationToken } from '../features/login/loginSlice'
 import Toast from 'react-native-toast-message';
 import { useIsFocused } from '@react-navigation/native';
 import jwtDecode from 'jwt-decode'
-
+import { getAllInternships } from '../features/internships/internshipsSlice'
+import { getAllPartnerCompanies } from '../features/companies/companiesSlice'
+import { getCategories } from '../features/filters/filtersSlice'
+import { getLocations } from '../features/filters/filtersSlice'
+import { getEvents } from '../features/events/eventsSlice'
 import * as Notifications from 'expo-notifications';
 
 function LoginScreen({ navigation, route }) {
@@ -21,7 +24,8 @@ function LoginScreen({ navigation, route }) {
   const isFocused = useIsFocused();
 
   const { isLoading, response } = useSelector(state => state.login)
-
+  const { data } = useSelector(state => state.profile)
+  console.log(data)
   BackHandler.addEventListener('hardwareBackPress', () => {
     navigation.addListener("beforeRemove", (e) => {
       e.preventDefault();
@@ -30,8 +34,6 @@ function LoginScreen({ navigation, route }) {
   const getNotificationTokenData = async () => {
     const authTokenExpiration = jwtDecode(response.token).exp * 1000
     const expo_token = (await Notifications.getExpoPushTokenAsync()).data
-    // (new Date(authTokenExpiration).toISOString())
-    // (await Notifications.getExpoPushTokenAsync()).data
     const data = {
       expiry_date: new Date(authTokenExpiration).toISOString(),
       expo_token: expo_token
@@ -39,11 +41,19 @@ function LoginScreen({ navigation, route }) {
     return data
   }
   useEffect(() => {
+    if (data.mobile_notifications === "on") {
+      dispatch(addNotificationToken(getNotificationTokenData()))
+    }
+  }, [data])
+  useEffect(() => {
     if (response.token) {
       saveToken(response.token)
       checkForToken()
-      dispatch(addNotificationToken(getNotificationTokenData()))
-      // console.log(getNotificationTokenData())
+      dispatch(getAllInternships())
+      dispatch(getAllPartnerCompanies())
+      dispatch(getCategories())
+      dispatch(getLocations())
+      dispatch(getEvents())
     } else if (response.email || response.password || response.non_field_errors) {
       Toast.show({
         type: 'error',
@@ -51,7 +61,6 @@ function LoginScreen({ navigation, route }) {
       });
     }
   }, [response])
-
 
   // https://github.com/react-navigation/react-navigation/issues/10394 
   const [formData, setFormData] = useState({

@@ -1,135 +1,93 @@
 import React from 'react'
-import { StyleSheet, SafeAreaView, Text, View, ScrollView, TouchableOpacity, StatusBar } from 'react-native'
+import { StyleSheet, SafeAreaView, Text, View, ScrollView, TouchableOpacity, RefreshControl, StatusBar } from 'react-native'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
-import FaIcon from 'react-native-vector-icons/FontAwesome5'
-import { colors, font } from '../../styles/globalStyle'
+import { colors, font, components } from '../../styles/globalStyle'
+import { useSelector, useDispatch } from 'react-redux';
+import { getNews } from '../../features/news/newsSlice';
+import moment from 'moment';
+import Loading from '../InternshipScreen/Loading';
 
 export default function NewsMain({ navigation }) {
   const styles = getStyles(useBottomTabBarHeight())
+  const dispatch = useDispatch()
+  const { news, isLoading } = useSelector(state => state.news)
 
-  const newsList = [
-    {
-      originScreen: 'Companies',
-      title: 'Pizza is coming',
-      description: 'Come and get it'
-    },
-    {
-      originScreen: 'Internships',
-      title: '3 new React internships',
-      description: 'Apply right now'
-    },
-    {
-      originScreen: 'Profile',
-      title: 'Add your CV',
-      description: "Companies that you have applied to would not be able to see your information."
-    },
-    {
-      originScreen: 'Calendar',
-      title: 'Pizza is coming',
-      description: 'Come and get it'
-    },
-    {
-      originScreen: 'Internships',
-      title: '3 new React internships',
-      description: 'Apply right now'
-    },
-    {
-      originScreen: 'Profile',
-      title: 'Add your CV',
-      description: "Companies that you have applied to would not be able to see your information."
-    },
-    {
-      originScreen: 'Calendar',
-      title: 'Pizza is coming',
-      description: 'Come and get it'
-    },
-    {
-      originScreen: 'Internships',
-      title: '3 new React internships',
-      description: 'Apply right now'
-    },
-    {
-      originScreen: 'Profile',
-      title: 'Add your CV',
-      description: "Companies that you have applied to would not be able to see your information."
-    },
-  ]
-
-  const generateListItem = (item, index) => {
-    let iconName;
-    switch (item.originScreen) {
-      case 'Companies':
-        iconName = 'building'
-        break;
-      case 'Internships':
-        iconName = 'briefcase'
-        break;
-      case 'Calendar':
-        iconName = 'desktop'
-        break;
-      case 'Profile':
-        iconName = 'user'
-        break;
-    }
-
+  const onRefresh = () => {
+    dispatch(getNews())
+  }
+  const NewsItem = ({ newsItem }) => {
     return (
-      <TouchableOpacity
-        key={index}
-        onPress={() => navigation.navigate(item.originScreen)}
-      >
+      <TouchableOpacity     >
         <View style={styles.newsItemWrap}>
-          <View flexDirection={'row'} alignItems={'center'} marginBottom={10}>
-            <FaIcon name={iconName} size={18} color={colors.main.accent} />
-            <Text style={styles.newsItemTitle}>{item.title}</Text>
+          <View flexDirection={'row'} alignItems={'center'} marginBottom={5}>
+            <Text style={styles.newsItemTitle}>{newsItem.title}</Text>
+          </View>
+          <View marginBottom={5}>
+            <Text style={[styles.newsItemText, { color: colors.secondary.lightGrey }]}>{moment(newsItem.added, "DD/MM/yyyy - hh:mm:ss").fromNow()}</Text>
           </View>
           <View>
-            <Text style={styles.newsItemText}>{item.description}</Text>
+            <Text style={styles.newsItemText}>{newsItem.text}</Text>
           </View>
         </View>
       </TouchableOpacity>
     )
   }
+  const NewsList = () => {
+    return (
+      <View>
+        {news?.map((newsItem, index) => <NewsItem newsItem={newsItem} key={index} />)}
+      </View>
+    )
+  }
   return (
     <SafeAreaView>
-      <ScrollView style={styles.container}>
-        <Text style={styles.header}>News</Text>
+      <ScrollView
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={onRefresh} />
+        }
+      >
+        <Text style={[components.screenHeader, { marginHorizontal: 0 }]}>NEWS</Text>
         <View style={styles.innerContainer}>
-          {/* {newsList.map((listItem, index) => generateListItem(listItem, index))} */}
-          <Text style={{ color: 'white' }}>No news yet</Text>
+          {isLoading ?
+            <Loading />
+            :
+            news.length === 0 ?
+              <Text style={{ color: 'white' }}>No news yet</Text>
+              :
+              <NewsList />
+          }
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView >
   )
 }
 
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     marginTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    minHeight: '100%',
   },
   innerContainer: {
-    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10,
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight * 2,
   },
-  header: {
-    color: colors.main.white,
-    fontSize: font.size.xl,
-    fontWeight: 'bold'
-  },
+
   newsItemWrap: {
     backgroundColor: colors.secondary.darkGrey,
     borderRadius: 5,
     marginVertical: 10,
+
     padding: 10
+
   },
   newsItemTitle: {
-    color: colors.main.white,
+    color: colors.main.accent,
     fontSize: font.size.l,
     fontWeight: 'bold',
-    marginLeft: 10
   },
   newsItemText: {
     color: colors.main.white,
     fontSize: font.size.m
-
   }
 })

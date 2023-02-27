@@ -23,6 +23,21 @@ export const getProfileData = createAsyncThunk('profile/get', async (internships
   }
 })
 
+export const updateMobileNoficiations = createAsyncThunk('profile/updateMobileNotifications', async (option, thunkAPI) => {
+  try {
+    return await profileService.updateMobileNotifications(option)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
+
 export
   const profileSlice = createSlice({
     name: 'profile',
@@ -34,6 +49,9 @@ export
         state.isError = false
         state.message = ''
         state.data = ''
+      },
+      updateReduxMobileNotifications: (state, { payload }) => {
+        state.data.mobile_notifications = payload
       }
     },
     extraReducers: (builder) => {
@@ -48,7 +66,15 @@ export
         .addCase(getProfileData.rejected, (state, action) => {
           state.isLoading = false
         })
-
+        .addCase(updateMobileNoficiations.pending, (state) => {
+          state.isLoading = true
+        })
+        .addCase(updateMobileNoficiations.fulfilled, (state, action) => {
+          state.isLoading = false
+        })
+        .addCase(updateMobileNoficiations.rejected, (state, action) => {
+          state.isLoading = false
+        })
     }
   })
 

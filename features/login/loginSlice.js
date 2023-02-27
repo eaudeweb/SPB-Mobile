@@ -53,6 +53,20 @@ export const deleteNotificationToken = createAsyncThunk('login/deleteNotificatio
   }
 })
 
+export const deleteAllNotificationTokens = createAsyncThunk('login/deleteAllNotificationTokens', async (id, thunkAPI) => {
+  try {
+    return await loginService.deleteAllNotificationTokens()
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+})
+
 
 export
   const loginSlice = createSlice({

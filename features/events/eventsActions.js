@@ -2,6 +2,7 @@ import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 
 const EVENTS_URL = 'https://staging.stagiipebune.ro/api/v1/webinars/'
+const NEWS_URL = 'https://staging.stagiipebune.ro/api/v1/public/news/'
 
 const getEvents = async () => {
   const response = await axios.get(`${EVENTS_URL}students`, {
@@ -34,6 +35,16 @@ const unbookEventSeat = async (eventId) => {
   return response.data
 }
 
+const getNews = async () => {
+  const response = await axios.get(NEWS_URL, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json; charset=UTF-8',
+      "X-CSRFToken": await tokenLogic.getToken(),
+    }
+  })
+  return response.data
+}
 const eventsService = {
   getEvents,
   bookEventSeat,

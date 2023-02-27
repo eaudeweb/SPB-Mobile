@@ -13,11 +13,19 @@ export default function EventDetail({ props }) {
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const { navigation, route } = props
+  const { events } = useSelector(state => state.events)
   const { isBookingSuccesful, isCancelSuccesful } = useSelector(state => state.events.booking)
   const { booking, isLoading } = useSelector(state => state.events)
   const [event, setEvent] = useState(route.params)
   const url = 'https://staging.stagiipebune.ro'
 
+
+  useEffect(() => {
+    const allEvents = [...events.upcoming, ...events.reserved, ...events.recordings]
+    const event = allEvents.find(event => event.id === route.params.id)
+    setEvent(event)
+  }, [events])
+  //TODO Upon loading event get event id from route.params and match it with the evens stored in redux
   const handleSeatBooking = () => {
     let newRegState = event.accepted === event.participant_limit ? 'pending' : 'accepted'
     setEvent({ ...event, reg_state: newRegState })
@@ -82,10 +90,15 @@ export default function EventDetail({ props }) {
           <FaIcon name={'map-marker'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
           <Text style={{ color: colors.secondary.lightGrey }}>{event.location}</Text>
         </View>
-        <View style={styles.iconWrapper}>
-          <FaIcon name={'bullhorn'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
-          <Text style={{ color: colors.main.accent, fontSize: font.size.m }}>{event.panelists}</Text>
-        </View>
+        {event.panelists ?
+          <View style={styles.iconWrapper}>
+            <FaIcon name={'bullhorn'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
+            <Text style={{ color: colors.main.accent, fontSize: font.size.m }}>{event.panelists}</Text>
+          </View>
+          :
+          ''
+        }
+
 
         <View>
           <Text style={styles.eventDescription}>{event.description}</Text>
@@ -100,15 +113,9 @@ export default function EventDetail({ props }) {
             </TouchableHighlight>
             :
             <ActionButton />
-
           }
         </View>
         <View width={'25%'}>
-          {/* <TouchableHighlight style={styles.bottomButton}>
-            <View style={{ alignItems: 'center' }}>
-              <FaIcon name={'bell'} size={20} color={colors.secondary.lightGrey} />
-            </View>
-          </TouchableHighlight> */}
           <View style={styles.iconWrapper}>
             <FaIcon name={'users'} style={styles.icon} />
             <Text style={getParticipantsIconColor()}>{event.accepted}</Text>

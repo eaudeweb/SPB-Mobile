@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import {
   applyToInternship,
+  getStudentInternships,
   withdrawFromInternship,
   resetApplicationStatus,
   updateLocalInternshipApplied,
@@ -17,6 +18,7 @@ import reactStringReplace from 'react-string-replace';
 import Toast from 'react-native-toast-message';
 import onShare from '../utils/shareFunction'
 import moment from 'moment'
+import FaIcon from 'react-native-vector-icons/FontAwesome5'
 
 export default function InternshipDetail({ route, navigation }) {
   const { application } = useSelector(state => state.internships)
@@ -27,8 +29,11 @@ export default function InternshipDetail({ route, navigation }) {
   const handleBarTouch = (view) => view === 'description' ? setCurrentView('description') : setCurrentView('about')
   const formatText = (text) => {
     const regex = /\*{2}(.*?)\*{2}/g
+    const spaceRegex = /\#{2}/g
+    const spaceRepllacementFunction = (match, index) => <Text>{'\n'}</Text>
     const replacementFunction = (match, index) => <Text style={{ fontWeight: font.fontWeight.xbold, color: colors.main.accent }} key={index}>{match}</Text>;
-    return reactStringReplace(text, regex, replacementFunction);
+    const boldText = reactStringReplace(text, regex, replacementFunction)
+    return reactStringReplace(boldText, spaceRegex, spaceRepllacementFunction)
   }
   const handleApplyPress = () => {
     const payload = {
@@ -36,6 +41,8 @@ export default function InternshipDetail({ route, navigation }) {
       jobId: internship.id
     }
     // dispatch(updateLocalInternshipApplied(internship))
+    dispatch(getStudentInternships())
+
     dispatch(applyToInternship(payload))
   }
   const handleWithdrawPress = () => {
@@ -46,6 +53,9 @@ export default function InternshipDetail({ route, navigation }) {
     // dispatch(updateLocalInternshipWithdrew(internship))
     dispatch(withdrawFromInternship(payload))
   }
+  useEffect(() => {
+
+  }, [])
   useEffect(() => {
     if (application.isApplySuccess) {
       Toast.show({
@@ -85,6 +95,24 @@ export default function InternshipDetail({ route, navigation }) {
       return true
     }
   }
+  console.log(internship)
+
+  const PaymentInformation = ({ is_paid, payment }) => {
+    let text = ''
+    if (is_paid && payment.length > 0) {
+      text = "PAID: " + payment
+    } else if (is_paid) {
+      text = "PAID"
+    } else {
+      text = "UNPAID"
+    }
+    return (
+      <View flexDirection={'row'} marginVertical={5}>
+        <FaIcon name={'wallet'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
+        <Text style={[styles.jobDescription, { color: colors.secondary.lightGrey, marginHorizontal: 5 }]}>{text}</Text>
+      </View>)
+  }
+
   return (
     <View style={styles.container}>
       <View marginBottom={10}>
@@ -108,6 +136,16 @@ export default function InternshipDetail({ route, navigation }) {
           :
           ''
         }
+        <View flexDirection={'row'} marginVertical={5}>
+          <FaIcon name={'building'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
+          <Text style={[styles.jobDescription, { color: colors.secondary.lightGrey, marginHorizontal: 5 }]}>{internship.office_location.toUpperCase()}</Text>
+        </View>
+        {/* {internship.is_paid ?
+          <PaymentInformation is_paid={internship.is_paid} payment={internship.payment} />
+          :
+          ''
+        } */}
+
         <View>
           <View flexDirection={'row'} marginBottom={10}>
             <TouchableOpacity onPress={() => handleBarTouch('description')}>
@@ -123,9 +161,11 @@ export default function InternshipDetail({ route, navigation }) {
           </View>
           {
             currentView === 'description' ?
-              <Text style={styles.jobDescription}>
-                {formatText(internship.description)}
-              </Text>
+              <View>
+                <Text style={styles.jobDescription}>
+                  {formatText(internship.description)}
+                </Text>
+              </View>
               :
               <Text style={styles.jobDescription}>
                 {formatText(internship.company.description)}

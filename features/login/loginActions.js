@@ -60,11 +60,20 @@ const deleteNotificationToken = async (id) => {
   })
   return response.data
 }
+const deleteAllNotificationTokens = async (id) => {
+  const response = await axios.delete(NOTIFICATION_TOKEN_URL, {
+    headers: {
+      "X-CSRFToken": await tokenLogic.getToken(),
+    }
+  })
+  return response.data
+}
 
 const loginService = {
   login,
   addNotificationToken,
-  deleteNotificationToken
+  deleteNotificationToken,
+  deleteAllNotificationTokens
 }
 
 export default loginService

@@ -3,9 +3,9 @@ import { useState } from 'react'
 import { SafeAreaView, TouchableOpacity, StyleSheet, Text, StatusBar, Animated, View } from 'react-native'
 import { colors, font } from '../styles/globalStyle'
 
-const CustomTabBar = ({ screens, navigation }) => {
+const CustomTabBar = ({ screens, navigation, display }) => {
   const [selectedTab, setSeletedTab] = useState('')
-
+  const styles = getStyles(display)
   const currentTabIndex = navigation.getState().index
 
   useEffect(() => {
@@ -24,7 +24,6 @@ const CustomTabBar = ({ screens, navigation }) => {
     setSeletedTab(option)
     navigation.navigate(option.screen)
   }
-
   const TabItem = ({ option }) => (
     <TouchableOpacity onPress={() => handlePress(option)}>
       <View style={option.name === selectedTab.name ? styles.activeTab : styles.tab}>
@@ -38,12 +37,13 @@ const CustomTabBar = ({ screens, navigation }) => {
     </SafeAreaView>
   )
 }
-const styles = StyleSheet.create({
+const getStyles = (displayTabBar) => StyleSheet.create({
   container: {
     marginTop: Platform.OS === "ios" ? 50 : StatusBar.currentHeight + 20,
     marginHorizontal: 10,
     marginBottom: 10,
     flexDirection: 'row',
+    display: displayTabBar ? 'flex' : 'none'
   },
 
   tab: {

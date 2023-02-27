@@ -10,7 +10,7 @@ import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import LoadingScreen from './components/LoadingScreen';
 
-export default function App(props) {
+export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
@@ -32,20 +32,9 @@ export default function App(props) {
   })
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log(notification)
       setNotification(notification);
     });
-
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response.notification.request.content.data);
-      // alert(response.notification.request.content.data.alertText)
-    });
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
   }, []);
 
   const registerForPushNotificationsAsync = async () => {
@@ -88,7 +77,6 @@ export default function App(props) {
       trigger: { seconds: 1 },
     });
   }
-
   return (
     <Provider store={store}>
       <NavigationContainer theme={CustomDarkTheme}>
@@ -99,7 +87,7 @@ export default function App(props) {
             gestureEnabled: false
           }}>
           <Stack.Screen name="Layout" >
-            {(props) => <LayoutScreen {...props} />}
+            {(props) => <LayoutScreen {...props} notification={notification} setNotification={setNotification} />}
           </Stack.Screen>
           <Stack.Screen name="Loading"   >
             {(props) => <LoadingScreen {...props} />}

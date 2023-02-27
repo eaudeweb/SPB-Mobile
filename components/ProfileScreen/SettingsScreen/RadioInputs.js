@@ -1,24 +1,46 @@
 import React from 'react'
 import { useState } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { useSelector, useDispatch } from 'react-redux'
+import { profileActions } from '../../../features/profile/profileSlice'
+import { updateMobileNoficiations } from '../../../features/profile/profileSlice'
+import { addNotificationToken, deleteAllNotificationTokens } from '../../../features/login/loginSlice'
+import jwtDecode from 'jwt-decode'
+import * as Notifications from 'expo-notifications';
+import tokenLogic from '../../../utils/tokenLogic'
 
 const NotificationsRadioInput = (props) => {
-  const { setModalVisible, notificationsActive, setNotificationsActive } = props
+  const dispatch = useDispatch()
+  const { isLoading } = useSelector(state => state.profile)
+  const { mobile_notifications } = useSelector(state => state.profile.data)
+  const getNotificationTokenData = async () => {
+    const authTokenExpiration = jwtDecode(await tokenLogic.getToken()).exp * 1000
+    const expo_token = (await Notifications.getExpoPushTokenAsync()).data
+    const data = {
+      expiry_date: new Date(authTokenExpiration).toISOString(),
+      expo_token: expo_token
+    }
+    return data
+  }
+
   const notificationModalOptions = [
     {
-      key: true,
+      key: 'on',
       text: 'On'
     },
     {
-      key: false,
+      key: 'off',
       text: 'Off'
     }
   ]
-
   const handleRadioPress = (option) => {
-    setNotificationsActive(option.key)
-    if (!option.key) {
-      setModalVisible(true)
+    dispatch(profileActions.updateReduxMobileNotifications(option.key))
+    dispatch(updateMobileNoficiations(option.key))
+    if (option.key === 'off') {
+      dispatch(deleteAllNotificationTokens())
+    } else {
+      dispatch(addNotificationToken(getNotificationTokenData()))
+
     }
   }
 
@@ -30,10 +52,9 @@ const NotificationsRadioInput = (props) => {
             <View
               style={radioStyle.radioCircle}
             >
-              {notificationsActive === option.key && <View style={radioStyle.selectedRb} />}
+              {mobile_notifications === option.key && <View style={radioStyle.selectedRb} />}
             </View>
             <Text style={radioStyle.radioText}>{option.text}</Text>
-
           </TouchableOpacity>
         );
       })}
@@ -43,9 +64,7 @@ const NotificationsRadioInput = (props) => {
 
 const FeedbackRadioInput = (props) => {
   const { feedbackProvided, setFeedbackProvided } = props
-
   const feedbackModalOptions = [
-
     {
       key: false,
       text: 'No'

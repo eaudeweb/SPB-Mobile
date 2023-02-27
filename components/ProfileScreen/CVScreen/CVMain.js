@@ -1,14 +1,26 @@
-import React, { useEffect } from 'react'
-import { ScrollView, StyleSheet, View, Text, Image } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { ScrollView, SafeAreaView, StyleSheet, View, Text, Image } from 'react-native'
 import { useSelector } from 'react-redux';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { colors, font } from '../../../styles/globalStyle'
+import FaIcon from 'react-native-vector-icons/FontAwesome5'
+import * as Progress from 'react-native-progress';
 
 export default function CVMain() {
   const styles = getStyles(useBottomTabBarHeight())
   const { data } = useSelector(state => state.profile)
+  const [cvPercentage, setCvPercentage] = useState(0)
 
-
+  useEffect(() => {
+    if (data.complete_percentage) {
+      if (data.complete_percentage === 100) {
+        setCvPercentage(data.complete_percentage)
+      } else {
+        setCvPercentage(data.complete_percentage / 100)
+      }
+    } else {
+    }
+  }, [data])
   const AboutCategory = ({ category, categoryName }) => {
     return (
       <View style={categoryStyle.outerWrapper}>
@@ -101,70 +113,86 @@ export default function CVMain() {
   }
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.cvWrap}>
-          <View style={styles.section}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 10 }}>
-              <Image source={{ uri: data?.picture }} style={styles.avatar} />
-              <View  >
-                <Text style={styles.nameText}>{data.user?.first_name} {data.user?.last_name}</Text>
-                {/* <View flexDirection='row' alignItems='center'>
-                  <Text style={[styles.infoText, { color: '#F26649' }]}>TOP 10%</Text>
-                  <Ionicon name={'arrow-up-outline'} size={26} color={'#4CAF50'} />
-                </View> */}
+    <SafeAreaView>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.cvWrap}>
+            <View style={styles.section}>
+              <View flexDirection='row' justifyContent={'center'} style={{ marginBottom: 20 }}>
+                <Text style={[styles.infoText, { fontSize: font.size.s, color: '#F26649' }]}>{data.top_percentage}</Text>
               </View>
-              {/* <View>
-                <Progress.Circle
-                  size={40}
-                  progress={0.5}
-                  borderWidth={0}
-                  thickness={4}
-                  showsText={true}
-                  textStyle={{ color: 'white', fontSize: 11, fontWeight: 'bold' }}
-                  color={'#F26649'}
-                />
-              </View> */}
-            </View>
-            <View style={{ flexDirection: 'row', width: '100%', flexWrap: 'wrap', justifyContent: 'center', paddingBottom: 10 }}>
-              <Text style={styles.quotationMark}>“</Text>
-              <Text style={[styles.infoText, { flex: 10, textAlign: 'center' }]}>{data?.about_me}</Text>
-              <Text style={[styles.quotationMark, { alignSelf: 'flex-end' }]}>”</Text>
-            </View>
-            <View>
-              <Text style={styles.infoText}>{data.faculty?.name}</Text>
-              <Text style={styles.infoText}>{data.faculty?.university}</Text>
-              <Text style={styles.infoText}>Last year grade: {data.faculty?.last_grade}</Text>
-
-            </View>
-          </View>
-          <View style={styles.section}>
-            {data.skills?.length ? <AboutCategory category={data.skills} categoryName="Skills" /> : ''}
-            {data.hobbies?.length ? <AboutCategory category={data.data.hobbies} categoryName="Hobbies" /> : ''}
-            {data.languages?.length ? <AboutCategory category={data.languages} categoryName="Languages" /> : ''}
-            {data.prefered_courses?.length ?
-              <View style={categoryStyle.outerWrapper}>
-                <View style={categoryStyle.innerWrapper}>
-                  <View style={styles.textWrap}>
-                    <Text style={[styles.infoText, styles.categoryText]}>Prefered classes:</Text>
-                  </View>
-                  <View style={categoryStyle.textListWrap}>
-                    <Text style={{ color: 'white', }}>{data.prefered_courses} </Text>
-                  </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 10 }}>
+                <Image source={{ uri: "https://staging.stagiipebune.ro/students/30106/photo/703d9b61effcb69e8337e6d09f1ff671.jpg" }} style={styles.avatar} />
+                <View  >
+                  <Text style={styles.nameText}>{data.user?.first_name} {data.user?.last_name}</Text>
                 </View>
               </View>
-              :
-              ''}
+              <View style={{ flexDirection: 'row', width: '100%', flexWrap: 'wrap', justifyContent: 'center', paddingBottom: 10 }}>
+                <Text style={styles.quotationMark}>“</Text>
+                <Text style={[styles.infoText, { flex: 10, textAlign: 'center' }]}>{data?.about_me}</Text>
+                <Text style={[styles.quotationMark, { alignSelf: 'flex-end' }]}>”</Text>
+              </View>
+              <View>
+                <Text style={styles.infoText}>{data.faculty?.name}</Text>
+                <Text style={styles.infoText}>{data.faculty?.university}</Text>
+                <Text style={styles.infoText}>Last year grade: {data.faculty?.last_grade}</Text>
+
+              </View>
+            </View>
+            <View style={styles.section}>
+              {data.skills?.length ? <AboutCategory category={data.skills} categoryName="Skills" /> : ''}
+              {data.hobbies?.length ?
+                <View style={categoryStyle.outerWrapper}>
+                  <View style={categoryStyle.innerWrapper}>
+                    <View style={styles.textWrap}>
+                      <Text style={[styles.infoText, styles.categoryText]}>Hobbies::</Text>
+                    </View>
+                    <View style={categoryStyle.textListWrap}>
+                      <Text style={{ color: 'white', }}>{data.hobbies} </Text>
+                    </View>
+                  </View>
+                </View>
+                :
+                ''}
+              {data.languages?.length ? <AboutCategory category={data.languages} categoryName="Languages" /> : ''}
+              {data.prefered_courses?.length ?
+                <View style={categoryStyle.outerWrapper}>
+                  <View style={categoryStyle.innerWrapper}>
+                    <View style={styles.textWrap}>
+                      <Text style={[styles.infoText, styles.categoryText]}>Prefered classes:</Text>
+                    </View>
+                    <View style={categoryStyle.textListWrap}>
+                      <Text style={{ color: 'white', }}>{data.prefered_courses} </Text>
+                    </View>
+                  </View>
+                </View>
+                :
+                ''
+              }
+            </View>
+            {data.education?.length ? <EducationComponent data={data.education} /> : ''}
+            {data.job_history?.length ? <ExperienceComponent data={data.job_history} /> : ''}
+            {data.projects?.length ? <ExtraComponenet data={data.projects} /> : ''}
           </View>
-          {data.education?.length ? <EducationComponent data={data.education} /> : ''}
-          {data.job_history?.length ? <ExperienceComponent data={data.job_history} /> : ''}
-          {data.projects?.length ? <ExtraComponenet data={data.projects} /> : ''}
+          <View style={styles.infoWrap}>
+            <View flexDirection={'row'} alignItems={'center'}>
+              <Text style={[styles.infoText, { marginRight: 10 }]}>Completation status</Text>
+              <Progress.Circle
+                size={40}
+                progress={cvPercentage}
+                borderWidth={0}
+                thickness={3}
+                showsText={true}
+                textStyle={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}
+                color={'#F26649'}
+              />
+            </View>
+            <Text style={[styles.infoText, { margin: 10 }]}>CV can be edited on our website</Text>
+
+          </View>
         </View>
-        <View style={styles.infoWrap}>
-          <Text style={styles.infoText}>CV can be edited on our website</Text>
-        </View>
-      </View>
-    </ScrollView >
+      </ScrollView >
+    </SafeAreaView>
   )
 }
 
@@ -236,10 +264,9 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   },
   infoWrap: {
     marginTop: 20,
-    marginBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10,
+    marginBottom: Platform.OS === 'ios' ? bottomTabHeight : 20,
     justifyContent: 'center',
     alignItems: 'center',
-
   },
   infoTextBold: {
     color: 'white',

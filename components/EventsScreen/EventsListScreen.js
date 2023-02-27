@@ -52,6 +52,8 @@ export default function EventsListScreen(props) {
           {events.upcoming?.length ? <EventSectionItem eventsType={"Upcoming"} events={events.upcoming} /> : ''}
           {events.reserved?.length ? <EventSectionItem eventsType={"Reserved"} events={events.reserved} /> : ''}
           {events.recordings?.length ? <EventSectionItem eventsType={"Recordings"} events={events.recordings} /> : ''}
+          {!events.upcoming?.length && !events.reserved?.length ? <Text style={styles.text}>No events available at the moment.
+          </Text> : ''}
         </View>
       </ScrollView>
     </SafeAreaView >
@@ -61,9 +63,9 @@ export default function EventsListScreen(props) {
 
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
-    marginHorizontal: 10,
     paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10
+    marginBottom: Platform.OS === 'ios' ? bottomTabHeight * 1.5 : bottomTabHeight + 10,
+    marginHorizontal: 10
   },
   sectionHeader: {
     color: colors.main.accent,
@@ -71,5 +73,10 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     fontSize: font.size.l,
     fontWeight: font.fontWeight.bold,
     marginVertical: 10
+  },
+  text: {
+    color: colors.main.white,
+    fontSize: font.size.m,
+    marginHorizontal: 10
   }
 })

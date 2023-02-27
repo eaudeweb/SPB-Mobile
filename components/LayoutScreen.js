@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, Platform, View, Text, BackHandler } from 'react-native'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
@@ -9,15 +9,16 @@ import ProfileScreen from './ProfileScreen/ProfileScreen';
 import NewsScreen from './NewsScreen/NewsScreen'
 import { colors } from '../styles/globalStyle';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import * as SecureStore from 'expo-secure-store';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllInternships } from '../features/internships/internshipsSlice'
+import { getAllInternships, getInternshipsBySearch } from '../features/internships/internshipsSlice'
 import { getAllPartnerCompanies } from '../features/companies/companiesSlice';
 import { getCategories, getLocations } from '../features/filters/filtersSlice';
 import { getEvents } from '../features/events/eventsSlice';
 import tokenLogic from '../utils/tokenLogic';
 import { loginActions } from '../features/login/loginSlice';
 import * as Notifications from 'expo-notifications';
+import { filtersActions } from '../features/filters/filtersSlice';
+import { getNews } from '../features/news/newsSlice';
 
 export default function LayoutScreen(props) {
   const insets = useSafeAreaInsets();
@@ -27,7 +28,8 @@ export default function LayoutScreen(props) {
   const events = useSelector(state => state.events)
   // const { isInternshipsLoading: isLoading, isRefreshLoading } = internshipsData
   // const { booking, isEventsLoading: loading } = useSelector(state => state.events)
-  const isTokenValid = async () => await tokenLogic.getToken().then(response => response)
+  const responseListener = useRef();
+  const notificationListener = useRef();
 
   useEffect(() => {
     //whenever an internship/event action is performed we verify the validity of the token, and if the token is valid user is logged out
@@ -54,6 +56,7 @@ export default function LayoutScreen(props) {
     dispatch(getCategories())
     dispatch(getLocations())
     dispatch(getEvents())
+    dispatch(getNews())
     props.navigation.setOptions({ gestureEnabled: false });
   }, [])
 
@@ -63,6 +66,37 @@ export default function LayoutScreen(props) {
       e.preventDefault();
     })
   })
+
+  useEffect(() => {
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      const data = response.notification.request.content.data
+      if (data.screen === 'jobs') {
+        const newFilters = {
+          category: '',
+          location: '',
+          company: {
+            id: data.companyId
+          },
+          search: ''
+        }
+        if (data.companyId) {
+          dispatch(filtersActions.updateFilterList(newFilters))
+          dispatch(getInternshipsBySearch(newFilters))
+        }
+        props.navigation.navigate('Internships')
+      } else if (data.screen = "news") {
+        props.navigation.navigate('News')
+        dispatch(getNews())
+      }
+      // alert(response.notification.request.content.data.alertText)
+    });
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
 
   return (
     <Tab.Navigator

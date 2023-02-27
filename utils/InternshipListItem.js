@@ -112,7 +112,11 @@ export default function InternshipListItem({ navigation, internship, parentRoute
           <View style={styles.innerWrapper}>
             <Text style={styles.internshipTitle}>{internship.title}</Text>
             <View style={styles.detailsWrapper}>
-              <Text style={styles.detailsText}>{moment(internship.validated, "DD/mm/yyyy - hh:mm:ss").format('DD MMM')}</Text>
+              {swipeable ?
+                ''
+                :
+                <Text style={styles.detailsText}>{moment(internship.validated, "DD/mm/yyyy - hh:mm:ss").format('DD MMM')}</Text>
+              }
               <PaymentInformation is_paid={internship.is_paid} payment={internship.payment} />
               <Text style={styles.detailsText}>{internship.office_location?.toUpperCase()}</Text>
             </View>

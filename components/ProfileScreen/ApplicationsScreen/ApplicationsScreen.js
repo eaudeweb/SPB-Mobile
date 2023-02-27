@@ -13,16 +13,19 @@ export default function ApplicationsScreen(props) {
   const Stack = createStackNavigator();
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets)
-  const { navigation, route, profileNavigation, profileRoute } = props
+  const { setDisplayTabBar, route, profileNavigation, profileRoute } = props
   useEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route);
 
     if (routeName === "ApplicationDetail") {
       profileNavigation.setOptions({ tabBarStyle: { display: 'none' } });
+      setDisplayTabBar(false)
     } else {
       profileNavigation.setOptions({ tabBarStyle: styles.tabBar });
+      setDisplayTabBar(true)
     }
   }, [profileNavigation, profileRoute])
+
   return (
     <Stack.Navigator initialRouteName="ApplicationsList" screenOptions={{ headerShown: false, }}>
       <Stack.Screen name="ApplicationsList"   >

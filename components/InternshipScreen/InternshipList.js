@@ -23,14 +23,14 @@ export default function InternshipsList(props) {
           </View>
         ))
         :
-        <Text style={styles.text}>No internships available for you at the moment</Text>}
+        <Text style={styles.text}>No internships available for you at the moment.</Text>}
     </View>
   )
 }
 
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
-    // paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10
+    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10
   },
   companyTitle: {
     color: colors.main.accent,

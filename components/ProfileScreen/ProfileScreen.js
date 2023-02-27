@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ApplicationsMain from './ApplicationsScreen/ApplicationsScreen';
 import CVMain from './CVScreen/CVMain';
@@ -11,6 +11,7 @@ import { loginActions } from '../../features/login/loginSlice';
 
 export default function ProfileScreen({ navigation, route, rootNavigation }) {
   const Tab = createMaterialTopTabNavigator();
+  const [displayTabBar, setDisplayTabBar] = useState(true)
   // TODO move to separate file and import 
   const dispatch = useDispatch()
   const { tokens } = useSelector(state => state.profile.data)
@@ -18,6 +19,7 @@ export default function ProfileScreen({ navigation, route, rootNavigation }) {
   useEffect(() => {
     dispatch(getProfileData())
   }, [])
+
   const getDeviceToken = async () => (await Notifications.getExpoPushTokenAsync()).data
   const updateExpoNotificationToken = async () => {
     const deviceToken = await getDeviceToken()
@@ -43,7 +45,7 @@ export default function ProfileScreen({ navigation, route, rootNavigation }) {
     {
       name: 'Settings',
       screen: 'Settings',
-    },
+    }
   ]
   return (
     <Tab.Navigator
@@ -57,15 +59,12 @@ export default function ProfileScreen({ navigation, route, rootNavigation }) {
         tabBarIndicatorStyle: {
           backgroundColor: '#F26649'
         },
-        tabBarStyle: {
-          backgroundColor: '#212121',
-          borderWidth: 0,
-        },
       }}
-      tabBar={(props) => < CustomTabBar {...props} screens={screens} />}
+      tabBar={(props) => < CustomTabBar {...props} screens={screens} display={displayTabBar} />
+      }
     >
       <Tab.Screen name="Applications">
-        {(props) => <ApplicationsMain {...props} profileNavigation={navigation} profileRoute={route} />}
+        {(props) => <ApplicationsMain {...props} profileNavigation={navigation} profileRoute={route} setDisplayTabBar={setDisplayTabBar} />}
       </Tab.Screen>
       <Tab.Screen name="CV">
         {(props) => <CVMain {...props} />}

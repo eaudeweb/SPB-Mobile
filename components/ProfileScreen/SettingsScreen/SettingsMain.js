@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect, useRef } from 'react'
-import { StyleSheet, View, Text, TextInput, TouchableHighlight, ScrollView, Platform } from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView, TouchableHighlight, ScrollView, Platform } from 'react-native'
 import FeedbackModal from './FeedbackModal'
 import { NotificationsRadioInput } from './RadioInputs'
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
@@ -16,12 +16,10 @@ import { colors } from '../../../styles/globalStyle'
 import { deleteNotificationToken } from '../../../features/login/loginSlice'
 
 export default function SettingsMain({ navigation, rootNavigation }) {
-  const [notificationsActive, setNotificationsActive] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
   const [expoPushToken, setExpoPushToken] = useState('');
   const dispatch = useDispatch()
   const { notificationToken } = useSelector(state => state.login)
-
   const getExpoToken = async () => {
     const token = (await Notifications.getExpoPushTokenAsync()).data;
     return token
@@ -40,24 +38,24 @@ export default function SettingsMain({ navigation, rootNavigation }) {
     dispatch(companiesActions.resetCompanies())
     dispatch(eventsActions.resetEvents())
     dispatch(profileActions.resetProfile())
-
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View>
-        <Text style={{ color: 'white', marginBottom: 20 }}>ExponentPushToken(include entire line in POST): </Text>
-        <Text style={{ color: 'white' }}>{expoPushToken}</Text>
-      </View>
+    <SafeAreaView style={styles.container}>
       <View>
         <Text style={styles.headerText}>Notifications</Text>
-        <NotificationsRadioInput setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} />
+        <NotificationsRadioInput
+          setModalVisible={setModalVisible}
+        />
+
       </View>
-      <TouchableHighlight style={[styles.button, { backgroundColor: colors.indicators.red, width: '100%' }]} onPress={handleLogOut}>
+      <TouchableHighlight
+        style={[styles.button, { backgroundColor: colors.indicators.red, width: '30%' }]}
+        onPress={handleLogOut}>
         <Text style={styles.labelText}>Log out</Text>
       </TouchableHighlight>
-      <FeedbackModal modalVisible={modalVisible} setModalVisible={setModalVisible} notificationsActive={notificationsActive} setNotificationsActive={setNotificationsActive} styles={styles} />
-    </ScrollView >
+
+    </SafeAreaView>
 
   )
 }
@@ -66,7 +64,9 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 10,
-    marginBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10,
+    justifyContent: 'space-between',
+    marginBottom: Platform.OS === 'ios' ? bottomTabHeight * 1.5 : bottomTabHeight + 10,
+
   },
   headerText: {
     fontSize: 22,
@@ -79,9 +79,6 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     marginVertical: 5
   },
   inputContainer: {
-    borderWidth: 2,
-    borderBottomWidth: 2,
-    borderColor: '#757575',
     borderRadius: 5,
     backgroundColor: '#424242',
     color: 'white',
@@ -94,11 +91,10 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 7,
     alignSelf: 'flex-start',
-    borderWidth: 2,
-    borderColor: '#30363b',
     borderRadius: 10,
     marginTop: 20,
-    marginBottom: 10
+    marginBottom: 10,
+    alignItems: 'center'
   },
   centeredView: {
     flex: 1,
