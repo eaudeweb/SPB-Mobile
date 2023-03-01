@@ -42,6 +42,7 @@ export default function CompaniesScreen({ navigation }) {
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>{internshipsNumber} </Text>INTERNSHIPS</Text>,
     <Text style={styles.infoTextDescription}><Text style={styles.infoTextNumber}>{eventsNumber} </Text>EVENTS</Text>
   ]
+
   const handlePress = (company) => {
     const newFilters = {
       category: '',
@@ -93,7 +94,7 @@ export default function CompaniesScreen({ navigation }) {
             <View>
               <View style={styles.jumbotron}>
                 {/* TODO no magic numbers */}
-                <LoopText textArray={jumbotronTextArr} duration={1500} delay={200} />
+                <LoopText textArray={isLoading ? [] : jumbotronTextArr} duration={1500} delay={200} />
               </View>
               <View style={[styles.companiesWrapper, wrapperLoadingHeight()]}>
                 {isLoading ?

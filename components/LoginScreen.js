@@ -13,10 +13,11 @@ import { useIsFocused } from '@react-navigation/native';
 import jwtDecode from 'jwt-decode'
 import { getAllInternships } from '../features/internships/internshipsSlice'
 import { getAllPartnerCompanies } from '../features/companies/companiesSlice'
-import { getCategories } from '../features/filters/filtersSlice'
+import { filtersActions, getCategories } from '../features/filters/filtersSlice'
 import { getLocations } from '../features/filters/filtersSlice'
 import { getEvents } from '../features/events/eventsSlice'
 import * as Notifications from 'expo-notifications';
+import { getProfileData } from '../features/profile/profileSlice';
 
 function LoginScreen({ navigation, route }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
@@ -25,7 +26,6 @@ function LoginScreen({ navigation, route }) {
 
   const { isLoading, response } = useSelector(state => state.login)
   const { data } = useSelector(state => state.profile)
-  console.log(data)
   BackHandler.addEventListener('hardwareBackPress', () => {
     navigation.addListener("beforeRemove", (e) => {
       e.preventDefault();
@@ -40,11 +40,14 @@ function LoginScreen({ navigation, route }) {
     }
     return data
   }
-  useEffect(() => {
-    if (data.mobile_notifications === "on") {
-      dispatch(addNotificationToken(getNotificationTokenData()))
-    }
-  }, [data])
+
+  const clearedFilters = {
+    category: '',
+    location: '',
+    company: '',
+    search: ''
+  }
+
   useEffect(() => {
     if (response.token) {
       saveToken(response.token)
@@ -54,6 +57,8 @@ function LoginScreen({ navigation, route }) {
       dispatch(getCategories())
       dispatch(getLocations())
       dispatch(getEvents())
+      dispatch(getProfileData())
+      dispatch(filtersActions.updateFilterList(clearedFilters))
     } else if (response.email || response.password || response.non_field_errors) {
       Toast.show({
         type: 'error',
@@ -84,7 +89,6 @@ function LoginScreen({ navigation, route }) {
   }
   const handleAuth = async () => {
     dispatch(login(formData))
-
   }
   // //setting > disable notifications, instead of the company name internship add a select w companies
   return (

@@ -26,7 +26,7 @@ const getToken = async () => {
 const getRefreshedToken = async () => {
   try {
     const response = await fetch(
-      "https://staging.stagiipebune.ro/api/v1/token/refresh/",
+      "https://stagiipebune.ro/api/v1/token/refresh/",
       {
         method: 'POST',
         headers: {

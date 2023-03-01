@@ -17,7 +17,7 @@ export default function NewsMain({ navigation }) {
   }
   const NewsItem = ({ newsItem }) => {
     return (
-      <TouchableOpacity     >
+      <TouchableOpacity disabled={true}  >
         <View style={styles.newsItemWrap}>
           <View flexDirection={'row'} alignItems={'center'} marginBottom={5}>
             <Text style={styles.newsItemTitle}>{newsItem.title}</Text>

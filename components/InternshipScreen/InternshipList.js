@@ -10,9 +10,7 @@ export default function InternshipsList(props) {
   const styles = getStyles(useBottomTabBarHeight())
   const { sortedInternships } = useSelector(state => state.internships)
   const { internshipsFilter } = useSelector(state => state.filters)
-  useEffect(() => {
 
-  }, [internshipsFilter])
   return (
     <View style={styles.container}>
       {sortedInternships.length ?

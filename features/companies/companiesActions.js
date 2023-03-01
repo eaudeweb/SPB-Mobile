@@ -1,7 +1,7 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 
-const COMPANIES_URL = 'https://staging.stagiipebune.ro/api/v1/companies/all-companies/'
+const COMPANIES_URL = 'https://stagiipebune.ro/api/v1/companies/all-companies/'
 
 
 const getAllPartnerCompanies = async () => {

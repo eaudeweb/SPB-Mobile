@@ -1,10 +1,10 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 import moment from "moment";
-const ALL_INTERNSHIPS_URL = 'https://staging.stagiipebune.ro/api/v1/students/jobs/'
-const STUDENT_INTERNSHIPS_URL = 'https://staging.stagiipebune.ro/api/v1/me/jobs'
-const GET_APPLICATION_URL = (companyId, jobId, applicationType) => `https://staging.stagiipebune.ro/api/v1/companies/${companyId}/jobs/${jobId}/${applicationType}`
-const GET_STATUS_CHANGE_URL = (jobId, status) => `https://staging.stagiipebune.ro/api/v1/students/${jobId}/jobs/${status}/change_status`
+const ALL_INTERNSHIPS_URL = 'https://stagiipebune.ro/api/v1/students/jobs/'
+const STUDENT_INTERNSHIPS_URL = 'https://stagiipebune.ro/api/v1/me/jobs'
+const GET_APPLICATION_URL = (companyId, jobId, applicationType) => `https://stagiipebune.ro/api/v1/companies/${companyId}/jobs/${jobId}/${applicationType}`
+const GET_STATUS_CHANGE_URL = (jobId, status) => `https://stagiipebune.ro/api/v1/students/${jobId}/jobs/${status}/change_status`
 
 const getSortedInternships = (internships) => {
   //internships are sorted from old to new, grouped by company
@@ -79,8 +79,8 @@ const getInternshipsBySearch = async (params) => {
   const locationParam = location.name ? `&location=${location.slug}` : ''
   const searchParam = params.search ? `&search=${params.search}` : ''
   const URL = ALL_INTERNSHIPS_URL + '?' + companyParam + categoryParam + locationParam + searchParam
-  console.log(company)
-  console.log(URL)
+  // console.log(company)
+  // console.log(URL)
   const response = await axios.get(URL, {
     headers: {
       'Accept': 'application/json',

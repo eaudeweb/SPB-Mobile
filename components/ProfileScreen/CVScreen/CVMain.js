@@ -122,7 +122,7 @@ export default function CVMain() {
                 <Text style={[styles.infoText, { fontSize: font.size.s, color: '#F26649' }]}>{data.top_percentage}</Text>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 10 }}>
-                <Image source={{ uri: "https://staging.stagiipebune.ro/students/30106/photo/703d9b61effcb69e8337e6d09f1ff671.jpg" }} style={styles.avatar} />
+                <Image source={{ uri: data.picture }} style={styles.avatar} />
                 <View  >
                   <Text style={styles.nameText}>{data.user?.first_name} {data.user?.last_name}</Text>
                 </View>

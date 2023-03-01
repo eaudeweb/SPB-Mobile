@@ -19,6 +19,9 @@ import { loginActions } from '../features/login/loginSlice';
 import * as Notifications from 'expo-notifications';
 import { filtersActions } from '../features/filters/filtersSlice';
 import { getNews } from '../features/news/newsSlice';
+import { getProfileData } from '../features/profile/profileSlice';
+import { addNotificationToken } from '../features/login/loginSlice';
+import jwtDecode from 'jwt-decode';
 
 export default function LayoutScreen(props) {
   const insets = useSafeAreaInsets();
@@ -26,6 +29,8 @@ export default function LayoutScreen(props) {
   const dispatch = useDispatch()
   const internshipsData = useSelector(state => state.internships)
   const events = useSelector(state => state.events)
+  const { data } = useSelector(state => state.profile)
+  const { notificationToken } = useSelector(state => state.login)
   // const { isInternshipsLoading: isLoading, isRefreshLoading } = internshipsData
   // const { booking, isEventsLoading: loading } = useSelector(state => state.events)
   const responseListener = useRef();
@@ -56,6 +61,7 @@ export default function LayoutScreen(props) {
     dispatch(getCategories())
     dispatch(getLocations())
     dispatch(getEvents())
+    dispatch(getProfileData())
     dispatch(getNews())
     props.navigation.setOptions({ gestureEnabled: false });
   }, [])
@@ -68,7 +74,6 @@ export default function LayoutScreen(props) {
   })
 
   useEffect(() => {
-
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       const data = response.notification.request.content.data
       if (data.screen === 'jobs') {
@@ -96,7 +101,21 @@ export default function LayoutScreen(props) {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+  const getNotificationTokenData = async () => {
+    const authTokenExpiration = jwtDecode(await tokenLogic.getToken()).exp * 1000
+    const expo_token = (await Notifications.getExpoPushTokenAsync()).data
+    const data = {
+      expiry_date: new Date(authTokenExpiration).toISOString(),
+      expo_token: expo_token
+    }
+    return data
+  }
+  useEffect(() => {
+    if (data.mobile_notifications === 'on' && !notificationToken) {
+      dispatch(addNotificationToken(getNotificationTokenData()))
+    }
 
+  }, [data])
 
   return (
     <Tab.Navigator

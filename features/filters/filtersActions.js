@@ -1,8 +1,8 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 
-const LOCATIONS_URL = 'https://staging.stagiipebune.ro/api/v1/public/locations/'
-const CATEGORIES_URL = 'https://staging.stagiipebune.ro/api/v1/public/categories/'
+const LOCATIONS_URL = 'https://stagiipebune.ro/api/v1/public/locations/'
+const CATEGORIES_URL = 'https://stagiipebune.ro/api/v1/public/categories/'
 
 const getLocations = async () => {
   const response = await axios.get(LOCATIONS_URL, {

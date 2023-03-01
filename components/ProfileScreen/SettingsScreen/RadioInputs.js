@@ -46,9 +46,9 @@ const NotificationsRadioInput = (props) => {
 
   return (
     <View style={{ width: '100%' }}>
-      {notificationModalOptions?.map(option => {
+      {notificationModalOptions?.map((option, index) => {
         return (
-          <TouchableOpacity key={option.key} style={radioStyle.container} onPress={() => handleRadioPress(option)}>
+          <TouchableOpacity key={index} style={radioStyle.container} onPress={() => handleRadioPress(option)}>
             <View
               style={radioStyle.radioCircle}
             >

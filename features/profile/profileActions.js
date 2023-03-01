@@ -1,8 +1,8 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 
-const PROFILE_URL = 'https://staging.stagiipebune.ro/api/v1/me/profile/'
-const NOTIFICATION_URL = 'https://staging.stagiipebune.ro/api/v1/me/account/notifications'
+const PROFILE_URL = 'https://stagiipebune.ro/api/v1/me/profile/'
+const NOTIFICATION_URL = 'https://stagiipebune.ro/api/v1/me/account/notifications'
 
 const getProfileData = async () => {
   const response = await axios.get(PROFILE_URL, {

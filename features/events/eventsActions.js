@@ -1,8 +1,8 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 
-const EVENTS_URL = 'https://staging.stagiipebune.ro/api/v1/webinars/'
-const NEWS_URL = 'https://staging.stagiipebune.ro/api/v1/public/news/'
+const EVENTS_URL = 'https://stagiipebune.ro/api/v1/webinars/'
+const NEWS_URL = 'https://stagiipebune.ro/api/v1/public/news/'
 
 const getEvents = async () => {
   const response = await axios.get(`${EVENTS_URL}students`, {

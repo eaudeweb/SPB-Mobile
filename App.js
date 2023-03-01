@@ -9,8 +9,9 @@ import { store } from './store/store';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import LoadingScreen from './components/LoadingScreen';
-
+import { YellowBox } from 'react-native'
 export default function App() {
+  YellowBox.ignoreWarnings([""]);
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();

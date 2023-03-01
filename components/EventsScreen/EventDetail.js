@@ -17,8 +17,9 @@ export default function EventDetail({ props }) {
   const { isBookingSuccesful, isCancelSuccesful } = useSelector(state => state.events.booking)
   const { booking, isLoading } = useSelector(state => state.events)
   const [event, setEvent] = useState(route.params)
-  const url = 'https://staging.stagiipebune.ro'
-
+  const url = 'https://stagiipebune.ro'
+  // dispatch(unbookEventSeat(event.id))
+  // dispatch(updateLocalEvents({ id: event.id, new_reg_state: event.reg_state === 'pending' ? 'cancelledPending' : 'cancelled' }))
 
   useEffect(() => {
     const allEvents = [...events.upcoming, ...events.reserved, ...events.recordings]
@@ -37,7 +38,7 @@ export default function EventDetail({ props }) {
     setEvent({ ...event, reg_state: 'cancelled' })
     dispatch(unbookEventSeat(event.id))
     dispatch(getEvents())
-    // dispatch(updateLocalEvents({ id: event.id, new_reg_state: event.reg_state === 'pending' ? 'cancelledPending' : 'cancelled' }))
+
   }
 
   const getParticipantsIconColor = () => {

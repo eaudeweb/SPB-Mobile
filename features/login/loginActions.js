@@ -1,8 +1,8 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 
-const LOGIN_URL = 'https://staging.stagiipebune.ro/api/v1/token/general_auth'
-const NOTIFICATION_TOKEN_URL = "https://staging.stagiipebune.ro/api/v1/me/profile/mobile-tokens/"
+const LOGIN_URL = 'https://stagiipebune.ro/api/v1/token/general_auth'
+const NOTIFICATION_TOKEN_URL = "https://stagiipebune.ro/api/v1/me/profile/mobile-tokens/"
 
 const login = async (loginForm) => {
   const { email, password } = loginForm

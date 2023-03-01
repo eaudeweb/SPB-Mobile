@@ -12,6 +12,7 @@ import { filtersActions } from '../../features/filters/filtersSlice';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getInternshipsBySearch, refreshInternshipsBySearch } from '../../features/internships/internshipsSlice';
 import { eventsActions } from '../../features/events/eventsSlice';
+import { login } from '../../features/login/loginSlice';
 
 export default function InternshipMain(props) {
   const styles = getStyles(useBottomTabBarHeight())
@@ -21,13 +22,16 @@ export default function InternshipMain(props) {
   const [searchText, setSearchText] = useState(internshipsFilter.search)
   const [wasSearchUsed, setWasSearchUsed] = useState(false)
   const { internships, isLoading, isRefreshLoading } = useSelector(state => state.internships)
+  const { response } = useSelector(state => state.login)
   const { updateFilterList } = filtersActions
   const [currentFilters, setCurrentFilters] = useState(internshipsFilter)
 
   const onRefresh = () => {
     dispatch(refreshInternshipsBySearch(internshipsFilter))
   }
-
+  useEffect(() => {
+    setSearchText('')
+  }, [response])
   const updateSearch = (text) => {
     const newFilters = {
       ...internshipsFilter,
@@ -53,20 +57,29 @@ export default function InternshipMain(props) {
     const finalCategories = categories.filter(category => categoriesIds.includes(category.id))
     return finalCategories
   }
-
   const getAvailableLocations = (internships) => {
     const locationSlugs = []
     internships.forEach(internship => {
-      internship.location.forEach(location => {
-        if (locations.includes(location)) {
-        } else {
-          locationSlugs.push(location)
-        }
-      })
+      if (!locationSlugs.includes(internship.office_location)) {
+        locationSlugs.push(internship.office_location)
+      }
     })
     const finalLocations = locations.filter(location => locationSlugs.includes(location.slug))
     return finalLocations
   }
+  // const getAvailableLocations = (internships) => {
+  //   const locationSlugs = []
+  //   internships.forEach(internship => {
+  //      internship.location.forEach(location => {
+  //       if (locations.includes(location)) {
+  //       } else {
+  //         locationSlugs.push(location)
+  //       }
+  //     })
+  //   })
+  //   const finalLocations = locations.filter(location => locationSlugs.includes(location.slug))
+  //   return finalLocations
+  // }
   const getAvailableCompanies = (internships) => {
     const companiesArr = []
     internships.forEach(internship => {
@@ -99,7 +112,7 @@ export default function InternshipMain(props) {
 
     return filteredCompaniesArr
   }
-
+  useEffect
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView

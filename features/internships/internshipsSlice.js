@@ -148,7 +148,6 @@ export
         state.application.isWithdrawSuccess = false
         state.application.isError = false
         state.application.message = ''
-
       },
       getInternshipsByCompany: (state, { payload }) => {
         const filterInternships = internships.filter(internships => internships.company.name === payload)

@@ -112,13 +112,21 @@ export default function InternshipListItem({ navigation, internship, parentRoute
           <View style={styles.innerWrapper}>
             <Text style={styles.internshipTitle}>{internship.title}</Text>
             <View style={styles.detailsWrapper}>
+              <PaymentInformation is_paid={internship.is_paid} payment={internship.payment} />
+
               {swipeable ?
                 ''
                 :
                 <Text style={styles.detailsText}>{moment(internship.validated, "DD/mm/yyyy - hh:mm:ss").format('DD MMM')}</Text>
               }
-              <PaymentInformation is_paid={internship.is_paid} payment={internship.payment} />
-              <Text style={styles.detailsText}>{internship.office_location?.toUpperCase()}</Text>
+
+
+              {
+                internship.office_location ?
+                  <Text style={styles.detailsText}>{internship.office_location?.toUpperCase()}</Text>
+                  :
+                  ''
+              }
             </View>
             <Text style={styles.internshipCompany}>{internship.company.name}</Text>
             {/* moment(internship.validated, "DD/mm/yyyy - hh:mm:ss").format('DD MMM') */}
@@ -170,7 +178,6 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: colors.secondary.darkGrey,
     borderRadius: 10,
-    borderWidth: 2,
     borderColor: colors.secondary.darkGrey,
   },
   innerWrapper: {

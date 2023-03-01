@@ -19,12 +19,13 @@ import Toast from 'react-native-toast-message';
 import onShare from '../utils/shareFunction'
 import moment from 'moment'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
+import Markdown from 'react-native-markdown-display';
 
 export default function InternshipDetail({ route, navigation }) {
   const { application } = useSelector(state => state.internships)
   const [internship, setInternship] = useState(route.params.internship)
   const dispatch = useDispatch()
-  const base_url = 'https://staging.stagiipebune.ro'
+  const base_url = 'https://stagiipebune.ro'
   const [currentView, setCurrentView] = useState('description')
   const handleBarTouch = (view) => view === 'description' ? setCurrentView('description') : setCurrentView('about')
   const formatText = (text) => {
@@ -41,7 +42,7 @@ export default function InternshipDetail({ route, navigation }) {
       jobId: internship.id
     }
     // dispatch(updateLocalInternshipApplied(internship))
-    dispatch(getStudentInternships())
+    // dispatch(getStudentInternships())
 
     dispatch(applyToInternship(payload))
   }
@@ -95,7 +96,6 @@ export default function InternshipDetail({ route, navigation }) {
       return true
     }
   }
-  console.log(internship)
 
   const PaymentInformation = ({ is_paid, payment }) => {
     let text = ''
@@ -136,10 +136,15 @@ export default function InternshipDetail({ route, navigation }) {
           :
           ''
         }
-        <View flexDirection={'row'} marginVertical={5}>
-          <FaIcon name={'building'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
-          <Text style={[styles.jobDescription, { color: colors.secondary.lightGrey, marginHorizontal: 5 }]}>{internship.office_location.toUpperCase()}</Text>
-        </View>
+        {internship.office_location ?
+          <View flexDirection={'row'} marginVertical={5}>
+            <FaIcon name={'building'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
+            <Text style={[styles.jobDescription, { color: colors.secondary.lightGrey, marginHorizontal: 5 }]}>{internship.office_location?.toUpperCase()}</Text>
+          </View>
+          :
+          ''
+        }
+
         {/* {internship.is_paid ?
           <PaymentInformation is_paid={internship.is_paid} payment={internship.payment} />
           :
@@ -162,14 +167,22 @@ export default function InternshipDetail({ route, navigation }) {
           {
             currentView === 'description' ?
               <View>
-                <Text style={styles.jobDescription}>
+                {/* <Text style={styles.jobDescription}>
                   {formatText(internship.description)}
-                </Text>
+                </Text> */}
+                <Markdown style={markdownStyle} >
+                  {internship.description}
+                </Markdown>
+
               </View>
               :
-              <Text style={styles.jobDescription}>
-                {formatText(internship.company.description)}
-              </Text>}
+              <View>
+
+                <Markdown style={markdownStyle} >
+                  {internship.company.description}
+                </Markdown>
+              </View>
+          }
         </View>
       </ScrollView>
       <View style={styles.bottomButtonsWrapper}>
@@ -214,6 +227,23 @@ export default function InternshipDetail({ route, navigation }) {
   )
 }
 
+const markdownStyle = StyleSheet.create({
+  paragraph: {
+    color: colors.main.white,
+    fontSize: font.size.m
+  },
+  bullet_list: {
+    color: colors.main.accent,
+  },
+  strong: {
+    fontWeight: 'bold',
+    color: colors.main.accent,
+  },
+  heading1: {
+    color: colors.main.accent,
+    fontSize: font.size.l
+  }
+})
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 10,

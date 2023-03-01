@@ -1,7 +1,7 @@
 import axios from "axios";
 import tokenLogic from "../../utils/tokenLogic";
 
-const NEWS_URL = 'https://staging.stagiipebune.ro/api/v1/public/news/'
+const NEWS_URL = 'https://stagiipebune.ro/api/v1/public/news/'
 
 const getNews = async () => {
   const response = await axios.get(NEWS_URL, {
