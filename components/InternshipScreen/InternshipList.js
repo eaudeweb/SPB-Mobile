@@ -33,11 +33,14 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   companyTitle: {
     color: colors.main.accent,
     fontSize: font.size.l,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    fontFamily: "Basier Square Medium"
+
   },
   text: {
     color: colors.main.white,
     fontSize: font.size.m,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    fontFamily: "Basier Square Regular"
   }
 })

@@ -114,12 +114,13 @@ const styles = StyleSheet.create({
   title: {
     color: colors.main.white,
     fontSize: font.size.l,
-    fontWeight: font.fontWeight.bold
+    fontFamily: 'Basier Square Medium'
   },
   companyName: {
     color: colors.main.accent,
     fontSize: font.size.m,
-    fontWeight: font.fontWeight.xbold
+    fontFamily: 'Basier Square Medium',
+    marginTop: 2
   },
   timeInformationIcon: {
     size: font.size.m,
@@ -127,14 +128,15 @@ const styles = StyleSheet.create({
     marginRight: 5
   },
   timeInformationContainer: {
-    marginTop: 10,
+    marginTop: 5,
     flexDirection: 'row',
     alignItems: 'center',
   },
   timeInformationText: {
     color: colors.secondary.lightGrey,
     fontSize: font.size.s,
-    marginRight: 5
+    marginRight: 5,
+    fontFamily: 'Basier Square Regular'
   },
   seatingContainer: {
     marginTop: 5,
@@ -148,6 +150,8 @@ const styles = StyleSheet.create({
   seatingText: {
     color: colors.indicators.green,
     fontSize: font.size.s,
+    fontFamily: 'Basier Square Medium'
+
   },
   bookEventButton: {
     paddingHorizontal: 15,

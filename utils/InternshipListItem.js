@@ -13,7 +13,7 @@ export default function InternshipListItem({ navigation, internship, parentRoute
   const dispatch = useDispatch()
   const { animations } = useSelector(state => state)
   const { toggleAcceptedStatus, toggleInterviewStatus } = internshipsActions
-
+  const styles = getStyles(swipeable)
   const newRoute = parentRoute === 'InternshipMain' ? 'InternshipDetail' : 'ApplicationDetail';
   const swipeRef = React.useRef()
   const PaymentInformation = ({ is_paid, payment }) => {
@@ -173,12 +173,14 @@ export default function InternshipListItem({ navigation, internship, parentRoute
   )
 }
 
-const styles = StyleSheet.create({
+const getStyles = (swipeable) => StyleSheet.create({
   internshipWrapper: {
     margin: 10,
     backgroundColor: colors.secondary.darkGrey,
+    borderWidth: swipeable ? 2 : 0,
     borderRadius: 10,
     borderColor: colors.secondary.darkGrey,
+
   },
   innerWrapper: {
     paddingHorizontal: 10,
@@ -186,11 +188,15 @@ const styles = StyleSheet.create({
   },
   internshipTitle: {
     color: colors.main.white,
-    fontSize: font.size.l
+    fontSize: font.size.l,
+    fontFamily: 'Basier Square Medium',
+    marginBottom: 5
   },
   internshipCompany: {
     color: '#2991e3',
-    fontSize: 16
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Regular',
+    marginTop: 2
   },
   detailsWrapper: {
     flexDirection: 'row',
@@ -198,6 +204,7 @@ const styles = StyleSheet.create({
   },
   detailsText: {
     color: colors.secondary.lightGrey,
+    fontFamily: 'Basier Square Regular',
     marginRight: 5
   },
   applicantsLow: {

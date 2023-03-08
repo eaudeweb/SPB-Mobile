@@ -66,7 +66,8 @@ const components = StyleSheet.create({
     color: colors.main.accent,
     marginHorizontal: spacing.s,
     fontSize: font.size.xl,
-    fontWeight: font.fontWeight.bold,
+    fontFamily: 'Basier Square Bold'
+    // fontWeight: font.fontWeight.bold,
   }
 })
 

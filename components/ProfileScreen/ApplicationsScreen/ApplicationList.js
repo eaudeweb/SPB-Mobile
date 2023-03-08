@@ -76,7 +76,7 @@ export default function ApplicationList(props) {
       >
         <View style={{ margin: 10 }}>
           <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-between' }} onPress={() => setIsFilterCollapsed(!isFilterCollapsed)}>
-            <Text style={{ color: '#F26649', fontSize: 18 }}>Filter:</Text>
+            <Text style={{ color: '#F26649', fontSize: 18, fontFamily: "Basier Square Medium" }}>Filter:</Text>
             <Ionicon name={isFilterCollapsed ? 'chevron-down' : 'chevron-up'} size={26} color='#F26649' />
           </TouchableOpacity>
           <Collapsible collapsed={isFilterCollapsed}>
@@ -130,7 +130,8 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   filterButtonTextActive: {
     fontSize: font.size.m,
     color: colors.main.cappuccino,
-    marginRight: 5
+    marginRight: 5,
+    fontFamily: "Basier Square Medium"
   },
   filterButtonWrapper: {
     flexDirection: 'row',
@@ -146,7 +147,8 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   filterButtonText: {
     fontSize: font.size.m,
     color: colors.secondary.lightGrey,
-    marginRight: 5
+    marginRight: 5,
+    fontFamily: "Basier Square Medium"
   },
   companyTitle: {
     color: colors.main.accent,

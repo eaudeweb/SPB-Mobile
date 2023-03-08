@@ -53,7 +53,7 @@ export default function NewsMain({ navigation }) {
             <Loading />
             :
             news.length === 0 ?
-              <Text style={{ color: 'white' }}>No news yet</Text>
+              <Text style={[styles.newsItemText, { marginTop: 10 }]}>No news yet</Text>
               :
               <NewsList />
           }
@@ -77,17 +77,16 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     backgroundColor: colors.secondary.darkGrey,
     borderRadius: 5,
     marginVertical: 10,
-
     padding: 10
-
   },
   newsItemTitle: {
     color: colors.main.accent,
     fontSize: font.size.l,
-    fontWeight: 'bold',
+    fontFamily: 'Basier Square Medium'
   },
   newsItemText: {
     color: colors.main.white,
-    fontSize: font.size.m
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Regular'
   }
 })

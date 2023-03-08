@@ -107,6 +107,7 @@ const radioStyle = StyleSheet.create({
   radioText: {
     fontSize: 20,
     color: 'white',
+    fontFamily: 'Basier Square Medium'
   },
   radioCircle: {
     height: 20,

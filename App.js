@@ -10,8 +10,10 @@ import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import LoadingScreen from './components/LoadingScreen';
 import { YellowBox } from 'react-native'
+import { useFonts } from 'expo-font';
+
 export default function App() {
-  YellowBox.ignoreWarnings([""]);
+  // YellowBox.ignoreWarnings([""]);
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
@@ -24,6 +26,11 @@ export default function App() {
       background: '#131111',
     },
   };
+  const [fontsLoaded] = useFonts({
+    'Basier Square Regular': require('./assets/fonts/basiersquare-regular-webfont.ttf'),
+    'Basier Square Medium': require('./assets/fonts/basiersquare-medium-webfont.ttf'),
+    'Basier Square Bold': require('./assets/fonts/basiersquare-bold-webfont.ttf')
+  });
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -31,6 +38,7 @@ export default function App() {
       shouldSetBadge: false
     })
   })
+
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -78,6 +86,10 @@ export default function App() {
       trigger: { seconds: 1 },
     });
   }
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <Provider store={store}>
       <NavigationContainer theme={CustomDarkTheme}>

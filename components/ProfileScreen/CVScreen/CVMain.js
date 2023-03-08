@@ -29,7 +29,7 @@ export default function CVMain() {
             <Text style={[styles.infoText, styles.categoryText]}>{categoryName}:</Text>
           </View>
           <View style={categoryStyle.textListWrap}>
-            {category?.map((item, index) => <Text key={index} style={{ flexWrap: 'wrap', color: 'white', }}>{item}{category.length - 1 === index ? '' : ', '}</Text>)}
+            {category?.map((item, index) => <Text key={index} style={styles.infoText}>{item}{category.length - 1 === index ? '' : ', '}</Text>)}
           </View>
         </View>
       </View>
@@ -123,7 +123,7 @@ export default function CVMain() {
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginBottom: 10 }}>
                 <Image source={{ uri: data.picture }} style={styles.avatar} />
-                <View  >
+                <View style={{ maxWidth: '70%' }}>
                   <Text style={styles.nameText}>{data.user?.first_name} {data.user?.last_name}</Text>
                 </View>
               </View>
@@ -148,7 +148,7 @@ export default function CVMain() {
                       <Text style={[styles.infoText, styles.categoryText]}>Hobbies::</Text>
                     </View>
                     <View style={categoryStyle.textListWrap}>
-                      <Text style={{ color: 'white', }}>{data.hobbies} </Text>
+                      <Text style={styles.infoText}>{data.hobbies} </Text>
                     </View>
                   </View>
                 </View>
@@ -162,7 +162,7 @@ export default function CVMain() {
                       <Text style={[styles.infoText, styles.categoryText]}>Prefered classes:</Text>
                     </View>
                     <View style={categoryStyle.textListWrap}>
-                      <Text style={{ color: 'white', }}>{data.prefered_courses} </Text>
+                      <Text style={styles.infoText}>{data.prefered_courses} </Text>
                     </View>
                   </View>
                 </View>
@@ -247,10 +247,10 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
 
   },
   nameText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: font.size.l,
     color: 'white',
-    marginBottom: 5
+    marginBottom: 5,
+    fontFamily: 'Basier Square Medium'
   },
   textWrap: {
     flexDirection: 'row',
@@ -259,8 +259,8 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     flex: 2
   },
   categoryText: {
-    fontWeight: font.fontWeight.xbold,
-    color: colors.main.accent
+    fontFamily: 'Basier Square Bold',
+    color: colors.main.accent,
   },
   infoWrap: {
     marginTop: 20,
@@ -270,18 +270,19 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   },
   infoTextBold: {
     color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold'
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Bold',
   },
   infoText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Regular',
   },
   quotationMark: {
-    color: '#cccccc',
-    fontSize: 30,
-    fontWeight: 'bold',
+    color: colors.main.white,
+    fontSize: font.size.xl,
     flex: 1,
     textAlign: 'center',
+    fontFamily: 'Basier Square Bold',
   }
 })

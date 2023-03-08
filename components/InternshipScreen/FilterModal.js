@@ -179,6 +179,9 @@ const styles = StyleSheet.create({
   modalTitle: {
     color: colors.main.accent,
     fontSize: font.size.l,
+    fontFamily: 'Basier Square Regular',
+    marginBottom: 5
+
   },
   optionWrapper: {
     paddingHorizontal: 10,
@@ -187,6 +190,7 @@ const styles = StyleSheet.create({
   optionText: {
     color: colors.secondary.lightGrey,
     fontSize: font.size.l,
+    fontFamily: 'Basier Square Regular'
   },
   optionWrapperSelected: {
     paddingHorizontal: 10,
@@ -200,16 +204,19 @@ const styles = StyleSheet.create({
   optionTextSelected: {
     color: colors.main.white,
     fontSize: font.size.l,
+    fontFamily: 'Basier Square Medium'
+
   },
   saveButton: {
     backgroundColor: colors.indicators.green,
     padding: 10,
-    marginTop: 10,
-    marginBottom: 10,
+    marginVertical: 10,
     borderRadius: 5
   },
   buttonText: {
     color: colors.main.white,
-    fontSize: 16
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Medium'
+
   }
 })

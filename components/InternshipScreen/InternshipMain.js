@@ -67,19 +67,7 @@ export default function InternshipMain(props) {
     const finalLocations = locations.filter(location => locationSlugs.includes(location.slug))
     return finalLocations
   }
-  // const getAvailableLocations = (internships) => {
-  //   const locationSlugs = []
-  //   internships.forEach(internship => {
-  //      internship.location.forEach(location => {
-  //       if (locations.includes(location)) {
-  //       } else {
-  //         locationSlugs.push(location)
-  //       }
-  //     })
-  //   })
-  //   const finalLocations = locations.filter(location => locationSlugs.includes(location.slug))
-  //   return finalLocations
-  // }
+
   const getAvailableCompanies = (internships) => {
     const companiesArr = []
     internships.forEach(internship => {
@@ -87,8 +75,6 @@ export default function InternshipMain(props) {
         companiesArr.push({ name: internship.company.name, id: internship.company.id })
       }
     })
-    // const mainPartnerCompanies = companies.filter(company => company.status === 2)
-    // const regularPartners = companies.filter(company => company.status === 1)
     //TODO REVISIT THIS AND REFACTOR TO A MORE EFFICIENT SOLUTION
     const filteredCompaniesArr = []
     companies.mainPartners?.forEach(partnerCompany => {
@@ -181,6 +167,7 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     backgroundColor: '#424242',
   },
   inputStyle: {
-    color: colors.secondary.lightGrey
+    color: colors.secondary.lightGrey,
+    fontFamily: 'Basier Square Regular'
   }
 })

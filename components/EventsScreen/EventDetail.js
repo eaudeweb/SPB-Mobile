@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getEvents } from '../../features/events/eventsSlice'
 
 export default function EventDetail({ props }) {
-  const { updateLocalEvents } = eventsActions
   const dispatch = useDispatch()
   const [modalVisible, setModalVisible] = useState(false)
   const { navigation, route } = props
@@ -18,13 +17,14 @@ export default function EventDetail({ props }) {
   const { booking, isLoading } = useSelector(state => state.events)
   const [event, setEvent] = useState(route.params)
   const url = 'https://stagiipebune.ro'
-  // dispatch(unbookEventSeat(event.id))
-  // dispatch(updateLocalEvents({ id: event.id, new_reg_state: event.reg_state === 'pending' ? 'cancelledPending' : 'cancelled' }))
 
   useEffect(() => {
-    const allEvents = [...events.upcoming, ...events.reserved, ...events.recordings]
-    const event = allEvents.find(event => event.id === route.params.id)
-    setEvent(event)
+    const allEvents = [...events?.upcoming, ...events?.reserved, ...events?.recordings]
+    const event = allEvents?.find(event => event.id === route.params.id)
+    if (event) {
+      setEvent(event)
+    }
+    // alert('event changed')
   }, [events])
   //TODO Upon loading event get event id from route.params and match it with the evens stored in redux
   const handleSeatBooking = () => {
@@ -38,7 +38,6 @@ export default function EventDetail({ props }) {
     setEvent({ ...event, reg_state: 'cancelled' })
     dispatch(unbookEventSeat(event.id))
     dispatch(getEvents())
-
   }
 
   const getParticipantsIconColor = () => {
@@ -83,24 +82,22 @@ export default function EventDetail({ props }) {
       <ScrollView  >
         <Image source={{ uri: url + event.image }} style={styles.headerImage} />
         <Text style={styles.eventTitle}>{event.title}</Text>
-        <View style={styles.iconWrapper}>
+        <View style={styles.infoWrapper}>
           <FaIcon name={'calendar-alt'} style={styles.icon} />
-          <Text style={{ color: colors.secondary.lightGrey }}>{event.starts_at}</Text>
+          <Text style={styles.infoText}>{event.starts_at}</Text>
         </View>
-        <View style={styles.iconWrapper}>
+        <View style={styles.infoWrapper}>
           <FaIcon name={'map-marker'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
-          <Text style={{ color: colors.secondary.lightGrey }}>{event.location}</Text>
+          <Text style={styles.infoText}>{event.location}</Text>
         </View>
         {event.panelists ?
-          <View style={styles.iconWrapper}>
+          <View style={styles.infoWrapper}>
             <FaIcon name={'bullhorn'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
             <Text style={{ color: colors.main.accent, fontSize: font.size.m }}>{event.panelists}</Text>
           </View>
           :
           ''
         }
-
-
         <View>
           <Text style={styles.eventDescription}>{event.description}</Text>
         </View>
@@ -117,7 +114,7 @@ export default function EventDetail({ props }) {
           }
         </View>
         <View width={'25%'}>
-          <View style={styles.iconWrapper}>
+          <View style={styles.infoWrapper}>
             <FaIcon name={'users'} style={styles.icon} />
             <Text style={getParticipantsIconColor()}>{event.accepted}</Text>
             <Text style={getParticipantsIconColor()}> / {event.participant_limit}</Text>
@@ -131,7 +128,6 @@ export default function EventDetail({ props }) {
 const styles = StyleSheet.create({
   container: {
     paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-    marginHorizontal: 10,
     flex: 1,
   },
   headerImage: {
@@ -144,16 +140,22 @@ const styles = StyleSheet.create({
   },
   eventTitle: {
     color: colors.main.white,
-    fontSize: font.size.xl,
-    fontWeight: 'bold',
+    fontSize: font.size.l,
+    // fontWeight: 'bold',
+    fontFamily: 'Basier Square Medium',
+    marginBottom: 10
   },
   eventDescription: {
     color: colors.main.white,
     fontSize: font.size.m,
+    fontFamily: 'Basier Square Regular',
+    marginTop: 5
   },
   text: {
     color: colors.main.white,
-    fontSize: font.size.m
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Regular'
+
   },
   bookEventButton: {
     paddingHorizontal: 25,
@@ -193,16 +195,20 @@ const styles = StyleSheet.create({
   bottomButtonText: {
     color: colors.main.accent,
     fontSize: font.size.m,
-    fontWeight: font.fontWeight.bold,
     textAlign: 'center',
+    fontFamily: 'Basier Square Medium'
   },
-  iconWrapper: {
+  infoWrapper: {
     flexDirection: 'row',
-    marginVertical: 2
+    marginVertical: 3
   },
   icon: {
     marginRight: 10,
     fontSize: font.size.m,
+    color: colors.secondary.lightGrey
+  },
+  infoText: {
+    fontFamily: 'Basier Square Regular',
     color: colors.secondary.lightGrey
   }
 })

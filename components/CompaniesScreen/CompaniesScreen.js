@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   infoTextDescription: {
     color: colors.main.accent,
     fontSize: font.size.xl,
-    fontWeight: font.fontWeight.bold
+    fontFamily: 'Basier Square Medium'
   },
   infoTextNumber: {
     color: colors.secondary.cream,

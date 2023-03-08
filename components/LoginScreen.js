@@ -22,8 +22,6 @@ import { getProfileData } from '../features/profile/profileSlice';
 function LoginScreen({ navigation, route }) {
   const customWidth = Dimensions.get('window').width - (spacing.xl * 2)
   const dispatch = useDispatch()
-  const isFocused = useIsFocused();
-
   const { isLoading, response } = useSelector(state => state.login)
   const { data } = useSelector(state => state.profile)
   BackHandler.addEventListener('hardwareBackPress', () => {
@@ -47,7 +45,6 @@ function LoginScreen({ navigation, route }) {
     company: '',
     search: ''
   }
-
   useEffect(() => {
     if (response.token) {
       saveToken(response.token)
@@ -90,6 +87,7 @@ function LoginScreen({ navigation, route }) {
   const handleAuth = async () => {
     dispatch(login(formData))
   }
+
   // //setting > disable notifications, instead of the company name internship add a select w companies
   return (
     <KeyboardAwareScrollView contentContainerStyle={{ minHeight: '100%' }} bounces={false}>
@@ -164,7 +162,9 @@ const styles = StyleSheet.create({
     fontSize: font.size.xxl,
     fontWeight: font.fontWeight.xbold,
     letterSpacing: 1.5,
-    lineHeight: 45
+    lineHeight: 45,
+    // fontFamily: 'Basier Square Bold'
+
   },
   loginButton: {
     width: '100%',
@@ -176,7 +176,8 @@ const styles = StyleSheet.create({
     fontSize: font.size.xl,
     fontWeight: font.fontWeight.xbold,
     paddingVertical: 5,
-    textAlign: 'center'
+    textAlign: 'center',
+
   },
   inputWrapper: {
     backgroundColor: colors.secondary.mediumGrey,

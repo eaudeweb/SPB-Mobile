@@ -12,8 +12,9 @@ import { eventsActions } from '../../../features/events/eventsSlice'
 import { profileActions } from '../../../features/profile/profileSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import tokenLogic from '../../../utils/tokenLogic'
-import { colors } from '../../../styles/globalStyle'
+import { colors, font } from '../../../styles/globalStyle'
 import { deleteNotificationToken } from '../../../features/login/loginSlice'
+import { color } from 'react-native-reanimated'
 
 export default function SettingsMain({ navigation, rootNavigation }) {
   const [modalVisible, setModalVisible] = useState(false)
@@ -47,7 +48,6 @@ export default function SettingsMain({ navigation, rootNavigation }) {
         <NotificationsRadioInput
           setModalVisible={setModalVisible}
         />
-
       </View>
       <TouchableHighlight
         style={[styles.button, { backgroundColor: colors.indicators.red, width: '30%' }]}
@@ -69,14 +69,15 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
 
   },
   headerText: {
-    fontSize: 22,
-    color: 'white',
-    marginVertical: 15
+    fontSize: font.size.l,
+    color: colors.main.white,
+    marginVertical: 10
   },
   labelText: {
     color: 'white',
-    fontSize: 16,
-    marginVertical: 5
+    fontSize: font.size.m,
+    marginVertical: 5,
+    fontFamily: 'Basier Square Medium'
   },
   inputContainer: {
     borderRadius: 5,
@@ -94,7 +95,7 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     marginBottom: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   centeredView: {
     flex: 1,
@@ -109,10 +110,9 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
     paddingVertical: 16
   },
   textStyle: {
-    color: "white",
-    fontWeight: "bold",
+    color: colors.main.white,
     textAlign: "center",
-    fontSize: 20
+    fontFamily: 'Basier Square Bold'
   },
   saveButton: {
     backgroundColor: '#4CAF50',

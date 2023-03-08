@@ -65,18 +65,19 @@ const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
     marginBottom: Platform.OS === 'ios' ? bottomTabHeight * 1.5 : bottomTabHeight + 10,
-    marginHorizontal: 10
   },
   sectionHeader: {
     color: colors.main.accent,
     marginHorizontal: spacing.s,
     fontSize: font.size.l,
-    fontWeight: font.fontWeight.bold,
-    marginVertical: 10
+    marginVertical: 10,
+    fontFamily: 'Basier Square Bold'
   },
   text: {
     color: colors.main.white,
     fontSize: font.size.m,
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    fontFamily: 'Basier Square Regular'
+
   }
 })

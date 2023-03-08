@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   filterDescriptionText: {
-    color: colors.secondary.lightGrey
+    color: colors.secondary.lightGrey,
+    fontFamily: 'Basier Square Regular'
   },
   filterContainer: {
     flexDirection: 'row',
@@ -133,11 +134,14 @@ const styles = StyleSheet.create({
   },
   filterText: {
     fontSize: font.size.m,
-    color: colors.secondary.lightGrey
+    color: colors.secondary.lightGrey,
+    fontFamily: 'Basier Square Regular'
+
   },
   filterTextActive: {
     fontSize: font.size.m,
-    color: colors.main.cappuccino
+    color: colors.main.cappuccino,
+    fontFamily: 'Basier Square Regular'
   },
   filterNumberCounter: {
     width: 22,

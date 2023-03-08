@@ -28,14 +28,7 @@ export default function InternshipDetail({ route, navigation }) {
   const base_url = 'https://stagiipebune.ro'
   const [currentView, setCurrentView] = useState('description')
   const handleBarTouch = (view) => view === 'description' ? setCurrentView('description') : setCurrentView('about')
-  const formatText = (text) => {
-    const regex = /\*{2}(.*?)\*{2}/g
-    const spaceRegex = /\#{2}/g
-    const spaceRepllacementFunction = (match, index) => <Text>{'\n'}</Text>
-    const replacementFunction = (match, index) => <Text style={{ fontWeight: font.fontWeight.xbold, color: colors.main.accent }} key={index}>{match}</Text>;
-    const boldText = reactStringReplace(text, regex, replacementFunction)
-    return reactStringReplace(boldText, spaceRegex, spaceRepllacementFunction)
-  }
+
   const handleApplyPress = () => {
     const payload = {
       companyId: internship.company.id,
@@ -64,7 +57,7 @@ export default function InternshipDetail({ route, navigation }) {
         text1: 'Applied successfully',
       });
 
-      setInternship({ ...internship, applied: new Date() })
+      setInternship({ ...internship, applied: new Date().toString() })
       dispatch(updateLocalInternshipApplied(internship))
       dispatch(updateLocalApplicationsApplied(internship))
     }
@@ -167,9 +160,6 @@ export default function InternshipDetail({ route, navigation }) {
           {
             currentView === 'description' ?
               <View>
-                {/* <Text style={styles.jobDescription}>
-                  {formatText(internship.description)}
-                </Text> */}
                 <Markdown style={markdownStyle} >
                   {internship.description}
                 </Markdown>
@@ -213,14 +203,19 @@ export default function InternshipDetail({ route, navigation }) {
                 ''
           }
         </View>
-        <View width={'30%'}>
-          <TouchableHighlight style={styles.bottomButton} onPress={() => onShare(base_url + internship.url)}>
-            <View flexDirection={'row'} alignItems={'center'}>
-              <Text style={[styles.bottomButtonText, { marginRight: 10, color: colors.secondary.lightGrey }]}>Share</Text>
-              <Ionicon name="send" size={16} color={colors.secondary.lightGrey} />
-            </View>
-          </TouchableHighlight>
-        </View>
+        {internship.url ?
+          <View width={'30%'}>
+            <TouchableHighlight style={styles.bottomButton} onPress={() => onShare(base_url + internship.url)}>
+              <View flexDirection={'row'} alignItems={'center'}>
+                <Text style={[styles.bottomButtonText, { marginRight: 10, color: colors.secondary.lightGrey }]}>Share</Text>
+                <Ionicon name="send" size={16} color={colors.secondary.lightGrey} />
+              </View>
+            </TouchableHighlight>
+          </View>
+          :
+          ''
+        }
+
       </View >
       <Toast />
     </View >
@@ -230,18 +225,31 @@ export default function InternshipDetail({ route, navigation }) {
 const markdownStyle = StyleSheet.create({
   paragraph: {
     color: colors.main.white,
-    fontSize: font.size.m
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Regular'
   },
   bullet_list: {
-    color: colors.main.accent,
+    color: colors.main.white,
+    fontSize: font.size.m,
   },
   strong: {
-    fontWeight: 'bold',
     color: colors.main.accent,
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Bold',
   },
   heading1: {
     color: colors.main.accent,
-    fontSize: font.size.l
+    fontSize: font.size.l,
+    fontFamily: 'Basier Square Medium'
+  },
+  heading2: {
+    color: colors.main.accent,
+    fontFamily: 'Basier Square Medium'
+  },
+  heading3: {
+    color: colors.main.accent,
+    fontFamily: 'Basier Square Medium',
+
   }
 })
 const styles = StyleSheet.create({
@@ -278,16 +286,15 @@ const styles = StyleSheet.create({
   },
   internshipTitle: {
     color: 'white',
-    fontSize: font.size.l
-  },
-  internshipCompany: {
-    color: '#2991e3',
-    fontSize: 16
+    fontSize: font.size.l,
+    fontFamily: 'Basier Square Medium'
+
   },
   jobDescription: {
     color: 'white',
     lineHeight: font.size.m + 1,
-    fontSize: font.size.m
+    fontSize: font.size.m,
+    fontFamily: 'Basier Square Regular'
   },
   tab: {
     backgroundColor: colors.secondary.mediumGrey,
@@ -300,7 +307,7 @@ const styles = StyleSheet.create({
   tabText: {
     color: colors.secondary.lightGrey,
     fontSize: font.size.m,
-    fontWeight: font.fontWeight.bold
+    fontFamily: 'Basier Square Medium'
   },
   activeTab: {
     backgroundColor: colors.buttonBackground.orange,
@@ -313,7 +320,7 @@ const styles = StyleSheet.create({
   activeTabText: {
     color: colors.main.cappuccino,
     fontSize: font.size.m,
-    fontWeight: font.fontWeight.bold
+    fontFamily: 'Basier Square Bold'
   },
   bottomButtonsWrapper: {
     flexDirection: 'row',
@@ -333,7 +340,7 @@ const styles = StyleSheet.create({
   bottomButtonText: {
     color: colors.main.accent,
     fontSize: font.size.m,
-    fontWeight: font.fontWeight.bold,
+    fontFamily: 'Basier Square Medium',
     textAlign: 'center',
   }
 })

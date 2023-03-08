@@ -45,7 +45,6 @@ const getStyles = (displayTabBar) => StyleSheet.create({
     flexDirection: 'row',
     display: displayTabBar ? 'flex' : 'none'
   },
-
   tab: {
     backgroundColor: colors.secondary.mediumGrey,
     borderRadius: 5,
@@ -57,7 +56,7 @@ const getStyles = (displayTabBar) => StyleSheet.create({
   tabText: {
     color: colors.secondary.lightGrey,
     fontSize: font.size.m,
-    fontWeight: font.fontWeight.bold
+    fontFamily: 'Basier Square Medium'
   },
   activeTab: {
     backgroundColor: colors.buttonBackground.orange,
@@ -70,7 +69,7 @@ const getStyles = (displayTabBar) => StyleSheet.create({
   activeTabText: {
     color: colors.main.cappuccino,
     fontSize: font.size.m,
-    fontWeight: font.fontWeight.bold
+    fontFamily: 'Basier Square Medium'
   }
 })
 

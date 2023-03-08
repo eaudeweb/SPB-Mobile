@@ -181,7 +181,7 @@ export
       updateLocalInternshipApplied: (state, { payload }) => {
         const companyIndex = state.sortedInternships.map(obj => obj.companyName).indexOf(payload.company.name)
         const internshipIndex = state.sortedInternships[companyIndex].internships.findIndex(internship => internship.id == payload.id)
-        state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = new Date()]
+        state.sortedInternships = [...state.sortedInternships, state.sortedInternships[companyIndex].internships[internshipIndex].applied = new Date().toString()]
       },
       updateLocalInternshipWithdrew: (state, { payload }) => {
         const companyIndex = current(state.sortedInternships).map(obj => obj.companyName).indexOf(payload.company.name)
@@ -191,7 +191,7 @@ export
       updateLocalApplicationsApplied: (state, { payload }) => {
         const internship = {
           ...payload,
-          applied: new Date()
+          applied: new Date().toString()
         }
         state.studentInternships = [...state.studentInternships, internship]
       },
