@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, View, Text, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { StyleSheet, Image, View, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import {
@@ -107,7 +107,7 @@ export default function InternshipDetail({ route, navigation }) {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View marginBottom={10}>
         <TouchableHighlight style={styles.backButtonWrapper} onPress={() => navigation.goBack()}>
           <Ionicon name="chevron-back" size={26} style={styles.backButton} />
@@ -131,8 +131,8 @@ export default function InternshipDetail({ route, navigation }) {
         }
         {internship.office_location ?
           <View flexDirection={'row'} marginVertical={5}>
-            <FaIcon name={'building'} style={[styles.icon, { color: colors.secondary.lightGrey }]} />
             <Text style={[styles.jobDescription, { color: colors.secondary.lightGrey, marginHorizontal: 5 }]}>{internship.office_location?.toUpperCase()}</Text>
+            {/* <FaIcon name={'building'} style={[styles.icon, { color: colors.secondary.lightGrey }]} /> */}
           </View>
           :
           ''
@@ -218,7 +218,7 @@ export default function InternshipDetail({ route, navigation }) {
 
       </View >
       <Toast />
-    </View >
+    </SafeAreaView >
   )
 }
 

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Stagii pe Bune",
     "slug": "StagiiPeBune",
-    "version": "1.1",
+    "version": "1.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -19,11 +19,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.StagiiPeBune",
-      "build": 2
+      "build": 3
     },
     "android": {
       "package": "com.StagiiPeBune",
-      "versionCode": 9,
+      "versionCode": 10,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

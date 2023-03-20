@@ -6,16 +6,21 @@ import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StyleSheet } from 'react-native'
 import { colors } from '../../styles/globalStyle'
+import { useDispatch } from 'react-redux';
+import { eventsActions } from '../../features/events/eventsSlice';
 
 export default function EventsScreen({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const styles = getStyles(insets)
   const Stack = createStackNavigator();
+  const dispatch = useDispatch()
+
   useEffect(() => {
     const routeName = getFocusedRouteNameFromRoute(route);
     if (routeName === "EventDetail") {
       navigation.setOptions({ tabBarStyle: { display: 'none' } });
     } else {
+      dispatch(eventsActions.resetBookingStatus())
       navigation.setOptions({ tabBarStyle: styles.tabBar });
     }
   }, [navigation, route])

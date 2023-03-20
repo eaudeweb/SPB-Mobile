@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, TouchableHighlight, Text, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, TouchableHighlight, Text } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import { colors, font } from '../styles/globalStyle'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
@@ -15,13 +15,8 @@ const EventListItem = ({ event, props }) => {
   const { navigation } = props
   const dispatch = useDispatch()
 
-  // const handleSeatBooking = () => {
-  //   dispatch(bookEventSeat(event.id))
-  //   dispatch(updateLocalEvents({ id: event.id, newQueue: 'reserved' }))
-  // }
   const handleSeatUnbooking = () => {
-    dispatch(unbookEventSeat(event.id))
-    dispatch(updateLocalEvents({ id: event.id, new_reg_state: event.reg_state === 'pending' ? 'cancelledPending' : 'cancelled' }))
+    dispatch(unbookEventSeat({ id: event.id, reg_state: event.reg_state }))
   }
 
   const ActionButton = () => {
@@ -36,7 +31,6 @@ const EventListItem = ({ event, props }) => {
         <TouchableHighlight style={[styles.bookEventButton, { backgroundColor: colors.secondary.mediumGrey }]} onPress={() => handleSeatUnbooking()}>
           <Text style={[styles.buttonText, { color: colors.indicators.orange }]}>Withdraw </Text>
         </TouchableHighlight>
-
       )
     } else {
       return ''
@@ -87,9 +81,7 @@ const EventListItem = ({ event, props }) => {
               <ActionButton />
             </View>
           </View>
-
         </View>
-
       </View>
     </TouchableHighlight>
   )
@@ -99,7 +91,8 @@ const styles = StyleSheet.create({
   eventContainer: {
     backgroundColor: colors.secondary.darkGrey,
     borderRadius: 10,
-    marginVertical: 10
+    marginVertical: 10,
+    marginHorizontal: 10
   },
   innerContainer: {
     padding: 10,
@@ -175,8 +168,7 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 20
-  },
-
+  }
 })
 
 export default EventListItem

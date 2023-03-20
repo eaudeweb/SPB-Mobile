@@ -25,26 +25,18 @@ const bookEventSeat = async (eventId) => {
   return response.data
 }
 
-const unbookEventSeat = async (eventId) => {
-  const URL = `${EVENTS_URL}${eventId}/unregister`;
+const unbookEventSeat = async (eventData) => {
+  const URL = `${EVENTS_URL}${eventData.id}/unregister`;
   const response = await axios.post(URL, {
     headers: {
       "X-CSRFToken": await tokenLogic.getToken(),
     }
   })
-  return response.data
+  //we return the event id to update the state locally after withdrawing
+  return eventData
 }
 
-const getNews = async () => {
-  const response = await axios.get(NEWS_URL, {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json; charset=UTF-8',
-      "X-CSRFToken": await tokenLogic.getToken(),
-    }
-  })
-  return response.data
-}
+
 const eventsService = {
   getEvents,
   bookEventSeat,

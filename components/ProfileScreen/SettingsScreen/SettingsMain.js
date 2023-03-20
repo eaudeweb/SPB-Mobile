@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import tokenLogic from '../../../utils/tokenLogic'
 import { colors, font } from '../../../styles/globalStyle'
 import { deleteNotificationToken } from '../../../features/login/loginSlice'
-import { color } from 'react-native-reanimated'
 
 export default function SettingsMain({ navigation, rootNavigation }) {
   const [modalVisible, setModalVisible] = useState(false)

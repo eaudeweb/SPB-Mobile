@@ -222,7 +222,7 @@ const categoryStyle = StyleSheet.create({
 const getStyles = (bottomTabHeight) => StyleSheet.create({
   container: {
     marginHorizontal: 10,
-    paddingBottom: Platform.OS === 'ios' ? bottomTabHeight : bottomTabHeight + 10
+    paddingBottom: Platform.OS === 'ios' ? 0 : bottomTabHeight + 10
   },
   cvWrap: {
     borderWidth: 2,

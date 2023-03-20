@@ -4,7 +4,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import NotificationsModal from '../../utils/NotificationsModal'
 import { colors, font } from '../../styles/globalStyle'
 import FaIcon from 'react-native-vector-icons/FontAwesome5'
-import { bookEventSeat, eventsActions, unbookEventSeat } from '../../features/events/eventsSlice'
+import { bookEventSeat, eventsActions, unbookEventSeat, updateLocalEvents } from '../../features/events/eventsSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { getEvents } from '../../features/events/eventsSlice'
 
@@ -24,20 +24,14 @@ export default function EventDetail({ props }) {
     if (event) {
       setEvent(event)
     }
-    // alert('event changed')
   }, [events])
+
   //TODO Upon loading event get event id from route.params and match it with the evens stored in redux
   const handleSeatBooking = () => {
-    let newRegState = event.accepted === event.participant_limit ? 'pending' : 'accepted'
-    setEvent({ ...event, reg_state: newRegState })
     dispatch(bookEventSeat(event.id))
-    dispatch(getEvents())
-    // dispatch(updateLocalEvents({ id: event.id, new_reg_state: newRegState }))
   }
   const handleSeatUnbooking = () => {
-    setEvent({ ...event, reg_state: 'cancelled' })
-    dispatch(unbookEventSeat(event.id))
-    dispatch(getEvents())
+    dispatch(unbookEventSeat({ id: event.id, reg_state: event.reg_state }))
   }
 
   const getParticipantsIconColor = () => {
@@ -52,13 +46,15 @@ export default function EventDetail({ props }) {
     }
   }
   const ActionButton = () => {
-    if (event.reg_state === 'accepted') {
+    let eventStatus
+    booking.status ? eventStatus = booking.status : eventStatus = event.reg_state
+    if (eventStatus === 'accepted') {
       return (
         <TouchableHighlight style={styles.bottomButton} onPress={() => handleSeatUnbooking()}>
           <Text style={[styles.bottomButtonText, { color: colors.main.cappuccino }]}>Withdraw</Text>
         </TouchableHighlight>
       )
-    } else if (event.reg_state === 'pending') {
+    } else if (eventStatus === 'pending') {
       return (
         <TouchableHighlight style={[styles.bottomButton, { backgroundColor: colors.secondary.mediumGrey }]} onPress={() => handleSeatUnbooking()}>
           <Text style={[styles.bottomButtonText, { color: colors.indicators.orange }]}>Withdraw</Text>
@@ -72,10 +68,16 @@ export default function EventDetail({ props }) {
       )
     }
   }
+  const handleBackButtonPress = () => {
+    dispatch(eventsActions.resetBookingStatus())
+
+    navigation.goBack()
+
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View marginBottom={10}>
-        <TouchableHighlight style={styles.backButtonWrapper} onPress={() => navigation.goBack()} disabled={isLoading}>
+        <TouchableHighlight style={styles.backButtonWrapper} onPress={() => handleBackButtonPress()} disabled={isLoading}>
           <Ionicon name="chevron-back" size={26} style={styles.backButton} />
         </TouchableHighlight>
       </View>
@@ -129,6 +131,7 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
     flex: 1,
+    marginHorizontal: 10
   },
   headerImage: {
     marginTop: 10,

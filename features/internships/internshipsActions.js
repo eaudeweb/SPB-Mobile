@@ -48,9 +48,7 @@ const getSortedInternships = (internships) => {
 
 const sortInternshipsByDate = (internships) => {
   const format = "DD/mm/yyyy - hh:mm:ss"
-  // return moment(a.createdAt).diff(b.createdAt);
 
-  // console.log(internships.sort((a, b) => moment(a.validated, format) - moment(b.validated, format)))
   return internships.sort((a, b) => moment(a.validated, format).diff(b.validated, format))
 }
 
@@ -79,8 +77,6 @@ const getInternshipsBySearch = async (params) => {
   const locationParam = location.name ? `&location=${location.slug}` : ''
   const searchParam = params.search ? `&search=${params.search}` : ''
   const URL = ALL_INTERNSHIPS_URL + '?' + companyParam + categoryParam + locationParam + searchParam
-  // console.log(company)
-  // console.log(URL)
   const response = await axios.get(URL, {
     headers: {
       'Accept': 'application/json',
@@ -88,6 +84,7 @@ const getInternshipsBySearch = async (params) => {
       "X-CSRFToken": await tokenLogic.getToken(),
     },
   })
+
   return getSortedInternships(response.data)
 }
 

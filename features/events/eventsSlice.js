@@ -13,7 +13,8 @@ const initialState = {
     isBookingSuccessful: false,
     isCancelSuccesful: false,
     isError: false,
-    message: null
+    message: null,
+    status: null
   },
 }
 
@@ -59,9 +60,9 @@ export const bookEventSeat = createAsyncThunk('events/bookSeat', async (eventId,
   }
 })
 
-export const unbookEventSeat = createAsyncThunk('events/unbookSeat', async (eventId, thunkAPI) => {
+export const unbookEventSeat = createAsyncThunk('events/unbookSeat', async (eventData, thunkAPI) => {
   try {
-    return await eventsService.unbookEventSeat(eventId)
+    return await eventsService.unbookEventSeat(eventData)
   } catch (error) {
     const message =
       (error.response &&
@@ -83,34 +84,36 @@ const eventsSlice = createSlice({
       state.booking.isCancelSuccesful = false
       state.booking.isError = false
       state.booking.message = null
+      state.booking.status = null
+
     },
     updateLocalEvents: (state, { payload }) => {
       const { id, new_reg_state } = payload
       const newEventArr = state.events
       const getEventIndex = (eventId, arr) => arr.findIndex(event => event.id == eventId)
       //todo this is not completed and only work for cancelled and cancelled pending
-      if (new_reg_state === 'cancelled') {
-        const index = getEventIndex(id, newEventArr.reserved)
-        const event = newEventArr.reserved[index]
-        event.reg_state = 'cancelled'
-        newEventArr.upcoming.push(event)
-        newEventArr.reserved.splice(index, 1)
-        state.events = newEventArr
-      } else if (new_reg_state === 'cancelledPending') {
-        const index = getEventIndex(id, newEventArr.upcoming)
-        const event = newEventArr.upcoming[index]
-        event.reg_state = 'cancelled'
-        newEventArr.upcoming.push(event)
-        newEventArr.upcoming.splice(index, 1)
-        state.events = newEventArr
-      } else {
-        const index = getEventIndex(id, newEventArr.upcoming)
-        const event = newEventArr.upcoming[index]
-        event.reg_state = 'accepted'
-        newEventArr.reserved.push(event)
-        newEventArr.upcoming.splice(index, 1)
-        state.events = newEventArr
-      }
+      // if (new_reg_state === 'cancelled') {
+      //   const index = getEventIndex(id, newEventArr.reserved)
+      //   const event = newEventArr.reserved[index]
+      //   event.reg_state = 'cancelled'
+      //   newEventArr.upcoming.push(event)
+      //   newEventArr.reserved.splice(index, 1)
+      //   state.events = newEventArr
+      // } else if (new_reg_state === 'cancelledPending') {
+      //   const index = getEventIndex(id, newEventArr.upcoming)
+      //   const event = newEventArr.upcoming[index]
+      //   event.reg_state = 'cancelled'
+      //   newEventArr.upcoming.push(event)
+      //   newEventArr.upcoming.splice(index, 1)
+      //   state.events = newEventArr
+      // } else {
+      //   const index = getEventIndex(id, newEventArr.upcoming)
+      //   const event = newEventArr.upcoming[index]
+      //   event.reg_state = 'accepted'
+      //   newEventArr.reserved.push(event)
+      //   newEventArr.upcoming.splice(index, 1)
+      //   state.events = newEventArr
+      // }
     },
     resetEvents: (state) => {
       state.isLoading = false
@@ -123,6 +126,7 @@ const eventsSlice = createSlice({
       state.booking.isCancelSuccesful = false
       state.booking.isError = false
       state.booking.message = null
+      state.booking.status = null
     }
   },
   extraReducers: (builder) => {
@@ -158,9 +162,23 @@ const eventsSlice = createSlice({
         state.booking.isLoading = true
       })
       .addCase(bookEventSeat.fulfilled, (state, action) => {
-        state.isBookingSuccessful = true
+        state.booking.isBookingSuccessful = true
         state.booking.isLoading = false
-
+        state.booking.status = action.payload.reg_state
+        //if there are enough seats for the user to be accepted to the event
+        if (action.payload.reg_state === 'accepted') {
+          const currentEvent = state.events.upcoming.find(event => event.id === action.payload.id)
+          const currentEventIndex = state.events.upcoming.findIndex(event => event.id === action.payload.id)
+          currentEvent.reg_state = action.payload.reg_state
+          currentEvent.accepted = parseInt(currentEvent.accepted) + 1
+          state.events.upcoming.splice(currentEventIndex, 1)
+          state.events.reserved.push(currentEvent)
+        } else {
+          const currentEvent = state.events.upcoming.find(event => event.id === action.payload.id)
+          const currentEventIndex = state.events.upcoming.findIndex(event => event.id === action.payload.id)
+          currentEvent.reg_state = action.payload.reg_state
+          state.events.upcoming[currentEventIndex] = currentEvent
+        }
       })
       .addCase(bookEventSeat.rejected, (state, action) => {
         state.booking.isLoading = false
@@ -171,8 +189,24 @@ const eventsSlice = createSlice({
         state.booking.isLoading = true
       })
       .addCase(unbookEventSeat.fulfilled, (state, action) => {
+        const { id, reg_state } = action.payload;
         state.booking.isCancelSuccesful = true
         state.booking.isLoading = false
+        state.booking.status = 'cancelled'
+        if (reg_state === 'pending') {
+          const currentEventIndex = state.events.upcoming.findIndex(event => event.id === id)
+          const currentEvent = state.events.upcoming.find(event => event.id === id)
+          currentEvent.reg_state = 'cancelled'
+          state.events.upcoming[currentEventIndex] = currentEvent
+        } else {
+          const currentEventIndex = state.events.reserved.findIndex(event => event.id === id)
+          const currentEvent = state.events.reserved.find(event => event.id === id)
+          currentEvent.reg_state = 'cancelled'
+          currentEvent.accepted = parseInt(currentEvent.accepted) - 1
+          state.events.reserved.splice(currentEventIndex, 1)
+          state.events.upcoming.push(currentEvent)
+        }
+        //TODO WRITE LOGIC TO UPDATE REDUX ON SEAT UNBOOKING
       })
       .addCase(unbookEventSeat.rejected, (state, action) => {
         state.booking.isLoading = false

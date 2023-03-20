@@ -30,10 +30,31 @@ export default function ApplicationList(props) {
       [filterType]: !applicationsFilter[filterType]
     })
   }
-  const onRefresh = useCallback(() => {
+  const onRefresh = () => {
     dispatch(refreshStudentInternships())
-  }, []);
+  }
 
+  useEffect(() => {
+    dispatch(getStudentInternships())
+  }, [])
+
+  useEffect(() => {
+    filterInternships()
+  }, [applicationsFilter, studentInternships])
+
+  //  TODO refactor
+  const filterInternships = () => {
+    // ACCEPTED = 3 | INTERVIEW = 2 | APPLIED = 1   <<< job status meaning
+    const { accepted, interview, applied } = applicationsFilter
+    const acceptedInternships = studentInternships.filter(application => accepted ? application.status === 3 : '')
+    const interviewInternships = studentInternships.filter(application => interview ? application.status === 2 : '')
+    const appliedInternships = studentInternships.filter(application => applied ? application.status === 1 : '')
+    const filteredResults = [...acceptedInternships, ...interviewInternships, ...appliedInternships]
+    const filterWasSelected = Object.values(applicationsFilter).some((item) => item === true)
+    const result = filterWasSelected ? filteredResults : studentInternships
+
+    setApplications(result)
+  }
   const FilterButton = ({ name, type, active }) => {
     return (
       <TouchableOpacity onPress={() => handleFilterTap(type)}>
@@ -44,27 +65,6 @@ export default function ApplicationList(props) {
       </TouchableOpacity>
     )
   }
-
-  useEffect(() => {
-    dispatch(getStudentInternships())
-  }, [])
-
-  //  TODO refactor
-  const filterInternships = () => {
-    // ACCEPTED = 3 | INTERVIEW = 2 | APPLIED = 1   <<< job status meaning
-    const { accepted, interview, applied } = applicationsFilter
-    const acceptedInternships = studentInternships.filter(application => accepted ? application.status === 3 : '')
-    const interviewInternships = studentInternships.filter(application => interview ? application.status === 2 : '')
-    const appliedInternships = studentInternships.filter(application => applied ? application.status === 1 : '')
-    const filteredResults = [...acceptedInternships, ...interviewInternships, ...appliedInternships]
-    const result = filteredResults.length > 0 ? filteredResults : studentInternships
-
-    setApplications(result)
-  }
-
-  useEffect(() => {
-    filterInternships()
-  }, [applicationsFilter, studentInternships])
 
   return (
     <SafeAreaView style={styles.container}>

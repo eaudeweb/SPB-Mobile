@@ -24,7 +24,7 @@ import { addNotificationToken } from '../features/login/loginSlice';
 import jwtDecode from 'jwt-decode';
 
 export default function LayoutScreen(props) {
-  const insets = useSafeAreaInsets();
+  const insets = useSafeAreaInsets()
   const Tab = createBottomTabNavigator()
   const dispatch = useDispatch()
   const internshipsData = useSelector(state => state.internships)
@@ -44,7 +44,6 @@ export default function LayoutScreen(props) {
         props.navigation.navigate('Login')
         tokenLogic.deleteToken()
       }
-
     })
   }, [internshipsData.isRefreshLoading, internshipsData.isLoading, internshipsData.application, events.isLoading, events.booking])
 

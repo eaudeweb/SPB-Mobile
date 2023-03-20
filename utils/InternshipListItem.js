@@ -117,10 +117,8 @@ export default function InternshipListItem({ navigation, internship, parentRoute
               {swipeable ?
                 ''
                 :
-                <Text style={styles.detailsText}>{moment(internship.validated, "DD/mm/yyyy - hh:mm:ss").format('DD MMM')}</Text>
+                <Text style={styles.detailsText}>{moment(internship.validated, "DD/MM/yyyy - hh:mm:ss").format('DD MMM')}</Text>
               }
-
-
               {
                 internship.office_location ?
                   <Text style={styles.detailsText}>{internship.office_location?.toUpperCase()}</Text>

@@ -17,5 +17,4 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
     flex: 1
   }
-
 })
